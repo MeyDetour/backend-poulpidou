@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
-class RegisterController extends AbstractController
+class ApiRegisterController extends AbstractController
 {
     private $entityManager;
 
@@ -25,23 +25,23 @@ class RegisterController extends AbstractController
         $this->validator = $validator;
     }
 
-    #[Route('/register', name: 'app_register', methods: 'post')]
+    #[Route('/register', name: 'api_app_register', methods: 'post')]
     public function register(Request $request, UserRepository $repository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!$data['email'] || $data['email'] == '' || $data['email'] == ' ') {
+        if (!$data['username'] || $data['username'] == '' || $data['username'] == ' ') {
             return $this->json(['message' => 'Username inexistant ou vide']);
         }
         if (!$data['password'] || $data['password'] == '' || $data['password'] == ' ') {
             return $this->json(['message' => 'Mot de passe inexistant ou vide']);
         }
-        if ($repository->findOneBy(['email' => $data['email']])) {
+        if ($repository->findOneBy(['email' => $data['username']])) {
             return $this->json(['message' => "Nom d'utilisateur déjà prit."]);
 
         }
         $user = new User();
-        $user->setEmail($data['email']);
+        $user->setEmail($data['username']);
         $user->setPassword(
             $passwordHasher->hashPassword(
                 $user,
