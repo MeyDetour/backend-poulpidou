@@ -89,10 +89,17 @@ class HomeController extends AbstractController
                     'need token ? ' => true],
                 [
                     'client currents projects' => '/api/client/{id}/currentProjects',
-                    'methode' => 'get',
-                    "renvoie" => "liste des projets courrants du client : id,name,startDate,endDate ( a toi de me dire les infos quil faut renvoyer sur le projet)",
-                    'parametres a mettre dans le body' => null,
+                    'methode' => 'post',
+                    "renvoie" => "liste des projets courrents du client : id,name,startDate,endDate ( a toi de me dire les infos quil faut renvoyer sur le projet)",
+                    'parametres a mettre dans le body' => "display_deleted (boolean) => true = afficher les projets supprimés",
                     'utilisation' => "passer en parametre l'id du client pour obtenir la liste de ses projets courrants",
+                    'need token ? ' => true],
+                [
+                    'add client currents projects' => '/api/client/{id}/currentProjects/add',
+                    'methode' => 'post',
+                    "renvoie" => "ok si c'est bien passé",
+                    'parametres a mettre dans le body' => "project_id",
+                    'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour ajouter un projet dans les projets courrents ",
                     'need token ? ' => true],
             ],
             'projects' => [

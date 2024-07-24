@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Repository\ClientRepository;
+use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,8 +193,8 @@ class ApiClientController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/api/client/{id}/currentProjects', name: 'get_clients_currentprojects', methods: 'get')]
-    public function getClientCurrentProjects($id, ClientRepository $repository): Response
+    #[Route('/api/client/{id}/currentProjects', name: 'get_clients_currentprojects', methods: 'post')]
+    public function getClientCurrentProjects($id, ClientRepository $repository, Request $request): Response
     {
         $client = $repository->find($id);
         if (!$client) {
@@ -202,12 +203,60 @@ class ApiClientController extends AbstractController
         if (!$client->getOwner() == $this->getUser()) {
             return $this->json(['message' => 'access denied to this client, not yours']);
         }
+        $datum = json_decode($request->getContent(), true);
+
+        if ($datum) {
+
+            if (isset($datum['display_deleted']) && !empty($datum['display_deleted'])) {
+                if ($datum['display_deleted']) {
+                    $data = [];
+                    foreach ($client->getCurrentProject() as $project) {
+
+                        if ($project->getOwner() == $this->getUser()) {
+                            $data[] = $this->getShortDataProject($project);
+                        }
+                    }
+                    return $this->json($data);
+                }
+            }
+        }
+
         $data = [];
         foreach ($client->getCurrentProject() as $project) {
-            $data[] = $this->getShortDataProject($project);
+            if($project->getState() != 'deleted'){
+
+                $data[] = $this->getShortDataProject($project);
+            }
         }
 
         return $this->json($data);
+    }#[Route('/api/client/{id}/currentProjects/add', name: 'add_clients_currentprojects', methods: 'post')]
+    public function addClientCurrentProjects($id, ClientRepository $repository,ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
+    {
+        $client = $repository->find($id);
+        if (!$client) {
+            return $this->json(['message' => 'no client found']);
+        }
+        if (!$client->getOwner() == $this->getUser()) {
+            return $this->json(['message' => 'access denied to this client, not yours']);
+        }
+        $datum = json_decode($request->getContent(),true);
+
+        if($datum){
+            if(isset($datum['project_id']) && !empty($datum['project_id'])){
+                $project = $projectRepository->find($datum['project_id']);
+                if(!$project){
+                    return  $this->json(['message'=>'no project found']);
+                }
+                $client->addCurrentProject($project);
+                $manager->persist($client);
+                $manager->flush();
+                return  $this->json(['message'=>'ok']);
+            }else{
+                return  $this->json(['message'=>'uncorrect data']);
+            }
+        }
+        return  $this->json(['message'=>'no data']);
     }
 
     public function getDataClient($client)
