@@ -17,9 +17,11 @@ class ApiUserController extends AbstractController
     public function index(): Response
     {
         return $this->json([
+            'state' => 'OK',
+            'value' =>[
                 'id' => $this->getUser()->getId(),
                 'mail' => $this->getUser()->getEmail()]
-        );
+        ]);
     }
 
     #[Route('/api/user/{id}', name: 'user')]
@@ -27,11 +29,17 @@ class ApiUserController extends AbstractController
     {
         $user = $repository->find($id);
         if (!$user) {
-            return $this->json(['message' => 'no user found']);
-        }
+            return $this->json([
+                'state' => 'NDF',
+                'value' => 'user'
+            ]);  }
+
         return $this->json([
+            'state' => 'OK',
+            'value' => [
                 'id' => $this->getUser()->getId(),
                 'mail' => $this->getUser()->getEmail()]
-        );
+        ]);
+
     }
 }

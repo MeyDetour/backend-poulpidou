@@ -61,6 +61,7 @@ class Client
     #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'currentProjetOfThisClient')]
     private Collection $currentProject;
 
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
@@ -253,4 +254,6 @@ class Client
 
         return $this;
     }
+
+
 }

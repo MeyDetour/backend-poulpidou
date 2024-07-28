@@ -8,14 +8,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
-    public function index(): Response
+    #[Route('/test', name: 'app_test')]
+    public function test()
     {
-
-        return $this->json(['message' => 'ok']);
+        $string = 'jj';
+ dd(strlen($string));
     }
 
-    #[Route('/routes', name: 'all_routes')]
+
+    #[Route('/doc', name: 'all_routes', methods: 'get')]
     public function getAllRoutes(): Response
     {
 
@@ -39,7 +40,7 @@ class HomeController extends AbstractController
             'clients' => [
                 [
                     'new client' => '/api/client/new',
-                    'utilisation' => 'Créer une fiche client avec les parametres rentréer dans le body',
+                    'utilisation' => 'Créer une fiche client avec les parametres rentréer dans le body, les données sont automatiquement formaté pour etre en maj',
                     'methode' => 'post',
                     "renvoie" => "la fiche client",
                     'parametres a mettre dans le body' => "first_name,last_name,job,age,location,mail,phone",
@@ -55,8 +56,8 @@ class HomeController extends AbstractController
                     'get clients' => '/api/clients',
                     'methode' => 'get',
                     "renvoie" => "tous les clients associés au compte de l'utilisateur selon le parametre entré",
-                    'parametres a mettre dans le body' => "display_deleted (boolean)",
-                    'utilisation' => "passer en parametre l'id du client pour obtenir les informations et renvoie tous les clients actifs par défaut ou tous les clients (actifs et supprimés) si display_deleted = true ",
+                    'parametres a mettre dans le body' => "display_deleted (boolean), order_by (string)",
+                    'utilisation' => "passer en parametre l'id du client pour obtenir les informations et renvoie tous les clients actifs par défaut ou tous les clients (actifs et supprimés) si display_deleted = true | si order_by='name' les clients seront trié par le lastName puis firstName",
                     'need token ? ' => true],
                 [
                     'edit client' => '/api/client/edit/{id du client}',
@@ -95,11 +96,18 @@ class HomeController extends AbstractController
                     'utilisation' => "passer en parametre l'id du client pour obtenir la liste de ses projets courrants",
                     'need token ? ' => true],
                 [
-                    'add client currents projects' => '/api/client/{id}/currentProjects/add',
+                    'add  currents projects to client' => '/api/client/{id}/currentProjects/add',
                     'methode' => 'post',
                     "renvoie" => "ok si c'est bien passé",
                     'parametres a mettre dans le body' => "project_id",
                     'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour ajouter un projet dans les projets courrents ",
+                    'need token ? ' => true],
+                [
+                    'remove client currents projects' => '/api/client/{id}/currentProjects/remove',
+                    'methode' => 'put',
+                    "renvoie" => "ok si c'est bien passé",
+                    'parametres a mettre dans le body' => "project_id",
+                    'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour enlever le projet des projets courrents ",
                     'need token ? ' => true],
             ],
             'projects' => [
@@ -160,6 +168,22 @@ class HomeController extends AbstractController
                     "renvoie" => "renvoie l'id et le mail de l'utilisateur visé",
                     'parametres a mettre dans le body' => null,
                     'utilisation' => "permet d'avoir l'utilisateur a partir d'un id",
+                    'need token ? ' => true],
+            ],
+            'invoice' => [
+                [
+                    'new invoice' => '/api/invoice/new',
+                    'methode' => 'post',
+                    "renvoie" => "la facture (id,price,description,date,project_id,owner)",
+                    'parametres a mettre dans le body' => "price,description,project_id",
+                    'utilisation' => "permet de créer une nouvelle facture liée a un projet ",
+                    'need token ? ' => true],
+                [
+                    'edit invoice' => '/api/invoice/edit/{id}',
+                    'methode' => 'post',
+                    "renvoie" => "la facture (id,price,description,date,project_id,client_id,owner)",
+                    'parametres a mettre dans le body' => "price,description",
+                    'utilisation' => "permet de modifier une facture liée a un projet ",
                     'need token ? ' => true],
             ]
 

@@ -23,36 +23,59 @@ class ApiProjectController extends AbstractController
             $project = new Project();
 
 
-            if (isset($data['client_id']) && !empty($data['client_id'])) {
-                $client = $clientRepository->find($data['client_id']);
-                if (!$client) {
-                    return $this->json(['message' => 'no client found']);
-                }
-                if ($client->getOwner() != $this->getUser()) {
-                    return $this->json(['message' => 'not yours']);
-                }
+            if (!isset($data['client_id']) || empty(trim($data['client_id']))) {
+                return $this->json([
+                    'state' => 'NED',
+                    'value' => 'client_id'
+                ]);
+            }
 
-                $project->setClient($client);
+            if (isset($data['name']) && !empty(trim($data['name']))) {
+
+                return $this->json([
+                    'state' => 'NED',
+                    'value' => 'name'
+                ]);
             }
-            if (isset($data['name']) && !empty($data['name'])) {
-                $project->setName($data['name']);
-            } else {
-                return $this->json(['message' => 'no name send']);
+
+            $client = $clientRepository->find($data['client_id']);
+            if (!$client) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'client'
+                ]);
             }
-            if (isset($data['figma_link']) && !empty($data['figma_link'])) {
+            if ($client->getOwner() != $this->getUser()) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'client'
+                ]);
+            }
+
+            $project->setClient($client);
+            $project->setName($data['name']);
+
+            if (isset($data['figma_link']) && !empty(trim($data['figma_link']))) {
                 $project->setFigmaLink($data['figma_link']);
             }
-            if (isset($data['github_link']) && !empty($data['github_link'])) {
+            if (isset($data['github_link']) && !empty(trim($data['github_link']))) {
                 $project->setGithubLink($data['github_link']);
             }
 
-            if (isset($data['start_date']) && !empty($data['start_date'])) {
+            if (isset($data['start_date']) && !empty(trim($data['start_date']))) {
                 $project->setStartDate($data['start_date']);
             }
-            if (isset($data['end_date']) && !empty($data['end_date'])) {
+            if (isset($data['end_date']) && !empty(trim($data['end_date']))) {
                 $project->setEndDate($data['end_date']);
             }
-            if (isset($data['total_price']) && !empty($data['total_price'])) {
+            if (isset($data['total_price']) && !empty(trim($data['total_price']))) {
+                $isValid = $data['total_price'] > 0 && is_numeric($data['total_price']);
+                if(!$isValid){
+                    return $this->json([
+                        'state' => 'IDT',
+                        'value' => 'total_price'
+                    ]);
+                }
                 $project->setTotalPrice($data['total_price']);
             }
             $project->setCreatedAt(new \DateTimeImmutable());
@@ -61,10 +84,14 @@ class ApiProjectController extends AbstractController
             $manager->persist($project);
             $manager->flush();
 
-
-            return $this->json($this->getDataProject($project));
+            return $this->json([
+                'state' => 'OK',
+                'value' => $this->json($this->getDataProject($project))
+            ]);
         }
-        return $this->json(['message' => 'no data']);
+        return $this->json([
+            'state' => 'ND'
+        ]);
 
     }
 
@@ -73,44 +100,67 @@ class ApiProjectController extends AbstractController
     {
         $project = $repository->find($id);
         if (!$project) {
-
-            return $this->json(['message' => 'no project']);
+            return $this->json([
+                'state' => 'NDF',
+                'value' => 'project'
+            ]);
         }
+        if (
+            $project->getOwner() != $this->getUser()
+        ) {
+            return $this->json([
+                'state' => 'FO',
+                'value' => 'project'
+            ]);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         if ($data) {
-            if (
-                $project->getOwner() == $this->getUser()
-            ) {
-                if (isset($data['name']) && !empty($data['name'])) {
+
+            {
+                if (!isset($data['name']) || empty(trim($data['name']))) {
                     $project->setName($data['name']);
-                } else {
-                    return $this->json(['message' => 'no name send']);
                 }
-                if (isset($data['client_id']) && !empty($data['client_id'])) {
+
+                if (isset($data['client_id']) && !empty(trim($data['client_id']))) {
                     $client = $clientRepository->find($data['client_id']);
                     if (!$client) {
-                        return $this->json(['message' => 'no client found']);
+                        return $this->json([
+                            'state' => 'NDF',
+                            'value' => 'client'
+                        ]);
                     }
                     if ($client->getOwner() != $this->getUser()) {
-                        return $this->json(['message' => 'not yours']);
+                        return $this->json([
+                            'state' => 'FO',
+                            'value' => 'client'
+                        ]);
                     }
                     $project->setClient($client);
                 }
-                if (isset($data['figma_link']) && !empty($data['figma_link'])) {
+                if (isset($data['figma_link']) && !empty(trim($data['figma_link']))) {
                     $project->setFigmaLink($data['figma_link']);
                 }
-                if (isset($data['github_link']) && !empty($data['github_link'])) {
+                if (isset($data['github_link']) && !empty(trim($data['github_link']))) {
                     $project->setGithubLink($data['github_link']);
                 }
 
-                if (isset($data['start_date']) && !empty($data['start_date'])) {
+                if (isset($data['start_date']) && !empty(trim($data['start_date']))) {
                     $project->setStartDate($data['start_date']);
                 }
-                if (isset($data['end_date']) && !empty($data['end_date'])) {
+                if (isset($data['end_date']) && !empty(trim($data['end_date']))) {
                     $project->setEndDate($data['end_date']);
                 }
-                if (isset($data['total_price']) && !empty($data['total_price'])) {
+                if (isset($data['total_price']) && !empty(trim($data['total_price']))) {
+
+                    $isValid = $data['total_price'] > 0 && is_numeric($data['total_price']);
+                    if(!$isValid){
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'total_price'
+                        ]);
+                    }
                     $project->setTotalPrice($data['total_price']);
                 }
                 $project->setCreatedAt(new \DateTimeImmutable());
@@ -118,22 +168,24 @@ class ApiProjectController extends AbstractController
                 $project->setState('active');
                 $manager->persist($project);
                 $manager->flush();
+                return $this->json([
+                    'state' => 'OK',
+                    'value' => $this->json($this->getDataProject($project))
+                ]);
 
-
-                return $this->json($this->getDataProject($project));
-            }else{
-
-                return $this->json(['message' => 'not yours']);
             }
+
         }
-        return $this->json(['message' => 'no data']);
+        return $this->json([
+            'state' => 'ND'
+        ]);
 
     }
 
     public function getDataProject($project)
     {
         $client = null;
-        if($project->getClient()){
+        if ($project->getClient()) {
             $client = $project->getClient()->getId();
         }
         return [
@@ -145,8 +197,8 @@ class ApiProjectController extends AbstractController
             "startDate" => $project->getStartDate(),
             "endDate" => $project->getEndDate(),
             "totalPrice" => $project->getTotalPrice(),
-            "client_id"=>$client,
-            'owner'=>$project->getOwner()->getEmail()
+            "client_id" => $client,
+            'owner' => $project->getOwner()->getEmail()
         ];
     }
 
@@ -156,15 +208,23 @@ class ApiProjectController extends AbstractController
 
         $project = $repository->find($id);
         if (!$project) {
-            return $this->json(['message' => 'no project found']);
+            return $this->json([
+                'state' => 'NDF',
+                'value' => 'project'
+            ]);
         }
         if (!$project->getOwner() == $this->getUser()) {
-            return $this->json(['message' => 'access denied to this project, not yours']);
+            return $this->json([
+                'state' => 'FO',
+                'value' => 'project'
+            ]);
         }
         $project->setState('deleted');
         $manager->persist($project);
         $manager->flush();
-        return $this->json(['message' => 'ok']);
+        return $this->json([
+            'state' => 'OK'
+        ]);
 
     }
 
@@ -174,14 +234,22 @@ class ApiProjectController extends AbstractController
 
         $project = $repository->find($id);
         if (!$project) {
-            return $this->json(['message' => 'no project found']);
+            return $this->json([
+                'state' => 'NDF',
+                'value' => 'project'
+            ]);
         }
         if (!$project->getOwner() == $this->getUser()) {
-            return $this->json(['message' => 'access denied to this project, not yours']);
+            return $this->json([
+                'state' => 'FO',
+                'value' => 'project'
+            ]);
         }
         $manager->remove($project);
         $manager->flush();
-        return $this->json(['message' => 'ok']);
+        return $this->json([
+            'state' => 'OK'
+        ]);
 
     }
 
@@ -190,9 +258,21 @@ class ApiProjectController extends AbstractController
     {
         $project = $repository->find($id);
         if (!$project) {
-            return $this->json(['message' => 'no project found']);
+            return $this->json([
+                'state' => 'NDF',
+                'value' => 'project'
+            ]);
         }
-        return $this->json($this->getDataProject($project));
+        if (!$project->getOwner() == $this->getUser()) {
+            return $this->json([
+                'state' => 'FO',
+                'value' => 'project'
+            ]);
+        }
+        return $this->json([
+            'state' => 'OK',
+            'value' => $this->json($this->getDataProject($project))
+        ]);
     }
 
     #[Route('/api/projects', name: 'get_projects', methods: 'get')]
@@ -200,7 +280,7 @@ class ApiProjectController extends AbstractController
     {
         $datum = json_decode($request->getContent(), true);
         if ($datum) {
-            if (isset($datum['display_deleted']) && !empty($datum['display_deleted'])) {
+            if (isset($datum['display_deleted']) && !empty(trim($datum['display_deleted']))) {
                 if ($datum['display_deleted']) {
                     $data = [];
                     foreach ($repository->findBy([], ['createdAt' => 'ASC']) as $client) {
@@ -208,7 +288,10 @@ class ApiProjectController extends AbstractController
                             $data[] = $this->getDataProject($client);
                         }
                     }
-                    return $this->json($data);
+                    return $this->json([
+                        'state' => 'OK',
+                        'value' => $data
+                    ]);
                 }
             }
         }
@@ -220,7 +303,10 @@ class ApiProjectController extends AbstractController
             }
 
         }
-        return $this->json($data);
+        return $this->json([
+            'state' => 'OK',
+            'value' => $data
+        ]);
     }
 
 }

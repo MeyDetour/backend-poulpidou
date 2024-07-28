@@ -28,17 +28,40 @@ class ApiRegisterController extends AbstractController
     #[Route('/register', name: 'api_app_register', methods: 'post')]
     public function register(Request $request, UserRepository $repository, UserPasswordHasherInterface $passwordHasher): Response
     {
+        $create = true;
+        if (!$create) {
+            return $this->json([
+                'state' => 'ISE',
+                'value' => 'cannot create account'
+            ]);
+        }
+
         $data = json_decode($request->getContent(), true);
 
-        if (!$data['username'] || $data['username'] == '' || $data['username'] == ' ') {
-            return $this->json(['message' => 'Username inexistant ou vide']);
+        if (!isset($data['username']) || empty(trim($data['username']))) {
+            return $this->json([
+                'state' => 'NED',
+                'value' => 'username'
+            ]);
         }
-        if (!$data['password'] || $data['password'] == '' || $data['password'] == ' ') {
-            return $this->json(['message' => 'Mot de passe inexistant ou vide']);
+        if (!isset($data['password']) || empty(trim($data['password']))) {
+
+            return $this->json([
+                'state' => 'NED',
+                'value' => 'password'
+            ]);
+        }
+        if(strlen($data['password']<=5)){
+            return $this->json([
+                'state' => 'LTS',
+                'value' => 'password'
+            ]);
         }
         if ($repository->findOneBy(['email' => $data['username']])) {
-            return $this->json(['message' => "Nom d'utilisateur déjà prit."]);
-
+            return $this->json([
+                'state' => 'NU',
+                'value' => 'email'
+            ]);
         }
         $user = new User();
         $user->setEmail($data['username']);
@@ -51,11 +74,15 @@ class ApiRegisterController extends AbstractController
 
         $errors = $this->validator->validate($user);
         if (count($errors) > 0) {
-            return $this->json($errors[0]);
+            return $this->json([
+                'state' => 'ISE',
+                'value' => $this->json($errors[0])
+            ]);
         }
         $this->entityManager->persist($user);
         $this->entityManager->flush();
-
-        return $this->json(['message' => 'ok']);
+        return $this->json([
+            'state' => 'OK'
+        ]);
     }
 }
