@@ -31,6 +31,10 @@ class Invoice
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $payed = null;
+
+
 
     public function getId(): ?int
     {
@@ -93,6 +97,18 @@ class Invoice
     public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function isPayed(): ?bool
+    {
+        return $this->payed;
+    }
+
+    public function setPayed(?bool $payed): static
+    {
+        $this->payed = $payed;
 
         return $this;
     }

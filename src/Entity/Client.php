@@ -61,6 +61,12 @@ class Client
     #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'currentProjetOfThisClient')]
     private Collection $currentProject;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $siret = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $online = null;
+
 
     public function __construct()
     {
@@ -251,6 +257,30 @@ class Client
                 $currentProject->setCurrentProjetOfThisClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSiret(): ?string
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(?string $siret): static
+    {
+        $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function isOnline(): ?bool
+    {
+        return $this->online;
+    }
+
+    public function setOnline(?bool $online): static
+    {
+        $this->online = $online;
 
         return $this;
     }

@@ -56,9 +56,52 @@ class Project
     #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'project', orphanRemoval: true)]
     private Collection $invoices;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 15, scale: 2, nullable: true)]
+    private ?string $estimatedPrice = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPaying = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $database = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $maquette = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $maintenance = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $type = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $framework = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $options = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $device = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $needTemplate = null;
+
+    /**
+     * @var Collection<int, Pdf>
+     */
+    #[ORM\OneToMany(targetEntity: Pdf::class, mappedBy: 'project')]
+    private Collection $pdfs;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $maintenanceProject = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $maintenancePercentage = null;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
+        $this->pdfs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -224,6 +267,180 @@ class Project
                 $invoice->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEstimatedPrice(): ?string
+    {
+        return $this->estimatedPrice;
+    }
+
+    public function setEstimatedPrice(?string $estimatedPrice): static
+    {
+        $this->estimatedPrice = $estimatedPrice;
+
+        return $this;
+    }
+
+    public function isPaying(): ?bool
+    {
+        return $this->isPaying;
+    }
+
+    public function setPaying(?bool $isPaying): static
+    {
+        $this->isPaying = $isPaying;
+
+        return $this;
+    }
+
+    public function isDatabase(): ?bool
+    {
+        return $this->database;
+    }
+
+    public function setDatabase(?bool $database): static
+    {
+        $this->database = $database;
+
+        return $this;
+    }
+
+    public function isMaquette(): ?bool
+    {
+        return $this->maquette;
+    }
+
+    public function setMaquette(?bool $maquette): static
+    {
+        $this->maquette = $maquette;
+
+        return $this;
+    }
+
+    public function isMaintenance(): ?bool
+    {
+        return $this->maintenance;
+    }
+
+    public function setMaintenance(?bool $maintenance): static
+    {
+        $this->maintenance = $maintenance;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getFramework(): ?string
+    {
+        return $this->framework;
+    }
+
+    public function setFramework(?string $framework): static
+    {
+        $this->framework = $framework;
+
+        return $this;
+    }
+
+    public function getOptions(): ?string
+    {
+        return $this->options;
+    }
+
+    public function setOptions(?string $options): static
+    {
+        $this->options = $options;
+
+        return $this;
+    }
+
+    public function getDevice(): ?string
+    {
+        return $this->device;
+    }
+
+    public function setDevice(?string $device): static
+    {
+        $this->device = $device;
+
+        return $this;
+    }
+
+    public function isNeedTemplate(): ?bool
+    {
+        return $this->needTemplate;
+    }
+
+    public function setNeedTemplate(?bool $needTemplate): static
+    {
+        $this->needTemplate = $needTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pdf>
+     */
+    public function getPdfs(): Collection
+    {
+        return $this->pdfs;
+    }
+
+    public function addPdf(Pdf $pdf): static
+    {
+        if (!$this->pdfs->contains($pdf)) {
+            $this->pdfs->add($pdf);
+            $pdf->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removePdf(Pdf $pdf): static
+    {
+        if ($this->pdfs->removeElement($pdf)) {
+            // set the owning side to null (unless already changed)
+            if ($pdf->getProject() === $this) {
+                $pdf->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getMaintenanceProject(): ?int
+    {
+        return $this->maintenanceProject;
+    }
+
+    public function setMaintenanceProject(?int $maintenanceProject): static
+    {
+        $this->maintenanceProject = $maintenanceProject;
+
+        return $this;
+    }
+
+    public function getMaintenancePercentage(): ?int
+    {
+        return $this->maintenancePercentage;
+    }
+
+    public function setMaintenancePercentage(?int $maintenancePercentage): static
+    {
+        $this->maintenancePercentage = $maintenancePercentage;
 
         return $this;
     }

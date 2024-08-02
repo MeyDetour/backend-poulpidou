@@ -1,0 +1,9 @@
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     '/usr/bin/wkhtmltopdf'  # Mettez ici le chemin correct
+        options:    []
+    image:
+        enabled:    true
+        binary:     '/usr/bin/wkhtmltoimage'  # Mettez ici le chemin correct
+        options:    []

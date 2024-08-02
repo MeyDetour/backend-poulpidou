@@ -15,6 +15,8 @@ SYMFONY_CONSOLE = symfony console
 init: ## Initialize project
 	$(MAKE) db-create
 
+ip:
+	hostname -I
 
 
 ## -------- SYMFONY COMMAND --------

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Note;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,7 +52,7 @@ class ApiRegisterController extends AbstractController
                 'value' => 'password'
             ]);
         }
-        if(strlen($data['password']<=5)){
+        if (strlen($data['password'] <= 5)) {
             return $this->json([
                 'state' => 'LTS',
                 'value' => 'password'
@@ -79,7 +80,17 @@ class ApiRegisterController extends AbstractController
                 'value' => $this->json($errors[0])
             ]);
         }
+
+
         $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+
+        $note = new Note();
+        $note->setOwner($this->getUser());
+        $note->setNotes("");
+        $note->setRemembers("");
+        $this->entityManager->persist($note);
         $this->entityManager->flush();
         return $this->json([
             'state' => 'OK'

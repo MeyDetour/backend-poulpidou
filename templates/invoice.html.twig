@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PDF VIEW{% endblock %}
+
+{% block body %}
+
+    <a href="{{ path('app_api_pdf') }}">download</a>
+
+    <canvas style="border: 1px solid black; margin: 10px" id="pdf-canvas" width="600" height="800"></canvas>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let w = window.innerWidth;
+            let h = window.innerHeight;
+
+            var url = '{{ pdfPath }}';
+            var canvas = document.getElementById('pdf-canvas');
+            var context = canvas.getContext('2d');
+
+            // Load the PDF
+            pdfjsLib.getDocument(url).promise.then(function (pdf) {
+                // Fetch the first page
+                pdf.getPage(1).then(function (page) {
+                    var viewport = page.getViewport({scale: 1.5});
+                    // Adjust canvas size to the PDF page
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    // Render the PDF page into the canvas context
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                });
+            });
+
+
+        });
+    </script>
+    {% endblock %}
