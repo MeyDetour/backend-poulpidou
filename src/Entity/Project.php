@@ -83,8 +83,6 @@ class Project
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $device = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $needTemplate = null;
 
     /**
      * @var Collection<int, Pdf>
@@ -98,10 +96,29 @@ class Project
     #[ORM\Column(nullable: true)]
     private ?int $maintenancePercentage = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    private ?string $noteNames = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $noteContent = null;
+
+    #[ORM\OneToOne(mappedBy: 'project', cascade: ['persist', 'remove'])]
+    private ?Chat $chat = null;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'autorisedInProjects')]
+    private Collection $userAuthorised;
+
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    private ?string $uuid = null;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
         $this->pdfs = new ArrayCollection();
+        $this->userAuthorised = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -379,17 +396,6 @@ class Project
         return $this;
     }
 
-    public function isNeedTemplate(): ?bool
-    {
-        return $this->needTemplate;
-    }
-
-    public function setNeedTemplate(?bool $needTemplate): static
-    {
-        $this->needTemplate = $needTemplate;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Pdf>
@@ -441,6 +447,90 @@ class Project
     public function setMaintenancePercentage(?int $maintenancePercentage): static
     {
         $this->maintenancePercentage = $maintenancePercentage;
+
+        return $this;
+    }
+
+    public function getNoteNames(): ?string
+    {
+        return $this->noteNames;
+    }
+
+    public function setNoteNames(?string $noteNames): static
+    {
+        $this->noteNames = $noteNames;
+
+        return $this;
+    }
+
+    public function getNoteContent(): ?string
+    {
+        return $this->noteContent;
+    }
+
+    public function setNoteContent(?string $noteContent): static
+    {
+        $this->noteContent = $noteContent;
+
+        return $this;
+    }
+
+    public function getChat(): ?Chat
+    {
+        return $this->chat;
+    }
+
+    public function setChat(Chat $chat): static
+    {
+        // set the owning side of the relation if necessary
+        if ($chat->getProject() !== $this) {
+            $chat->setProject($this);
+        }
+
+        $this->chat = $chat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUserAuthorised(): Collection
+    {
+        return $this->userAuthorised;
+    }
+
+    public function addUserAuthorised(User $userAuthorised): static
+    {
+        if (!$this->userAuthorised->contains($userAuthorised)) {
+            $this->userAuthorised->add($userAuthorised);
+        }
+
+        return $this;
+    }
+    public function hasUserInUserAuthorised(User $userAuthorised): bool
+    {
+        if ($this->userAuthorised->contains($userAuthorised)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function removeUserAuthorised(User $userAuthorised): static
+    {
+        $this->userAuthorised->removeElement($userAuthorised);
+
+        return $this;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(?string $uuid): static
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

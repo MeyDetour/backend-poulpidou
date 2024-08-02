@@ -91,7 +91,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $notes;
 
+    /**
+     * @var Collection<int, Chat>
+     */
+    #[ORM\ManyToMany(targetEntity: Chat::class, mappedBy: 'users')]
+    private Collection $chats;
 
+
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'userAuthorised')]
+    private Collection $autorisedInProjects;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'authorUser')]
+    private Collection $messages;
 
 
     public function __construct()
@@ -102,6 +119,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->logs = new ArrayCollection();
         $this->pdfs = new ArrayCollection();
         $this->notes = new ArrayCollection();
+        $this->chats = new ArrayCollection();
+        $this->autorisedInProjects = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,6 +130,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function getMail(): ?string
     {
         return $this->email;
     }
@@ -128,13 +153,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
+     * @return list<string>
      * @see UserInterface
      *
-     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -431,7 +456,90 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, Chat>
+     */
+    public function getChats(): Collection
+    {
+        return $this->chats;
+    }
 
+    public function addChat(Chat $chat): static
+    {
+        if (!$this->chats->contains($chat)) {
+            $this->chats->add($chat);
+            $chat->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChat(Chat $chat): static
+    {
+        if ($this->chats->removeElement($chat)) {
+            $chat->removeUser($this);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getAutorisedInProjects(): Collection
+    {
+        return $this->autorisedInProjects;
+    }
+
+    public function addAutorisedInProject(Project $autorisedInProject): static
+    {
+        if (!$this->autorisedInProjects->contains($autorisedInProject)) {
+            $this->autorisedInProjects->add($autorisedInProject);
+            $autorisedInProject->addUserAuthorised($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAutorisedInProject(Project $autorisedInProject): static
+    {
+        if ($this->autorisedInProjects->removeElement($autorisedInProject)) {
+            $autorisedInProject->removeUserAuthorised($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setAuthorUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getAuthorUser() === $this) {
+                $message->setAuthorUser(null);
+            }
+        }
+
+        return $this;
+    }
 
 
 }

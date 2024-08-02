@@ -567,12 +567,12 @@ class ApiClientController extends AbstractController
 
     }
 
-    #[Route('/interface/project/{id}', name: 'interface_client', methods: 'get')]
-    public function getDataForClientInterface($id, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
+    #[Route('/interface/{uuid}', name: 'interface_client', methods: 'get')]
+    public function getDataForClientInterface($uuid, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
     {
         try {
 
-            $project = $projectRepository->find($id);
+            $project = $projectRepository->findOneBy(['uuid'=>$uuid]);
             if (!$project) {
                 return $this->json([
                     'state' => 'NDF',
@@ -586,7 +586,6 @@ class ApiClientController extends AbstractController
                 'state' => 'OK',
                 'value' => [
                     'project' => [
-                        'id' => $project->getId(),
                         'startDate' => $project->getStartDate(),
                         'endDate' => $project->getEndDate(),
                         'price' => $project->getTotalPrice(),
@@ -657,7 +656,7 @@ class ApiClientController extends AbstractController
             $manager->flush();
             return $this->json([
                 'state' => 'OK',
-                'value'=>$this->getDataClient($client)
+                'value' => $this->getDataClient($client)
             ]);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
@@ -672,9 +671,58 @@ class ApiClientController extends AbstractController
 
     }
 
+    #[Route('/api/search/client', name: 'search_client', methods: 'get')]
+    public function searchClients(Request $request, ClientRepository $clientRepository): Response
+    {
+        try {
+            $datum = json_decode($request->getContent(), true);
+
+            $data = [];
+            if ($datum) {
+                if (isset($datum['searchTerm']) && !empty(trim($datum['searchTerm']))) {
+                    $clients = $clientRepository->searchAcrossTables($datum['searchTerm']);
+                    $dataToReturn = [];
+                    foreach ($clients as $client) {
+                        if ($client->getState() != 'deleted') {
+                            $dataToReturn[] = [
+                                "id" => $client->getId(),
+                                "firstName" => $client->getFirstName(),
+                                "lastName" => $client->getLastName(),
+                                "online" => $client->isOnline(),
+                                "projectsNumber"=>count($client->getProjects()),
+                                'date'=>$client->getCreatedAt()->format('Y-m-d'),
+                            ];
+                        }
+
+                    }
+                    return $this->json([
+                        'state' => 'OK',
+                        'value' => $dataToReturn
+                    ]);
+                }
+            }
+
+            return $this->json([
+                'state' => 'ND'
+            ]);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+    }
+
     public function getDataClient($client)
     {
-
+$links = [];
+foreach ($client->getProjects() as $project) {
+    $links[] = 'interface/'.$project->getUuid();
+}
         return [
             "id" => $client->getId(),
             "firstName" => $client->getFirstName(),
@@ -686,7 +734,8 @@ class ApiClientController extends AbstractController
             "phone" => $client->getPhone(),
             "createdAt" => $client->getCreatedAt(),
             "state" => $client->getState(),
-            "online"=>$client->isOnline()
+            "online" => $client->isOnline(),
+            'links'=>$links
 
         ];
     }

@@ -8,15 +8,6 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/test', name: 'app_test')]
-    public function test()
-    {
-        $string = ['fraise', 'linux'];
-        dump(implode(',', $string));
-        dd(empty($string));
-
-
-    }
 
 
     #[Route('/doc', name: 'all_routes', methods: 'get')]
@@ -111,13 +102,20 @@ class HomeController extends AbstractController
                     'parametres a mettre dans le body' => "project_id",
                     'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour enlever le projet des projets courrents ",
                     'need token ? ' => true],
+                [
+                    'edit note of project' => '/api/project/id/note',
+                    'methode' => 'put',
+                    "renvoie" => "renvoie les notes",
+                    'parametres a mettre dans le body' => "names ( dico avec les clés de 0 à 4 contenant les noms) et content ( dico de clé 0 à 5 cpontenant le contenu)",
+                    'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour enlever le projet des projets courrents ",
+                    'need token ? ' => true],
 
             ],
-            "client Interface"=>[
+            "client Interface" => [
                 [
-                    'get data of project' => '/interface/project/{id}',
+                    'get data of project' => '/interface/{uuid}',
                     'methode' => 'get',
-                    "renvoie" => "project(id,startDate,endDAte,price,maintenancePercentage), client(id,firstName,lastname) ",
+                    "renvoie" => "project(id,startDate,endDAte,price,maintenancePercentage), client(id,firstName,lastname)  avoir le chat et les messages",
                     'parametres a mettre dans le body' => "nothing",
                     'utilisation' => "nothin",
                     'need token ? ' => false],
@@ -156,7 +154,7 @@ class HomeController extends AbstractController
                     'edit project' => '/api/project/edit/{id du client}',
                     'methode' => 'put',
                     "renvoie" => "le projet",
-                    'parametres a mettre dans le body' => "name(*),figmaLink,githubLink,state,startDate,endDate,totalPrice,client_id,estimatedPrice,isPaying,database,maquette,maintenance,type,framework,options,devices,needTemplate,maintenancePercentage",
+                    'parametres a mettre dans le body' => "name(*),figmaLink,githubLink,state,startDate,endDate,totalPrice,client_id,estimatedPrice,isPaying,database,maquette,maintenance,type,framework,options,devices,maintenancePercentage",
                     'utilisation' => "passer en parametre l'id du project et mettre dans le body les parametre a changer",
                     'need token ? ' => true],
                 [
@@ -172,6 +170,13 @@ class HomeController extends AbstractController
                     "renvoie" => "ok si l'action a bien été faite",
                     'parametres a mettre dans le body' => null,
                     'utilisation' => "passer en parametre l'id du project pour supprimer vraiment la fiche project",
+                    'need token ? ' => true],
+                [
+                    'editer les notes du projet' => '/api/project/{id du projet}/note',
+                    'methode' => 'put',
+                    "renvoie" => "renvoie les notes modifiés",
+                    'parametres a mettre dans le body' => "notes,remembers ",
+                    'utilisation' => "Créer une note, la modifier ou la renvoie",
                     'need token ? ' => true],
             ],
             'user' => [
@@ -263,15 +268,68 @@ class HomeController extends AbstractController
             ],
             'note' => [
                 [
-                    'gerer les note' => '/api/note',
+                    'edit les note' => '/api/edit/note',
                     'methode' => 'post',
-                    "renvoie" => "renvoie la note soit vide soit pleine",
-                    'parametres a mettre dans le body' => "notes,remembers (facultatif si contenu elle sera modifier sinon elle sera renvoyé tel quel)",
+                    "renvoie" => "renvoie la note modifié",
+                    'parametres a mettre dans le body' => "notes,remembers ",
                     'utilisation' => "Créer une note, la modifier ou la renvoie",
+                    'need token ? ' => true],
+                [
+                    'get les note' => '/api/note',
+                    'methode' => 'get',
+                    "renvoie" => "renvoie la note soit vide soit pleine",
+                    'parametres a mettre dans le body' => "nothin",
+                    'utilisation' => "renvoie la note",
                     'need token ? ' => true],
 
 
             ],
+            "search" => [
+                [
+                    'search project' => '/api/search/project',
+                    'methode' => 'get',
+                    "renvoie" => "renvoie les projets trouvés",
+                    'parametres a mettre dans le body' => "searchTerm",
+                    'utilisation' => "chercher les projets",
+                    'need token ? ' => true],
+                [
+                    'search client' => '/api/search/client',
+                    'methode' => 'get',
+                    "renvoie" => "renvoie les clients trouvés",
+                    'parametres a mettre dans le body' => "searchTerm",
+                    'utilisation' => "chercher les clients",
+                    'need token ? ' => true],
+            ],
+            "message" => [
+                [
+                    'gets all chats' => '/api/chats',
+                    'methode' => 'get',
+                    "renvoie" => "renvoie les chats dans lequels vous vous trouvez",
+                    'parametres a mettre dans le body' => "nothin",
+                    'utilisation' => "avoir les chats",
+                    'need token ? ' => true],
+                [
+                    'get one chat' => '/api/chat/{id du chat}',
+                    'methode' => 'get',
+                    "renvoie" => "renvoie le chat avec les données du client et les messages",
+                    'parametres a mettre dans le body' => "nothing",
+                    'utilisation' => "avoir une conversation",
+                    'need token ? ' => true],
+                [
+                    'envoyer un message depuis l interface client' => '/message',
+                    'methode' => 'post',
+                    "renvoie" => "ok",
+                    'parametres a mettre dans le body' => "id (uuid du projet) , content",
+                    'utilisation' => "envoyer un message",
+                    'need token ? ' => false],
+                [
+                    'envoyer un message depuis l app' => '/api/message',
+                    'methode' => 'post',
+                    "renvoie" => "ok",
+                    'parametres a mettre dans le body' => "id (id du projet) , content",
+                    'utilisation' => "envoyer un message",
+                    'need token ? ' => false],
+            ]
 
         ]);
     }

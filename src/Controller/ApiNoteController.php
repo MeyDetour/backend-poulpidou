@@ -23,12 +23,12 @@ class ApiNoteController extends AbstractController
         $this->logService = $logService;
     }
 
-    #[Route('/api/note', name: 'new_note', methods: 'post')]
-    public function index(Request $request, EntityManagerInterface $manager, NoteRepository $repository): Response
+    #[Route('/api/edit/note', name: 'new_note', methods: 'post')]
+    public function edit(Request $request, EntityManagerInterface $manager, NoteRepository $repository): Response
     {
         try {
             $note = $repository->findOneBy(['owner' => $this->getUser()]);
-            if(!$note){
+            if (!$note) {
                 $note = new Note();
                 $note->setOwner($this->getUser());
                 $note->setNotes("");
@@ -59,6 +59,33 @@ class ApiNoteController extends AbstractController
                     'value' =>
                         $this->getDataNote($note)
                 ]);
+
+            }
+            return $this->json([
+                'state' => 'ND',
+            ]);
+        } catch (\Exception $exception) {
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+    }
+
+    #[Route('/api/note', name: 'get_note', methods: 'get')]
+    public function index(Request $request, EntityManagerInterface $manager, NoteRepository $repository): Response
+    {
+        try {
+            $note = $repository->findOneBy(['owner' => $this->getUser()]);
+            if (!$note) {
+                $note = new Note();
+                $note->setOwner($this->getUser());
+                $note->setNotes("");
+                $note->setRemembers("");
+
+                $manager->persist($note);
+                $manager->flush();
 
             }
             return $this->json([
