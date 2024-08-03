@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Message;
 use App\Repository\ChatRepository;
 use App\Repository\ClientRepository;
+use App\Repository\MessageRepository;
 use App\Repository\ProjectRepository;
+use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,11 +20,13 @@ class ApiMessageController extends AbstractController
 {
     private LogService $logService;
     private EntityManagerInterface $entityManager;
+    private DateService $dateService;
 
-    public function __construct(LogService $logService, EntityManagerInterface $entityManager)
+    public function __construct(LogService $logService,DateService $dateService ,EntityManagerInterface $entityManager)
     {
         $this->logService = $logService;
         $this->entityManager = $entityManager;
+        $this->dateService = $dateService;
     }
 
     #[Route('/api/chats', name: 'api_get_chats', methods: ['get'])]
@@ -110,7 +114,7 @@ class ApiMessageController extends AbstractController
             $formattedMessages[] = [
                 'id' => $message->getId(),
                 'content' => $message->getContent(),
-                'datetime' => $message->getCreatedAt()->format('Y-m-d H:i'),
+                'datetime' => $this->dateService->formateDateWithHour( $message->getCreatedAt()),
                 'author' => $authorData,
                 'type' => $type
             ];
@@ -121,15 +125,15 @@ class ApiMessageController extends AbstractController
             'value' => [
                 'id' => $chat->getId(),
                 'name' => $chat->getName(),
-                'date' => $chat->getCreatedAt()->format('d-m-Y'),
-                'project_id'=>$chat->getProject()->getId(),
-                'project_uuid'=>$chat->getProject()->getUuid(),
+                'date' => $this->dateService->formateDate( $chat->getCreatedAt()),
+                'project_id' => $chat->getProject()->getId(),
+                'project_uuid' => $chat->getProject()->getUuid(),
                 'client' => [
                     'id' => $client->getId(),
                     'firstName' => $client->getFirstName(),
                     'lastName' => $client->getLastName(),
                     'online' => $client->isOnline(),
-                    'date' => $client->getCreatedAt()->format('d-m-Y'),
+                    'date' => $this->dateService->formateDate( $client->getCreatedAt()),
                     'projectNumber' => count($client->getProjects()),
                 ],
                 'messages' => $formattedMessages
@@ -148,7 +152,7 @@ class ApiMessageController extends AbstractController
             'value' => [
                 'id' => $chat->getId(),
                 'name' => $chat->getName(),
-                'date' => $chat->getCreatedAt()->format('d-m-Y'),
+                'date' => $this->dateService->formateDate( $chat->getCreatedAt()),
                 'client' => [
                     'id' => $chat->getClient()->getId(),
                     'firstName' => $chat->getClient()->getFirstName(),
@@ -169,7 +173,7 @@ class ApiMessageController extends AbstractController
             if ($data) {
 
                 //verifying if needed data are set
-                if (!isset($data['id'])|| empty(trim($data['id']))) {
+                if (!isset($data['id']) || empty(trim($data['id']))) {
                     return $this->json([
                         'state' => 'NED',
                         'value' => 'id'
@@ -262,7 +266,8 @@ class ApiMessageController extends AbstractController
                         'state' => 'NDF',
                         'value' => 'project'
                     ]);
-                } if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
+                }
+                if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                     return $this->json([
                         'state' => 'FO',
                         'value' => 'project'
@@ -297,7 +302,56 @@ class ApiMessageController extends AbstractController
 
     }
 
-    public function newMessage($message, $content, $project)
+    #[Route('/api/delete/{id}/message', name: 'api_delete_message', methods: 'get')]
+    public function removeMessage(Request $request, EntityManagerInterface $manager, $id, MessageRepository $messageRepository): Response
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+
+            $message = $messageRepository->find($id);
+            if (!$message) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'message'
+                ]);
+            }
+            if ($message->getChat()->getProject()->getOwner() != $this->getUser() && !$message->getChat()->getProject()->hasUserInUserAuthorised($this->getUser())) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if ($message->getAuthorUser() != $this->getUser()) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'message'
+                ]);
+            }
+            $array = $message->getChat()->getMessages();
+            $messagesArray = $array->toArray();
+            if (end($messagesArray) != $message) {
+                return $this->json([
+                    'state' => 'ASFO',
+                    'value' => 'message'
+                ]);
+            }
+            $manager->remove($message);
+            $manager->flush();
+            return $this->json([
+                'state' => 'OK',
+            ]);
+
+
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            return $this->json(['state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
+        }
+
+    }
+
+    public
+    function newMessage($message, $content, $project)
     {
         try {
             $message->setCreatedAt(new \DateTimeImmutable());

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Entity\Setting;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -86,11 +87,17 @@ class ApiRegisterController extends AbstractController
         $this->entityManager->flush();
 
 
+        $setting = new Setting();
+        $setting->setOwner($this->getUser());
+        $setting->setDateFormat('UE');
+        $setting->setPayment('');
+
         $note = new Note();
         $note->setOwner($this->getUser());
         $note->setNotes("");
         $note->setRemembers("");
         $this->entityManager->persist($note);
+        $this->entityManager->persist($setting);
         $this->entityManager->flush();
         return $this->json([
             'state' => 'OK'

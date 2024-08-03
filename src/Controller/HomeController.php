@@ -329,6 +329,15 @@ class HomeController extends AbstractController
                     'parametres a mettre dans le body' => "id (id du projet) , content",
                     'utilisation' => "envoyer un message",
                     'need token ? ' => false],
+            ],
+            "setting"=>[
+                [
+                    "recuperer les parametre de l'utilisateur " => '/api/message',
+                    'methode' => 'post',
+                    "renvoie" => "ok",
+                    'parametres a mettre dans le body' => "id (id du projet) , content",
+                    'utilisation' => "envoyer un message",
+                    'need token ? ' => false],
             ]
 
         ]);

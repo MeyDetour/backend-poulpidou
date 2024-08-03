@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Logs;
 use App\Repository\LogsRepository;
+use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,10 +14,12 @@ use Symfony\Component\Routing\Attribute\Route;
 class ApiLogController extends AbstractController
 {
     private LogService $logService;
+    private DateService $dateService;
 
-    public function __construct(LogService $logService)
+    public function __construct(LogService $logService, DateService $dateService)
     {
         $this->logService = $logService;
+        $this->dateService = $dateService;
     }
 
     #[Route('/api/logs', name: 'getLogs',methods: 'get')]
@@ -29,7 +32,7 @@ class ApiLogController extends AbstractController
             foreach($repository->findBy(['author' =>$this->getUser()], ['date' => 'DESC']) as $log){
                 $data[]=[
                     'id' => $log->getId(),
-                    'date' => $log->getDate()->format('d-m-Y H:i:s'),
+                    'date' => $this->dateService->formateDateWithHour( $log->getDate()),
                     'author' => $log->getAuthor()->getEmail(),
                     'message' => ucfirst($log->getMessage()) ,
                     'error'=>$log->getError(),

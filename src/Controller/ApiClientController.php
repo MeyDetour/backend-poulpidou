@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Repository\ClientRepository;
 use App\Repository\ProjectRepository;
+use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,11 +18,13 @@ class ApiClientController extends AbstractController
 
     private EntityManagerInterface $entityManager;
     private LogService $logService;
+    private DateService $dateService;
 
-    public function __construct(EntityManagerInterface $entityManager, LogService $logService)
+    public function __construct(EntityManagerInterface $entityManager, DateService $dateService ,LogService $logService)
     {
         $this->entityManager = $entityManager;
         $this->logService = $logService;
+        $this->dateService = $dateService;
     }
 
     #[Route('/api/client/new', name: 'new_client', methods: 'post')]
@@ -586,8 +589,8 @@ class ApiClientController extends AbstractController
                 'state' => 'OK',
                 'value' => [
                     'project' => [
-                        'startDate' => $project->getStartDate(),
-                        'endDate' => $project->getEndDate(),
+                        'startDate' =>$this->dateService->formateDate( $project->getStartDate()),
+                        'endDate' => $this->dateService->formateDate( $project->getEndDate()),
                         'price' => $project->getTotalPrice(),
                         'maintenancePercentage' => $project->getMaintenancePercentage()
 
@@ -690,7 +693,7 @@ class ApiClientController extends AbstractController
                                 "lastName" => $client->getLastName(),
                                 "online" => $client->isOnline(),
                                 "projectsNumber"=>count($client->getProjects()),
-                                'date'=>$client->getCreatedAt()->format('Y-m-d'),
+                                'date'=>$this->dateService->formateDate( $client->getCreatedAt()),
                             ];
                         }
 
@@ -732,7 +735,7 @@ foreach ($client->getProjects() as $project) {
             "location" => $client->getLocation(),
             "mail" => $client->getMail(),
             "phone" => $client->getPhone(),
-            "createdAt" => $client->getCreatedAt(),
+            "createdAt" => $this->dateService->formateDate( $client->getCreatedAt()),
             "state" => $client->getState(),
             "online" => $client->isOnline(),
             'links'=>$links
@@ -746,8 +749,8 @@ foreach ($client->getProjects() as $project) {
         return [
             'id' => $project->getId(),
             'name' => $project->getName(),
-            'startDate' => $project->getStartDate(),
-            'endDate' => $project->getEndDate(),
+            'startDate' => $this->dateService->formateDate( $project->getStartDate()),
+            'endDate' =>$this->dateService->formateDate(  $project->getEndDate()),
         ];
     }
 

@@ -6,6 +6,7 @@ use App\Entity\Chat;
 use App\Entity\Project;
 use App\Repository\ClientRepository;
 use App\Repository\ProjectRepository;
+use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ApiProjectController extends AbstractController
 {
     private LogService $logService;
+    private DateService $dateService;
     private array $listeOfFrameworks = ["symfony",
         "django",
         "react",
@@ -40,9 +42,10 @@ class ApiProjectController extends AbstractController
         "printer"];
 
 
-    public function __construct(LogService $logService)
+    public function __construct(LogService $logService, DateService $dateService)
     {
         $this->logService = $logService;
+        $this->dateService = $dateService;
     }
 
     #[Route('/api/project/new', name: 'app_api_project', methods: 'post')]
@@ -116,11 +119,25 @@ class ApiProjectController extends AbstractController
                 }
 
                 if (isset($data['identity']['startDate']) && !empty(trim($data['identity']['startDate']))) {
-                    $project->setStartDate($data['identity']['startDate']);
+
+                    $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['startDate']);
+                    if (!$searchDate) {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'startDate'
+                        ]);
+                    }
+                    $project->setStartDate($searchDate);
                 }
-                if (isset($data['end_date']) && !empty(trim($data['end_date']))) {
-                    $project->setEndDate($data['end_date']);
-                }
+                if (isset($data['identity']['endDate']) && !empty(trim($data['identity']['endDate']))) {
+                    $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['startDateendDate']);
+                    if (!$searchDate) {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'endDate'
+                        ]);
+                    }
+                    $project->setStartDate($searchDate);          }
                 if (isset($data['totalPrice']) && !empty(trim($data['totalPrice']))) {
                     $isValid = $data['totalPrice'] > 0 && is_numeric($data['total_price']);
                     if (!$isValid) {
@@ -232,7 +249,7 @@ class ApiProjectController extends AbstractController
                     $project->setDevice(implode(',', $liste));
 
                 }
-
+                $project->setUuid(uniqid());
                 $project->setCreatedAt(new \DateTimeImmutable());
                 $project->setOwner($this->getUser());
                 $project->setState('active');
@@ -803,8 +820,8 @@ class ApiProjectController extends AbstractController
                     "name" => $project->getName(),
                     "figmaLink" => $project->getFigmaLink(),
                     "githubLink" => $project->getGithubLink(),
-                    "startDate" => $project->getStartDate(),
-                    "endDate" => $project->getEndDate(),
+                    "startDate" => $this->dateService->formateDate($project->getStartDate()),
+                    "endDate" => $this->dateService->formateDate($project->getEndDate()),
                     "client" => $client,
                     "chatName" => $chat,
 
@@ -851,7 +868,7 @@ class ApiProjectController extends AbstractController
                     'id' => $project->getClient()->getId(),
                     'firstName' => $project->getClient()->getFirstName(),
                     'lastName' => $project->getClient()->getLastName(),
-                    'date' => $project->getClient()->getCreatedAt()->format('Y-m-d'),
+                    'date' => $this->dateService->formateDate($project->getClient()->getCreatedAt()),
                 ];
 
             }

@@ -7,6 +7,7 @@ use App\Entity\Invoice;
 use App\Repository\ClientRepository;
 use App\Repository\InvoiceRepository;
 use App\Repository\ProjectRepository;
+use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,10 +18,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class ApiInvoiceController extends AbstractController
 {
     private LogService $logService;
-
-    public function __construct(LogService $logService)
+private DateService $dateService;
+    public function __construct(LogService $logService,     DateService $dateService)
     {
         $this->logService = $logService;
+        $this->dateService = $dateService;
     }
 
     #[Route('/api/invoice/new', name: 'new_invoice', methods: 'post')]
@@ -275,7 +277,7 @@ class ApiInvoiceController extends AbstractController
             'id' => $invoice->getId(),
             'price' => $invoice->getPrice(),
             'description' => $invoice->getDescription(),
-            'date' => $invoice->getDate(),
+            'date' => $this->dateService->formateDate( $invoice->getDate()),
             'project_id' => $invoice->getProject()->getId(),
             'client'=>[
                 "firstName" => $client->getFirstName(),

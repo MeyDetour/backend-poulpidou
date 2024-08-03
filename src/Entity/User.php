@@ -110,6 +110,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'authorUser')]
     private Collection $messages;
 
+    #[ORM\OneToOne(mappedBy: 'owner', cascade: ['persist', 'remove'])]
+    private ?Setting $setting = null;
+
 
     public function __construct()
     {
@@ -537,6 +540,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $message->setAuthorUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSetting(): ?Setting
+    {
+        return $this->setting;
+    }
+
+    public function setSetting(Setting $setting): static
+    {
+        // set the owning side of the relation if necessary
+        if ($setting->getOwner() !== $this) {
+            $setting->setOwner($this);
+        }
+
+        $this->setting = $setting;
 
         return $this;
     }

@@ -40,6 +40,7 @@ class Chat
      * @var Collection<int, Message>
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'chat')]
+    #[ORM\orderBy(['createdAt' => 'DESC'])]
     private Collection $messages;
 
     public function __construct()

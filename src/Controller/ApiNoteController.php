@@ -18,6 +18,7 @@ class ApiNoteController extends AbstractController
 {
     private LogService $logService;
 
+
     public function __construct(LogService $logService)
     {
         $this->logService = $logService;

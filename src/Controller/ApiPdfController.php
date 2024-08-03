@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\PdfType;
 use App\Repository\PdfRepository;
 use App\Repository\ProjectRepository;
+use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
@@ -17,11 +18,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ApiPdfController extends AbstractController
 {
+    private DateService $dateService;
     private LogService $logService;
 
-    public function __construct(LogService $logService)
+    public function __construct(LogService $logService, DateService $dateService)
     {
         $this->logService = $logService;
+        $this->dateService = $dateService;
     }
 
     #[Route('/upload/pdf', name: 'upload_pdf_without_token', methods: ['post'])]
@@ -299,7 +302,7 @@ class ApiPdfController extends AbstractController
             'clientTVA' => 'xxx',
 
             'invoiceNumber' => '25625',
-            'invoiceDate' => '01/01/2017',
+            'invoiceDate' => '01/01/2017', /*$this->dateService->formateDate(*/
             'projectName' => 'F&B',
 
             "details" => [
