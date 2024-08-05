@@ -91,6 +91,11 @@ class ApiRegisterController extends AbstractController
         $setting->setOwner($this->getUser());
         $setting->setDateFormat('UE');
         $setting->setPayment('');
+        $setting->setDelayDays(30);
+        $setting->setFreeMaintenance(true);
+        $setting->setInstallmentPayments(true);
+        $setting->setInterfaceLangage('FR');
+
 
         $note = new Note();
         $note->setOwner($this->getUser());

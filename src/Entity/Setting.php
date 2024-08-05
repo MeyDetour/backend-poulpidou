@@ -24,6 +24,18 @@ class Setting
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $payment = null;
 
+    #[ORM\Column]
+    private ?int $delayDays = null;
+
+    #[ORM\Column]
+    private ?bool $installmentPayments = null;
+
+    #[ORM\Column]
+    private ?bool $freeMaintenance = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $interfaceLangage = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +73,54 @@ class Setting
     public function setPayment(?string $payment): static
     {
         $this->payment = $payment;
+
+        return $this;
+    }
+
+    public function getDelayDays(): ?int
+    {
+        return $this->delayDays;
+    }
+
+    public function setDelayDays(int $delayDays): static
+    {
+        $this->delayDays = $delayDays;
+
+        return $this;
+    }
+
+    public function isInstallmentPayments(): ?bool
+    {
+        return $this->installmentPayments;
+    }
+
+    public function setInstallmentPayments(bool $installmentPayments): static
+    {
+        $this->installmentPayments = $installmentPayments;
+
+        return $this;
+    }
+
+    public function isFreeMaintenance(): ?bool
+    {
+        return $this->freeMaintenance;
+    }
+
+    public function setFreeMaintenance(bool $freeMaintenance): static
+    {
+        $this->freeMaintenance = $freeMaintenance;
+
+        return $this;
+    }
+
+    public function getInterfaceLangage(): ?string
+    {
+        return $this->interfaceLangage;
+    }
+
+    public function setInterfaceLangage(string $interfaceLangage): static
+    {
+        $this->interfaceLangage = $interfaceLangage;
 
         return $this;
     }

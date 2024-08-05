@@ -12,9 +12,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ApiSettingController extends AbstractController
-{ private $associationKey = [
-    "UE", "SUI", "PB", "US", "AS", "ISO"
-];
+{
+    private $associationKey = [
+        "UE", "SUI", "PB", "US", "AS", "ISO"
+    ];
+    private $associationLangageKey = [
+        "FR","AG"
+    ];  private $associationPayementKey = [
+        "CHEQUE","CASH","BANKTRANSFER"
+    ];
     private LogService $logService;
     private EntityManagerInterface $entityManager;
 
@@ -31,7 +37,8 @@ class ApiSettingController extends AbstractController
             $settings = $this->getUser()->getSetting();
 
             if (!$settings) {
-                $this->createDefaultSettings();
+                $settings = $this->createDefaultSettings();
+
             }
             return $this->json(['state' => 'OK',
                 'value' => $this->getData($settings)]);
@@ -52,23 +59,75 @@ class ApiSettingController extends AbstractController
 
                 $settings = $this->getUser()->getSetting();
                 if (!$settings) {
-                    $this->createDefaultSettings();
+                    $settings = $this->createDefaultSettings();
+
                 }
                 if (isset($data['formatDate']) && !empty(trim($data['formatDate']))) {
                     if (!in_array($data['formatDate'], $this->associationKey)) {
-                     return $this->json([
-                         'state' => 'IDT',
-                         'value'=>'formatDate',
-                     ]);
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'formatDate',
+                        ]);
                     }
                     $settings->setDateFormat($data['formatDate']);
                 }
+                if (isset($data['interfaceLangage']) && !empty(trim($data['interfaceLangage']))) {
+                    if (!in_array($data['interfaceLangage'], $this->associationLangageKey)) {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'interfaceLangage',
+                        ]);
+                    }
+                    $settings->setInterfaceLangage($data['interfaceLangage']);
+                }
                 if (isset($data['payment']) && gettype($data['payment']) == 'array') {
-
+                    foreach ($data['payment'] as $pay) {
+                            if(!in_array($pay, $this->associationPayementKey)) {
+                                return $this->json([
+                                    'state' => 'IDT',
+                                    'value' => 'payment',
+                                ]);
+                            }
+                    }
                     $settings->setPayment(implode(',', $data['payment']));
                 }
+                if (isset($data['delayDays'])) {
+                    if (!is_numeric($data['delayDays']) || !in_array($data['delayDays'], [30, 50, 60])) {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'formatDate',
+                        ]);
+                    }
 
-    $entityManager->persist($settings);
+
+                    $settings->setDelayDays($data['delayDays']);
+                }
+                if (isset($data['installmentPayments'])) {
+
+                    if (!is_bool($data['installmentPayments'])) {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'installmentPayments'
+                        ]);
+
+                    }
+
+                    $settings->setInstallmentPayments($data['installmentPayments']);
+                }
+                if (isset($data['freeMaintenance'])) {
+
+                    if (!is_bool($data['freeMaintenance'])) {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'freeMaintenance'
+                        ]);
+
+                    }
+
+                    $settings->setFreeMaintenance($data['freeMaintenance']);
+                }
+
+                $entityManager->persist($settings);
                 $entityManager->flush();
                 return $this->json(['state' => 'OK',
 
@@ -86,20 +145,35 @@ class ApiSettingController extends AbstractController
 
     public function createDefaultSettings()
     {
-        $setting = new Setting();
-        $setting->setOwner($this->getUser());
-        $setting->setDateFormat('UE');
-        $setting->setPayment('');
-        $this->entityManager->persist($setting);
-        $this->entityManager->flush();
+        try {
+            $setting = new Setting();
+            $setting->setOwner($this->getUser());
+            $setting->setDateFormat('UE');
+            $setting->setPayment('');
+            $setting->setDelayDays(30);
+            $setting->setFreeMaintenance(true);
+            $setting->setInstallmentPayments(true);
+            $setting->setInterfaceLangage('FR');
+            $this->entityManager->persist($setting);
+            $this->entityManager->flush();
+            return $setting;
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            return $this->json(['state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
+        }
     }
 
     public function getData($setting)
     {
-
+        $payments = explode(',', $setting->getPayment());
         return [
             'formatDate' => $setting->getDateFormat(),
-            'payment' => $setting->getPayment(),
+            'payments' => $payments,
+            'delayDays' => $setting->getDelayDays(),
+            'installmentPayments' => $setting->isInstallmentPayments(),
+            'freeMaintenance' => $setting->isFreeMaintenance(),
+            'interfaceLangage' => $setting->getInterfaceLangage()
         ];
     }
 }
