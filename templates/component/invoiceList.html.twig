@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}COMPONENT SETTINGS{% endblock %}
+
+{% block body %}
+    <div class="invoiceListContainer">
+
+        <div class="titleContainer ">
+            <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14.4375 15.125H23.375M9.625 15.125H10.3125M9.625 10.3125H10.3125M9.625 19.9375H10.3125M23.375 19.9375H22M14.4375 19.9375H18.5625M23.375 10.3125H19.25M14.4375 10.3125H15.8125M28.875 9.625V8.75875C28.875 7.11837 28.875 6.2975 28.6577 5.6375C28.4605 5.02457 28.1245 4.4654 27.6759 4.00347C27.2273 3.54154 26.6783 3.1893 26.0714 2.97413C25.4279 2.75 24.6317 2.75 23.0381 2.75H9.96187C8.36825 2.75 7.57213 2.75 6.92863 2.97413C6.32195 3.18925 5.77302 3.54132 5.32446 4.00299C4.87591 4.46465 4.53981 5.0235 4.34225 5.63612C4.125 6.29887 4.125 7.11837 4.125 8.75875V20.625M28.875 15.125V28.0143C28.875 29.194 27.5206 29.821 26.664 29.0373C26.4237 28.8152 26.1085 28.6919 25.7812 28.6919C25.454 28.6919 25.1388 28.8152 24.8985 29.0373L24.2344 29.645C23.8133 30.0343 23.261 30.2506 22.6875 30.2506C22.114 30.2506 21.5617 30.0343 21.1406 29.645C20.7196 29.2557 20.1672 29.0394 19.5938 29.0394C19.0203 29.0394 18.4679 29.2557 18.0469 29.645C17.6258 30.0343 17.0735 30.2506 16.5 30.2506C15.9265 30.2506 15.3742 30.0343 14.9531 29.645C14.5321 29.2557 13.9797 29.0394 13.4062 29.0394C12.8328 29.0394 12.2804 29.2557 11.8594 29.645C11.4383 30.0343 10.886 30.2506 10.3125 30.2506C9.73903 30.2506 9.18666 30.0343 8.76562 29.645L8.1015 29.0373C7.86117 28.8152 7.54597 28.6919 7.21875 28.6919C6.89153 28.6919 6.57633 28.8152 6.336 29.0373C5.47937 29.821 4.125 29.194 4.125 28.0143V26.125"
+                      stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <h2>Invoices List</h2>
+        </div>
+        <table>
+
+            <thead>
+            <tr>
+                <th scope="col">Invoice #</th>
+                <th scope="col">Date</th>
+                <th scope="col">Client Name</th>
+                <th scope="col">Total Price</th>
+                <th scope="col">Titles</th>
+                <th scope="col"></th>
+                <th class="alignEnd" scope="col">Pay</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for invoice in invoices %}
+                <tr>
+                    <th scope="row" class="alignCenter">
+                        <input type="checkbox"> {#Icon to edit or delete invoice#}
+                      <span>#{{ invoice.number }}</span>  </th>
+                    <td ><span>{{ invoice.date }}</span></td>
+                    <td ><span>{{ invoice.client.firstName }} {{ invoice.client.lastName }}</span></td>
+                    <td ><span>{{ invoice.price }} €</span></td>
+                    <td ><span>{{ invoice.nbTitles }} titles</span></td>
+                    <td></td>
+                    <td class="alignEnd"> <span class=" {{ invoice.payed ? 'payed':'unpayed' }}">{{ invoice.payed ? 'Payed':'Unpayed' }}</span></td>
+                </tr>
+            {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+{% endblock %}

@@ -82,7 +82,7 @@ private DateService $dateService;
 
                 $invoice->setPayed(false);
 
-
+    $invoice->setNumber(uniqid());
                 $invoice->setOwner($this->getUser());
                 $manager->persist($invoice);
                 $manager->flush();
@@ -279,6 +279,7 @@ private DateService $dateService;
             'description' => $invoice->getDescription(),
             'date' => $this->dateService->formateDate( $invoice->getDate()),
             'project_id' => $invoice->getProject()->getId(),
+            'number'=>$invoice->getNumber(),
             'client'=>[
                 "firstName" => $client->getFirstName(),
                 "lastName" => $client->getLastName(),

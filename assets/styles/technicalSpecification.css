@@ -1,0 +1,57 @@
+.fr-howToWriteTechnicalSpecificationContainer {
+    height: 90vh;
+    width: 100vw;
+
+    background: var(--white-grey-background);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    border-radius: 37px 37px 0px 0px;
+    padding: 17px;
+}
+
+
+.fr-howToWriteTechnicalSpecificationContainer .leftPanel {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    font-size: 14px;
+    align-items: start;
+}
+
+.fr-howToWriteTechnicalSpecificationContainer .leftPanel .sectionContainer {
+  display: flex; flex-direction: column;
+    justify-content: space-around;
+    width: 40%;
+    height: 100%;
+
+}
+.fr-howToWriteTechnicalSpecificationContainer .leftPanel .section {
+    width: 100%;
+
+}
+
+.fr-howToWriteTechnicalSpecificationContainer .leftPanel .section span {
+    font-weight: bold !important;
+    font-size: 20px;
+}
+
+.fr-howToWriteTechnicalSpecificationContainer .rightPanel {
+    width: 30%;
+
+    background: var(--bleu3);
+
+    border-radius: 30px;
+    padding: 20px;
+
+    overflow-y: scroll;
+}

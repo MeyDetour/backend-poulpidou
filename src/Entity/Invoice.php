@@ -34,6 +34,9 @@ class Invoice
     #[ORM\Column(nullable: true)]
     private ?bool $payed = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $number = null;
+
 
 
     public function getId(): ?int
@@ -109,6 +112,18 @@ class Invoice
     public function setPayed(?bool $payed): static
     {
         $this->payed = $payed;
+
+        return $this;
+    }
+
+    public function getNumber(): ?string
+    {
+        return $this->number;
+    }
+
+    public function setNumber(string $number): static
+    {
+        $this->number = $number;
 
         return $this;
     }

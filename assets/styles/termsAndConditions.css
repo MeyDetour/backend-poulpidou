@@ -1,0 +1,51 @@
+.termsAndConditionsOfPayementContainer {
+    height: 90vh;
+    width: 784px;
+
+    margin-top: 5vh;
+
+    border-radius: 10px;
+    border: 1px solid var(--bleu2);
+
+    color: var(--grey);
+    font-size: 16px;
+
+    clip-path: border-box;
+
+}
+
+.termsAndConditionsOfPayementContainer .title {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--bleu4);
+
+    border-radius: 0px 0px 7px 7px;
+    border: 1px solid var(--bleu2);
+    padding: 17px;
+}
+
+.termsAndConditionsOfPayementContainer .title h3 {
+    font-size: 16px;
+    font-weight: bold !important;
+}
+
+.termsAndConditionsOfPayementContainer .body {
+    height: 90%;
+
+    padding: 25px 50px;
+
+    overflow-y: scroll;
+}
+
+.termsAndConditionsOfPayementContainer .body .section {
+
+}
+
+.termsAndConditionsOfPayementContainer .body .section span {
+    font-weight: bold !important;
+}

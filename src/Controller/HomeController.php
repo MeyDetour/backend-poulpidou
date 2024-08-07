@@ -8,7 +8,56 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
+    #[Route('/', name: 'index')]
+    public function index(): Response
+    {
+        $invoicesData = [[
+            'id' => '1',
+            'price' => 12.5,
+            'description' => 'jspppp',
+            'date' => '2025/60/03',
+            'project_id' => 1,
+            'nbTitles' => 3,
+            'number' => 'af8441df84',
+            'client' => [
+                "firstName" => 'Gaelle',
+                "lastName" => 'Ghizoli',
+            ],
+            'payed' => true,
 
+        ], [
+            'id' => '1',
+            'price' => 565465,
+            'nbTitles' => 3,
+            'date' => '2024/06/03',
+            'project_id' => 1,
+
+            'number' => 'gf8d552gf',
+            'client' => [
+                "firstName" => 'Gaelle',
+                "lastName" => 'Ghizoli',
+            ],
+            'payed' => true,
+
+        ], [
+            'id' => '1',
+            'price' => 1250,
+            'description' => 'jspppp',
+
+            'nbTitles' => 3,
+            'date' => '2024/06/03',
+            'number' => '8z4f4d15f',
+            'project_id' => 1,
+            'client' => [
+                "firstName" => 'Gaelle',
+                "lastName" => 'Ghizoli',
+            ],
+            'payed' => false,
+
+        ]];
+        return $this->render('/component/invoiceList.html.twig',
+            ['invoices' => $invoicesData]);
+    }
 
     #[Route('/doc', name: 'all_routes', methods: 'get')]
     public function getAllRoutes(): Response
@@ -330,7 +379,7 @@ class HomeController extends AbstractController
                     'utilisation' => "envoyer un message",
                     'need token ? ' => false],
             ],
-            "setting"=>[
+            "setting" => [
                 [
                     "recuperer les parametre de l'utilisateur " => '/api/message',
                     'methode' => 'post',

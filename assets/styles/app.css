@@ -1,0 +1,20 @@
+:root{
+    --bleu : #6779A6;
+    --bleu2 : #C7D1E7;
+    --bleu4 : #F4F6F9;
+    --bleu3 : #E4E9F4;
+    --grey : #767676;
+    --grey3 : #BCBCBC;
+    --white-grey-background : #F5F5F5;
+    --white : #FCFCFC;
+    --greenBackground : #DFF0E9;
+    --green : #3FE39F;
+    --redBackground : #F0DFDF;
+    --red : #E33F3F;
+}
+body{
+    overflow-y: hidden;
+    overflow-x: hidden;
+    font-family: Inter,sans-serif;
+    background: var(--white);
+}

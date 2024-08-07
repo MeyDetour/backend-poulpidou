@@ -1,0 +1,61 @@
+.invoiceListContainer {
+height: 100vh;
+    padding: 30px;
+}
+.invoiceListContainer .titleContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.invoiceListContainer  h2{
+    font-weight: bold;
+    width: fit-content;
+    margin-left: 10px;
+    margin-bottom: 0;
+}
+
+.invoiceListContainer .alignEnd {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+
+.invoiceListContainer .payed {
+    background: var(--greenBackground);
+    color: var(--green);
+    width: 133px;
+    display: block;
+    padding: 7px 0px;
+    border-radius: 4px;
+}
+
+.invoiceListContainer .unpayed {
+    background: var(--redBackground);
+    color: var(--red);
+    width: 133px;
+    display: block;
+    padding: 7px 0px;
+    border-radius: 4px;
+}
+
+.invoiceListContainer table {
+    width: 80vw;
+    background: var(--white);
+
+    border: 1px solid var(--grey3);
+    border-spacing: 0;
+    border-radius: 10px;
+    border-collapse: separate;
+}
+
+.invoiceListContainer table tbody tr th, .invoiceListContainer table tbody tr td, .invoiceListContainer table thead tr th {
+    text-align: center;
+    padding: 14px 39px;
+
+    border-bottom: 1px solid var(--grey3);
+}
+.invoiceListContainer table tbody tr:last-child td, .invoiceListContainer table tbody tr:last-child th{
+    border-bottom: 0 !important;
+}
