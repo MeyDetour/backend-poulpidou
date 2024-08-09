@@ -217,9 +217,8 @@ class ApiPdfController extends AbstractController
                     'value' => 'pdf'
                 ]);
             }
-            $manager->remove($pdf);
-            $manager->flush();
             $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
+
 
             if (!file_exists($filePath)) {
                 return $this->json([

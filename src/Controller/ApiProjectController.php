@@ -59,13 +59,18 @@ class ApiProjectController extends AbstractController
                 $project = new Project();
 
 
-                if (!isset($data['identity']['client_id']) || empty(trim($data['identity']['client_id']))) {
+                if (!isset($data['identity']['client_id'])) {
                     return $this->json([
                         'state' => 'NED',
                         'value' => 'client_id'
                     ]);
                 }
-
+                if (!is_numeric($data['identity']['client_id'])) {
+                    return $this->json([
+                        'state' => 'IDT',
+                        'value' => 'client_id'
+                    ]);
+                }
                 if (!isset($data['identity']['name']) || empty(trim($data['identity']['name']))) {
 
                     return $this->json([
@@ -96,6 +101,9 @@ class ApiProjectController extends AbstractController
                 }
                 if (isset($data['identity']['githubLink']) && !empty(trim($data['identity']['githubLink']))) {
                     $project->setGithubLink($data['identity']['githubLink']);
+                }
+                if (isset($data['identity']['websiteLink']) && !empty(trim($data['identity']['websiteLink']))) {
+                    $project->setFigmaLink($data['identity']['websiteLink']);
                 }
                 if (isset($data['estimatedPrice']) && !empty(trim($data['estimatedPrice']))) {
                     $isValid = $data['estimatedPrice'] > 0 && is_numeric($data['estimatedPrice']);
@@ -137,7 +145,8 @@ class ApiProjectController extends AbstractController
                             'value' => 'endDate'
                         ]);
                     }
-                    $project->setStartDate($searchDate);          }
+                    $project->setStartDate($searchDate);
+                }
                 if (isset($data['totalPrice']) && !empty(trim($data['totalPrice']))) {
                     $isValid = $data['totalPrice'] > 0 && is_numeric($data['total_price']);
                     if (!$isValid) {
@@ -298,15 +307,18 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if (
-                $project->getOwner() != $this->getUser()
-            ) {
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
                     'value' => 'project'
                 ]);
             }
-
+            if($project->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
             $data = json_decode($request->getContent(), true);
 
             if ($data) {
@@ -326,22 +338,7 @@ class ApiProjectController extends AbstractController
                         $project->setEstimatedPrice($data['estimatedPrice']);
                     }
 
-                    if (isset($data['identity']['client_id']) && !empty(trim($data['identity']['client_id']))) {
-                        $client = $clientRepository->find($data['identity']['client_id']);
-                        if (!$client) {
-                            return $this->json([
-                                'state' => 'NDF',
-                                'value' => 'client'
-                            ]);
-                        }
-                        if ($client->getOwner() != $this->getUser()) {
-                            return $this->json([
-                                'state' => 'FO',
-                                'value' => 'client'
-                            ]);
-                        }
-                        $project->setClient($client);
-                    }
+
                     if (isset($data['total_price']) && !empty(trim($data['total_price']))) {
 
                         $isValid = $data['total_price'] > 0 && is_numeric($data['total_price']);
@@ -356,6 +353,8 @@ class ApiProjectController extends AbstractController
 
                     if (isset($data['identity']['figmaLink']) && !empty(trim($data['identity']['figmaLink']))) {
                         $project->setFigmaLink($data['identity']['figmaLink']);
+                    } if (isset($data['identity']['websiteLink']) && !empty(trim($data['identity']['websiteLink']))) {
+                        $project->setFigmaLink($data['identity']['websiteLink']);
                     }
                     if (isset($data['identity']['githubLink']) && !empty(trim($data['identity']['githubLink']))) {
                         $project->setGithubLink($data['identity']['githubLink']);
@@ -485,6 +484,10 @@ class ApiProjectController extends AbstractController
                     $project->setState('active');
                     $manager->persist($project);
                     $manager->flush();
+                    $chat = $project->getChat();
+                    $chat->setName($project->getName() . ' Chat');
+                    $manager->persist($chat);
+                    $manager->flush();
                     $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
 
                     return $this->json([
@@ -518,11 +521,16 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if (
-                $project->getOwner() != $this->getUser()
-            ) {
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
+
                 return $this->json([
                     'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if($project->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
                     'value' => 'project'
                 ]);
             }
@@ -609,9 +617,15 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if (!$project->getOwner() == $this->getUser()) {
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if($project->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
                     'value' => 'project'
                 ]);
             }
@@ -647,13 +661,59 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if (!$project->getOwner() == $this->getUser()) {
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
                     'value' => 'project'
                 ]);
             }
+            if($project->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
             $message = ' Delete force Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')';
+
+
+            foreach ($project->getCategories() as $category){
+
+                $manager->remove($category);
+            }
+            foreach ($project->getTasks() as $task){
+                $manager->remove($task);
+            }
+            foreach ($project->getInvoices() as $invoice){
+                $manager->remove($invoice);
+            }
+            foreach ($project->getPdfs() as $pdf){
+                $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
+
+
+                if (!file_exists($filePath)) {
+                    return $this->json([
+                        'state' => 'NDF',
+                        'value' => 'pdf'
+                    ]);
+                }
+
+                $filePath = 'pdf/' . $pdf->getFileName();
+                if (unlink($filePath)) {
+                    $manager->remove($pdf);
+
+                } else {
+                    return $this->json([
+                        'state' => 'ISE',
+                        'value' => 'Failed to remove pdf'
+                    ]);
+                }
+
+            }
+            $chat = $project->getChat();
+            foreach ($chat->getMessages() as $message){
+                $manager->remove($message);
+            }
+            $manager->remove($chat);
             $manager->remove($project);
             $manager->flush();
             $this->logService->createLog('DELETE', $message, null);
@@ -684,15 +744,21 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if (!$project->getOwner() == $this->getUser()) {
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
                     'value' => 'project'
                 ]);
             }
+            if($project->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
             return $this->json([
                 'state' => 'OK',
-                'value' => $this->json($this->getDataProject($project))
+                'value' => $this->getDataProject($project)
             ]);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
@@ -723,8 +789,7 @@ class ApiProjectController extends AbstractController
                 }
             }
             foreach ($arrayToIterate as $project) {
-
-                if ($project->getOwner() == $this->getUser()) {
+                if ($project->getOwner() == $this->getUser() || $project->hasUserInUserAuthorised($this->getUser())) {
                     if ($display_delete && $project->getState() == 'deleted' || $project->getState() != 'deleted') {
                         $data[] = $this->getDataProject($project);
                     }
@@ -809,21 +874,33 @@ class ApiProjectController extends AbstractController
             $notesContent = explode(',', $project->getNoteContent());
 
 
+            $userAutorised = [];
+            foreach ($project->getUserAuthorised() as $user) {
+                $userAutorised[] = [
+                    'address' => $user->getAdresse(),
+                    'firstName' => $user->getFirstName(),
+                    'lastName' => $user->getLastName(),
+                ];
+            }
+
             return [
                 "totalPrice" => $project->getTotalPrice(),
                 "estimatedPrice" => $project->getEstimatedPrice(),
                 "maintenancePercentage" => $project->getMaintenancePercentage(),
-
+                "members" => $userAutorised,
                 'identity' => [
                     "id" => $project->getId(),
                     'uuid' => $project->getUuid(),
                     "name" => $project->getName(),
                     "figmaLink" => $project->getFigmaLink(),
                     "githubLink" => $project->getGithubLink(),
+                    "websiteLink" => $project->getWebsiteLink(),
                     "startDate" => $this->dateService->formateDate($project->getStartDate()),
                     "endDate" => $this->dateService->formateDate($project->getEndDate()),
                     "client" => $client,
                     "chatName" => $chat,
+                    "state" => $project->getState(),
+                    "cratedAt" => $this->dateService->formateDate($project->getCreatedAt()),
 
                 ],
 

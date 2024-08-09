@@ -50,7 +50,7 @@ class ApiSettingController extends AbstractController
         }
     }
 
-    #[Route('/api/edit/settings', name: 'edit_api_setting', methods: ['GET'])]
+    #[Route('/api/edit/settings', name: 'edit_api_setting', methods: ['post'])]
     public function editSettings(EntityManagerInterface $entityManager, Request $request): Response
     {
         try {
@@ -80,16 +80,16 @@ class ApiSettingController extends AbstractController
                     }
                     $settings->setInterfaceLangage($data['interfaceLangage']);
                 }
-                if (isset($data['payment']) && gettype($data['payment']) == 'array') {
-                    foreach ($data['payment'] as $pay) {
+                if (isset($data['payments']) && gettype($data['payments']) == 'array') {
+                    foreach ($data['payments'] as $pay) {
                             if(!in_array($pay, $this->associationPayementKey)) {
                                 return $this->json([
                                     'state' => 'IDT',
-                                    'value' => 'payment',
+                                    'value' => 'payments',
                                 ]);
                             }
                     }
-                    $settings->setPayment(implode(',', $data['payment']));
+                    $settings->setPayment(implode(',', $data['payments']));
                 }
                 if (isset($data['delayDays'])) {
                     if (!is_numeric($data['delayDays']) || !in_array($data['delayDays'], [30, 50, 60])) {

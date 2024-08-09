@@ -49,8 +49,8 @@ class ClientRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('c')
             ->from(Client::class, 'c')
-            ->leftJoin('c.projects', 'p');
-
+            ->leftJoin('c.projects', 'p')
+            ->leftJoin('c.chats', 'ch');
 
         $clientConditions = $queryBuilder->expr()->orX(
             $queryBuilder->expr()->like('c.firstName', ':searchTerm'),
@@ -62,12 +62,23 @@ class ClientRepository extends ServiceEntityRepository
             $queryBuilder->expr()->like('c.siret', ':searchTerm')
         );
         $projectConditions = $queryBuilder->expr()->orX(
-            $queryBuilder->expr()->like('p.name', ':searchTerm')
-        );
-        $queryBuilder->where($clientConditions)
-            ->orWhere($projectConditions)
-            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+            $queryBuilder->expr()->like('p.name', ':searchTerm'),
+            $queryBuilder->expr()->neq('p.state', ':deletedStates')
 
+        );
+
+        $chatConditions = $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->like('ch.name', ':searchTerm'),
+        );
+      $queryBuilder->where(
+          $queryBuilder->expr()->orX(
+              $clientConditions,
+              $projectConditions,
+              $chatConditions
+          )
+      )
+          ->setParameter('searchTerm', '%' . $searchTerm . '%')
+          ->setParameter('deletedStates', 'deleted');
 
         if (is_numeric($searchTerm)) {
 

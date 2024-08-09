@@ -81,6 +81,7 @@ class ApiClientController extends AbstractController
                 $client->setCreatedAt(new \DateTime());
                 $client->setOwner($this->getUser());
                 $client->setState('active');
+                $client->setOnline(false);
                 $manager->persist($client);
                 $manager->flush();
                 $this->logService->createLog('ACTION', 'create new client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')', null);
@@ -195,6 +196,10 @@ class ApiClientController extends AbstractController
                 ]);
             }
             $client->setState('deleted');
+            foreach ($client->getProjects() as $project) {
+                $project->setState('deleted');
+                $manager->persist($project);
+            }
 
             $manager->persist($client);
             $manager->flush();
@@ -231,7 +236,51 @@ class ApiClientController extends AbstractController
                 ]);
             }
             $cpForLog = '(' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')';
-            $manager->remove($client);
+
+            foreach ($client->getProjects() as $project){
+
+                foreach ($project->getCategories() as $category){
+
+                    $manager->remove($category);
+                }
+                foreach ($project->getTasks() as $task){
+                 $manager->remove($task);
+                }
+                foreach ($project->getInvoices() as $invoice){
+                    $manager->remove($invoice);
+                }
+                foreach ($project->getPdfs() as $pdf){
+                    $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
+
+
+                    if (!file_exists($filePath)) {
+                        return $this->json([
+                            'state' => 'NDF',
+                            'value' => 'pdf'
+                        ]);
+                    }
+
+                    $filePath = 'pdf/' . $pdf->getFileName();
+                    if (unlink($filePath)) {
+                         $manager->remove($pdf);
+
+                    } else {
+                        return $this->json([
+                            'state' => 'ISE',
+                            'value' => 'Failed to remove pdf'
+                        ]);
+                    }
+
+                }
+                $chat = $project->getChat();
+                foreach ($chat->getMessages() as $message){
+                    $manager->remove($message);
+                }
+                $manager->remove($chat);
+                $manager->remove($project);
+            }
+
+           $manager->remove($client);
             $manager->flush();
 
             $this->logService->createLog('DELETE', 'delete force client ' . $cpForLog, null);
@@ -670,7 +719,7 @@ class ApiClientController extends AbstractController
             $manager->flush();
             return $this->json([
                 'state' => 'OK',
-                'value' => $this->getDataClient($client)
+                'value' => $this->getDataClientForUnconnectedUser($client)
             ]);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
@@ -747,6 +796,27 @@ class ApiClientController extends AbstractController
             "mail" => $client->getMail(),
             "phone" => $client->getPhone(),
             "createdAt" => $this->dateService->formateDate($client->getCreatedAt()),
+            "state" => $client->getState(),
+            "online" => $client->isOnline(),
+            'links' => $links
+
+        ];
+    }  public function getDataClientForUnconnectedUser($client)
+    {
+        $links = [];
+        foreach ($client->getProjects() as $project) {
+            $links[] = 'interface/' . $project->getUuid();
+        }
+        return [
+            "id" => $client->getId(),
+            "firstName" => $client->getFirstName(),
+            "lastName" => $client->getLastName(),
+            "job" => $client->getJob(),
+            "age" => $client->getAge(),
+            "location" => $client->getLocation(),
+            "mail" => $client->getMail(),
+            "phone" => $client->getPhone(),
+            "createdAt" => $this->dateService->formateDateWithUser($client->getCreatedAt(),$client->getOwner()),
             "state" => $client->getState(),
             "online" => $client->isOnline(),
             'links' => $links

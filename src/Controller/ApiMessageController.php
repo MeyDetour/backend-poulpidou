@@ -36,9 +36,10 @@ class ApiMessageController extends AbstractController
             $data = [];
             foreach ($chatRepository->findAll() as $chat) {
 
-                if ($chat->getProject()->getOwner() == $this->getUser() || $chat->getProject()->hasUserInUserAuthorised($this->getUser())) {
+                if ( ($chat->getProject()->getOwner() == $this->getUser() || $chat->getProject()->hasUserInUserAuthorised($this->getUser())) &&  $chat->getProject()->getState() != 'deleted' ) {
                     $data[] = $this->chatDataShortData($chat);
                 }
+
             }
             return $this->json($data);
 
@@ -66,9 +67,21 @@ class ApiMessageController extends AbstractController
                     'value' => 'chat'
                 ]);
             }
-            if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser())) {
+            if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser()) ) {
                 return $this->json([
                     'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if($chat->getProject()->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+            if($chat->getProject()->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
                     'value' => 'project'
                 ]);
             }
@@ -273,7 +286,12 @@ class ApiMessageController extends AbstractController
                         'value' => 'project'
                     ]);
                 }
-
+                if($project->getState() == 'deleted'){
+                    return $this->json([
+                        'state' => 'DD',
+                        'value' => 'project'
+                    ]);
+                }
                 $message = new Message();
                 $message->setAuthorUser($this->getUser());
                 if ($this->newMessage($message, $data['content'], $project)) {
@@ -321,6 +339,12 @@ class ApiMessageController extends AbstractController
                     'value' => 'project'
                 ]);
             }
+            if($message->getProject()->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
             if ($message->getAuthorUser() != $this->getUser()) {
                 return $this->json([
                     'state' => 'FO',
@@ -348,6 +372,46 @@ class ApiMessageController extends AbstractController
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
 
+    }
+    #[Route('/api/search/chat', name: 'search_chat', methods: 'get')]
+    public function searchClients(Request $request, ChatRepository $chatRepository): Response
+    {
+        try {
+            $datum = json_decode($request->getContent(), true);
+
+            $data = [];
+            if ($datum) {
+                if (isset($datum['searchTerm']) && !empty(trim($datum['searchTerm']))) {
+                    $chats = $chatRepository->searchAcrossTables($datum['searchTerm']);
+                    $dataToReturn = [];
+                    foreach ($chats as $chat) {
+                        $dataToReturn[] = [
+                                "id" => $chat->getId(),
+                             "name"=>$chat->getName()
+                               ];
+
+
+                    }
+                    return $this->json([
+                        'state' => 'OK',
+                        'value' => $dataToReturn
+                    ]);
+                }
+            }
+
+            return $this->json([
+                'state' => 'ND'
+            ]);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
     }
 
     public

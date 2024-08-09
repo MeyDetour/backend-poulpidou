@@ -18,8 +18,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class ApiInvoiceController extends AbstractController
 {
     private LogService $logService;
-private DateService $dateService;
-    public function __construct(LogService $logService,     DateService $dateService)
+    private DateService $dateService;
+
+    public function __construct(LogService $logService, DateService $dateService)
     {
         $this->logService = $logService;
         $this->dateService = $dateService;
@@ -82,7 +83,7 @@ private DateService $dateService;
 
                 $invoice->setPayed(false);
 
-    $invoice->setNumber(uniqid());
+                $invoice->setNumber(uniqid());
                 $invoice->setOwner($this->getUser());
                 $manager->persist($invoice);
                 $manager->flush();
@@ -104,7 +105,7 @@ private DateService $dateService;
         }
     }
 
-    #[   Route('/api/invoice/edit/{id}', name: 'edit_invoice', methods: 'post')]
+    #[Route('/api/invoice/edit/{id}', name: 'edit_invoice', methods: 'post')]
     public function edit($id, InvoiceRepository $invoiceRepository, Request $request, EntityManagerInterface $manager, ClientRepository $clientRepository, ProjectRepository $projectRepository): Response
     {
         try {
@@ -169,7 +170,8 @@ private DateService $dateService;
             ]);
         }
     }
-    #[   Route('/api/invoice/{id}/pay', name: 'pay_invoice', methods: 'put')]
+
+    #[Route('/api/invoice/{id}/pay', name: 'pay_invoice', methods: 'put')]
     public function payInvoice($id, InvoiceRepository $invoiceRepository, Request $request, EntityManagerInterface $manager): Response
     {
         try {
@@ -270,6 +272,47 @@ private DateService $dateService;
 
     }
 
+    #[Route('/api/invoice/delete/{id}', name: 'delete_invoice', methods: 'delete')]
+    public function delete($id, InvoiceRepository $repository, EntityManagerInterface $manager): Response
+    {
+        try {
+            $invoice = $repository->find($id);
+            if (!$invoice) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'invoice'
+                ]);
+            }
+            if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'invoice'
+                ]);
+            }
+            if($invoice->getProject()->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+            $message = ' Delete Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . ')';
+            $manager->remove($invoice);
+            $manager->flush();
+            $this->logService->createLog('DELETE', $message, null);
+            return $this->json(['state' => 'OK']);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+
+    }
+
     public function getDataInvoice($invoice)
     {
         $client = $invoice->getProject()->getCLient();
@@ -277,14 +320,14 @@ private DateService $dateService;
             'id' => $invoice->getId(),
             'price' => $invoice->getPrice(),
             'description' => $invoice->getDescription(),
-            'date' => $this->dateService->formateDate( $invoice->getDate()),
+            'date' => $this->dateService->formateDate($invoice->getDate()),
             'project_id' => $invoice->getProject()->getId(),
-            'number'=>$invoice->getNumber(),
-            'client'=>[
+            'number' => $invoice->getNumber(),
+            'client' => [
                 "firstName" => $client->getFirstName(),
                 "lastName" => $client->getLastName(),
             ],
-            'payed'=>$invoice->isPayed(),
+            'payed' => $invoice->isPayed(),
 
         ];
     }

@@ -24,7 +24,7 @@ class ApiUserController extends AbstractController
         $this->logService = $logService;
     }
 
-    #[Route('/api/me', name: 'user_me')]
+    #[Route('/api/me', name: 'user_me', methods: 'get')]
     public function index(): Response
     {
         return $this->json([
@@ -33,14 +33,15 @@ class ApiUserController extends AbstractController
         ]);
     }
 
-    #[Route('/api/edit/me', name: 'edit_me')]
+    #[Route('/api/edit/me', name: 'edit_me', methods: 'put')]
     public function edit(Request $request, EntityManagerInterface $manager): Response
     {
-        $data = json_decode($request->getContent(), true);
-        $user = $this->getUser();
+        try {
+            $data = json_decode($request->getContent(), true);
+            $user = $this->getUser();
 
-        if ($data) {
-            try {
+            if ($data) {
+
                 if (isset($data['firstName']) && !empty(trim($data['firstName']))) {
                     $user->setFirstName($data['firstName']);
                 }
@@ -58,24 +59,25 @@ class ApiUserController extends AbstractController
                 }
                 $manager->persist($user);
                 $manager->flush();
-                $this->logService->createLog('ACTION','Edit profile ('.$user->getEmail().')',null);
+                $this->logService->createLog('ACTION', 'Edit profile (' . $user->getEmail() . ')', null);
                 return $this->json([
                     'state' => 'OK',
                     'value' => $this->getData($user)
 
                 ]);
-            } catch (\Exception $exception) {
-                return $this->json([
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-                ]);
             }
+            return $this->json(['state' => 'ND']);
+        } catch (\Exception $exception) {
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
         }
-        return $this->json(['state' => 'ND']);
     }
 
-    #[Route('/api/user/{id}', name: 'user')]
+    #[Route('/api/user/{id}', name: 'user',methods: 'get')]
     public function getOneUser($id, UserRepository $repository): Response
     {
         $user = $repository->find($id);
@@ -88,7 +90,7 @@ class ApiUserController extends AbstractController
             } catch (\Exception $exception) {
                 return $this->json([
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine() 
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]);
             }

@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Note;
+use App\Entity\Setting;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -17,6 +19,22 @@ class AppFixtures extends Fixture
 
         $manager->flush();
 
-        $manager->flush();
+        $setting = new Setting();
+        $setting->setOwner($user);
+        $setting->setDateFormat('UE');
+        $setting->setPayment('');
+        $setting->setDelayDays(30);
+        $setting->setFreeMaintenance(true);
+        $setting->setInstallmentPayments(true);
+        $setting->setInterfaceLangage('FR');
+
+
+        $note = new Note();
+        $note->setOwner($user);
+        $note->setNotes("");
+        $note->setRemembers("");
+       $manager->persist($note);
+       $manager->persist($setting);
+       $manager->flush();
     }
 }

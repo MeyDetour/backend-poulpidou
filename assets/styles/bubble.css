@@ -707,3 +707,8 @@
     color: var(--grey);
     margin-top: 63px;
 }
+.textContainer a{
+    color: var(--bleu);
+    font-weight: bold;
+    font-family: ui-rounded;
+}
