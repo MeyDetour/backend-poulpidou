@@ -22,7 +22,7 @@ class ApiLogController extends AbstractController
         $this->dateService = $dateService;
     }
 
-    #[Route('/api/logs', name: 'getLogs',methods: 'get')]
+    #[Route('/api/logs', name: 'getL_lgs',methods: 'get')]
     public function index(LogsRepository $repository): Response
     {
         try {

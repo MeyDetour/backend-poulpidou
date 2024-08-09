@@ -57,8 +57,6 @@ class ApiProjectController extends AbstractController
         if ($data) {
             try {
                 $project = new Project();
-
-
                 if (!isset($data['identity']['client_id'])) {
                     return $this->json([
                         'state' => 'NED',
@@ -71,6 +69,7 @@ class ApiProjectController extends AbstractController
                         'value' => 'client_id'
                     ]);
                 }
+
                 if (!isset($data['identity']['name']) || empty(trim($data['identity']['name']))) {
 
                     return $this->json([
@@ -89,6 +88,12 @@ class ApiProjectController extends AbstractController
                 if ($client->getOwner() != $this->getUser()) {
                     return $this->json([
                         'state' => 'FO',
+                        'value' => 'client'
+                    ]);
+                }
+                if ($client->getState() == 'deleted') {
+                    return $this->json([
+                        'state' => 'DD',
                         'value' => 'client'
                     ]);
                 }
@@ -138,7 +143,7 @@ class ApiProjectController extends AbstractController
                     $project->setStartDate($searchDate);
                 }
                 if (isset($data['identity']['endDate']) && !empty(trim($data['identity']['endDate']))) {
-                    $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['startDateendDate']);
+                    $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['endDate']);
                     if (!$searchDate) {
                         return $this->json([
                             'state' => 'IDT',
@@ -275,7 +280,6 @@ class ApiProjectController extends AbstractController
                 $chat->addUser($this->getUser());
                 $manager->persist($chat);
                 $manager->flush();
-
                 $this->logService->createLog('ACTION', ' Create Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')', null);
 
                 return $this->json([
@@ -361,10 +365,25 @@ class ApiProjectController extends AbstractController
                     }
 
                     if (isset($data['identity']['startDate']) && !empty(trim($data['identity']['startDate']))) {
-                        $project->setStartDate($data['identity']['startDate']);
+
+                        $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['startDate']);
+                        if (!$searchDate) {
+                            return $this->json([
+                                'state' => 'IDT',
+                                'value' => 'startDate'
+                            ]);
+                        }
+                        $project->setStartDate($searchDate);
                     }
-                    if (isset($data['end_date']) && !empty(trim($data['end_date']))) {
-                        $project->setEndDate($data['end_date']);
+                    if (isset($data['identity']['endDate']) && !empty(trim($data['identity']['endDate']))) {
+                        $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['endDate']);
+                        if (!$searchDate) {
+                            return $this->json([
+                                'state' => 'IDT',
+                                'value' => 'endDate'
+                            ]);
+                        }
+                        $project->setStartDate($searchDate);
                     }
                     if (isset($data['composition']['isPaying'])) {
                         if (gettype($data['composition']['isPaying']) != 'string') {
@@ -820,7 +839,6 @@ class ApiProjectController extends AbstractController
         try {
             $datum = json_decode($request->getContent(), true);
 
-            $data = [];
             if ($datum) {
                 if (isset($datum['searchTerm']) && !empty(trim($datum['searchTerm']))) {
                     $projects = $projectRepository->searchAcrossTables($datum['searchTerm']);

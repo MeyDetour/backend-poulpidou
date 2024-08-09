@@ -78,9 +78,15 @@ class ApiPdfController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if (!$project->getOwner() == $this->getUser()) {
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if($project->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
                     'value' => 'project'
                 ]);
             }
@@ -117,7 +123,9 @@ class ApiPdfController extends AbstractController
                 $file->move('pdf', $newFilename);
                 return $this->json([
                     'state' => 'OK',
-                    'value' => $filePath
+                    'value' => [
+                        'filePath'=>$filePath
+                    ]
 
                 ]);
             } catch (\Exception $exception) {
@@ -148,12 +156,19 @@ class ApiPdfController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if (!$project->getOwner() == $this->getUser()) {
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
                     'value' => 'project'
                 ]);
             }
+            if($project->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
             if (!$pdf) {
                 return $this->json([
@@ -173,7 +188,9 @@ class ApiPdfController extends AbstractController
             try {
                 return $this->json([
                     'state' => 'OK',
-                    'value' => $filePath
+                    'value' => [
+                        'filePath'=>$filePath
+                    ]
                 ]);
             } catch (\Exception $exception) {
                 return $this->json([
@@ -203,12 +220,19 @@ class ApiPdfController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if (!$project->getOwner() == $this->getUser()) {
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
                     'value' => 'project'
                 ]);
             }
+            if($project->getState() == 'deleted'){
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+
 
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
             if (!$pdf) {

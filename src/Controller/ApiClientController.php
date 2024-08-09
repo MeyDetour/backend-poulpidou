@@ -121,6 +121,11 @@ class ApiClientController extends AbstractController
                     'state' => 'FO',
                     'value' => 'client'
                 ]);
+            }  if ($client->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'client'
+                ]);
             }
             $this->formatNames($client);
 
@@ -163,7 +168,10 @@ class ApiClientController extends AbstractController
                 $manager->persist($client);
                 $manager->flush();
                 $this->logService->createLog('ACTION', 'Edit client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')', null);
-                return $this->json($this->getDataClient($client));
+                return $this->json([
+                    'state' => 'OK',
+                    'value' =>
+                        $this->getDataClient($client)]);
             }
             return $this->json(['state' => 'ND']);
         } catch (\Exception $exception) {
@@ -237,20 +245,20 @@ class ApiClientController extends AbstractController
             }
             $cpForLog = '(' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')';
 
-            foreach ($client->getProjects() as $project){
+            foreach ($client->getProjects() as $project) {
 
-                foreach ($project->getCategories() as $category){
+                foreach ($project->getCategories() as $category) {
 
                     $manager->remove($category);
                 }
-                foreach ($project->getTasks() as $task){
-                 $manager->remove($task);
+                foreach ($project->getTasks() as $task) {
+                    $manager->remove($task);
                 }
-                foreach ($project->getInvoices() as $invoice){
+                foreach ($project->getInvoices() as $invoice) {
                     $manager->remove($invoice);
                 }
-                foreach ($project->getPdfs() as $pdf){
-                    $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
+                foreach ($project->getPdfs() as $pdf) {
+                    $filePath = $this->getParameter('upload_directory') . '/' . $pdf->getFileName();
 
 
                     if (!file_exists($filePath)) {
@@ -262,7 +270,7 @@ class ApiClientController extends AbstractController
 
                     $filePath = 'pdf/' . $pdf->getFileName();
                     if (unlink($filePath)) {
-                         $manager->remove($pdf);
+                        $manager->remove($pdf);
 
                     } else {
                         return $this->json([
@@ -273,14 +281,14 @@ class ApiClientController extends AbstractController
 
                 }
                 $chat = $project->getChat();
-                foreach ($chat->getMessages() as $message){
+                foreach ($chat->getMessages() as $message) {
                     $manager->remove($message);
                 }
                 $manager->remove($chat);
                 $manager->remove($project);
             }
 
-           $manager->remove($client);
+            $manager->remove($client);
             $manager->flush();
 
             $this->logService->createLog('DELETE', 'delete force client ' . $cpForLog, null);
@@ -408,6 +416,12 @@ class ApiClientController extends AbstractController
                     'value' => 'client'
                 ]);
             }
+            if ($client->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'client'
+                ]);
+            }
             $this->formatNames($client);
             $data = [];
             foreach ($client->getProjects() as $project) {
@@ -431,7 +445,7 @@ class ApiClientController extends AbstractController
     }
 
     #[Route('/api/client/{id}/currentProjects', name: 'get_clients_currentprojects', methods: 'post')]
-    public function getClientCurrentProjects($id, ClientRepository $repository, Request $request): Response
+    public function getCurrentsProjectsOfClient($id, ClientRepository $repository, Request $request): Response
     {
         try {
             $client = $repository->find($id);
@@ -447,12 +461,18 @@ class ApiClientController extends AbstractController
                     'value' => 'client'
                 ]);
             }
+            if ($client->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'client'
+                ]);
+            }
             $datum = json_decode($request->getContent(), true);
 
             if ($datum) {
 
-                if (isset($datum['displayDeleted']) && !empty(trim($datum['displayDeleted']))) {
-                    if ($datum['displayDeleted']) {
+                if (isset($datum['displayDeleted'])) {
+                    if ($datum['displayDeleted']==true) {
                         $data = [];
                         foreach ($client->getCurrentProject() as $project) {
 
@@ -506,6 +526,12 @@ class ApiClientController extends AbstractController
                     'value' => 'client'
                 ]);
             }
+            if ($client->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'client'
+                ]);
+            }
             $datum = json_decode($request->getContent(), true);
 
             if ($datum) {
@@ -553,7 +579,7 @@ class ApiClientController extends AbstractController
         }
     }
 
-    #[Route('/api/client/{id}/currentProjects/remove', name: 'remove_clients_currentprojects', methods: 'put')]
+    #[Route('/api/client/{id}/currentProjects/remove', name: 'remove_clients_currentprojects', methods: 'delete')]
     public function removeClientCurrentProjects($id, ClientRepository $repository, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
     {
         try {
@@ -568,6 +594,12 @@ class ApiClientController extends AbstractController
             if (!$client->getOwner() == $this->getUser()) {
                 return $this->json([
                     'state' => 'FO',
+                    'value' => 'client'
+                ]);
+            }
+            if ($client->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
                     'value' => 'client'
                 ]);
             }
@@ -649,8 +681,8 @@ class ApiClientController extends AbstractController
                     ]
                     ,
                     'project' => [
-                        'startDate' => $this->dateService->formateDateWithUser($project->getStartDate(),$project->getOwner()),
-                        'endDate' => $this->dateService->formateDateWithUser($project->getEndDate(),$project->getOwner()),
+                        'startDate' => $this->dateService->formateDateWithUser($project->getStartDate(), $project->getOwner()),
+                        'endDate' => $this->dateService->formateDateWithUser($project->getEndDate(), $project->getOwner()),
                         'price' => $project->getTotalPrice(),
                         'maintenancePercentage' => $project->getMaintenancePercentage()
 
@@ -679,10 +711,20 @@ class ApiClientController extends AbstractController
 
     }
 
-    #[Route('/interface/project/{id}/online', name: 'online_client', methods: 'post')]
-    public function setClientOfflineOrOnline($id, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
+    #[Route('/interface/project/{uuid}/online', name: 'online_client', methods: 'post')]
+    public function setClientOfflineOrOnline($uuid, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
     {
         try {
+
+            $project = $projectRepository->findOneBy(['uuid' => $uuid]);
+            if (!$project) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'project'
+                ]);
+            }
+
+
             $data = json_decode($request->getContent(), true);
             if (!$data) {
                 return $this->json([
@@ -705,21 +747,12 @@ class ApiClientController extends AbstractController
 
             }
 
-            $project = $projectRepository->find($id);
-            if (!$project) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'project'
-                ]);
-            }
-
             $client = $project->getClient();
             $client->setOnline($data['online']);
             $manager->persist($client);
             $manager->flush();
             return $this->json([
                 'state' => 'OK',
-                'value' => $this->getDataClientForUnconnectedUser($client)
             ]);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
@@ -740,7 +773,6 @@ class ApiClientController extends AbstractController
         try {
             $datum = json_decode($request->getContent(), true);
 
-            $data = [];
             if ($datum) {
                 if (isset($datum['searchTerm']) && !empty(trim($datum['searchTerm']))) {
                     $clients = $clientRepository->searchAcrossTables($datum['searchTerm']);
@@ -792,31 +824,11 @@ class ApiClientController extends AbstractController
             "lastName" => $client->getLastName(),
             "job" => $client->getJob(),
             "age" => $client->getAge(),
+            "siret" => $client->getSiret(),
             "location" => $client->getLocation(),
             "mail" => $client->getMail(),
             "phone" => $client->getPhone(),
             "createdAt" => $this->dateService->formateDate($client->getCreatedAt()),
-            "state" => $client->getState(),
-            "online" => $client->isOnline(),
-            'links' => $links
-
-        ];
-    }  public function getDataClientForUnconnectedUser($client)
-    {
-        $links = [];
-        foreach ($client->getProjects() as $project) {
-            $links[] = 'interface/' . $project->getUuid();
-        }
-        return [
-            "id" => $client->getId(),
-            "firstName" => $client->getFirstName(),
-            "lastName" => $client->getLastName(),
-            "job" => $client->getJob(),
-            "age" => $client->getAge(),
-            "location" => $client->getLocation(),
-            "mail" => $client->getMail(),
-            "phone" => $client->getPhone(),
-            "createdAt" => $this->dateService->formateDateWithUser($client->getCreatedAt(),$client->getOwner()),
             "state" => $client->getState(),
             "online" => $client->isOnline(),
             'links' => $links

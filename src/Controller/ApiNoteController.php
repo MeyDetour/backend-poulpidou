@@ -25,10 +25,10 @@ class ApiNoteController extends AbstractController
     }
 
     #[Route('/api/edit/note', name: 'new_note', methods: 'post')]
-    public function edit(Request $request, EntityManagerInterface $manager, NoteRepository $repository): Response
+    public function edit(Request $request, EntityManagerInterface $manager): Response
     {
         try {
-            $note = $repository->findOneBy(['owner' => $this->getUser()]);
+            $note = $this->getUser()->getNotes();
             if (!$note) {
                 $note = new Note();
                 $note->setOwner($this->getUser());
@@ -75,10 +75,10 @@ class ApiNoteController extends AbstractController
     }
 
     #[Route('/api/note', name: 'get_note', methods: 'get')]
-    public function index(Request $request, EntityManagerInterface $manager, NoteRepository $repository): Response
+    public function index( EntityManagerInterface $manager): Response
     {
         try {
-            $note = $repository->findOneBy(['owner' => $this->getUser()]);
+            $note = $this->getUser()->getNotes();
             if (!$note) {
                 $note = new Note();
                 $note->setOwner($this->getUser());

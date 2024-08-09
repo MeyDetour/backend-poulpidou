@@ -27,7 +27,7 @@ class ApiInvoiceController extends AbstractController
     }
 
     #[Route('/api/invoice/new', name: 'new_invoice', methods: 'post')]
-    public function index(Request $request, EntityManagerInterface $manager, ClientRepository $clientRepository, ProjectRepository $projectRepository, InvoiceRepository $invoiceRepository): Response
+    public function index(Request $request, EntityManagerInterface $manager, ProjectRepository $projectRepository, InvoiceRepository $invoiceRepository): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -42,9 +42,15 @@ class ApiInvoiceController extends AbstractController
                 }
                 $invoice->setDescription($data['description']);
 
-                if (!isset($data['project_id']) || empty(trim($data['project_id']))) {
+                if (!isset($data['project_id'])) {
                     return $this->json([
                         'state' => 'NED',
+                        'value' => 'project_id'
+                    ]);
+                }
+                if (!is_numeric($data['project_id'])) {
+                    return $this->json([
+                        'state' => 'IDT',
                         'value' => 'project_id'
                     ]);
                 }
@@ -55,12 +61,19 @@ class ApiInvoiceController extends AbstractController
                         'value' => 'project'
                     ]);
                 }
-                if (!$project->getOwner() == $this->getUser()) {
+                if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                     return $this->json([
                         'state' => 'FO',
                         'value' => 'project'
                     ]);
                 }
+                if ($project->getState() == 'deleted') {
+                    return $this->json([
+                        'state' => 'DD',
+                        'value' => 'project'
+                    ]);
+                }
+
                 $invoice->setProject($project);
 
 
@@ -74,20 +87,30 @@ class ApiInvoiceController extends AbstractController
                     }
                     $invoice->setPrice($data['price']);
                 }
-                $invoice->setDate(new \DateTime());
 
-                $nb = mt_rand(100, 1000);
-                while ($invoiceRepository->findBy(['number' => $nb])) {
-                    $nb = mt_rand(100000, 999999);
+                if (isset($data['date']) && !empty(trim($data['date']))) {
+                    $searchDate = \DateTime::createFromFormat('d/m/Y', $data['date']);
+                    if (!$searchDate) {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'date'
+                        ]);
+                    }
+                    $invoice->setDate($searchDate);
                 }
+
+                $nb = mt_rand(1000, 9999);
+                while (count($invoiceRepository->findBy(['number' => $nb])) != 0) {
+                    $nb = mt_rand(1000, 9999);
+                }
+
 
                 $invoice->setPayed(false);
 
-                $invoice->setNumber(uniqid());
-                $invoice->setOwner($this->getUser());
+                $invoice->setNumber($nb);
                 $manager->persist($invoice);
                 $manager->flush();
-                $this->logService->createLog('ACTION', ' Create Invoice (' . $invoice->getId() . ') for project  Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+                $this->logService->createLog('ACTION', ' Create Invoice (' . $invoice->getId() . ') for project  Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail(), null);
 
 
                 return $this->json([
@@ -105,7 +128,7 @@ class ApiInvoiceController extends AbstractController
         }
     }
 
-    #[Route('/api/invoice/edit/{id}', name: 'edit_invoice', methods: 'post')]
+    #[Route('/api/invoice/edit/{id}', name: 'edit_invoice', methods: 'put')]
     public function edit($id, InvoiceRepository $invoiceRepository, Request $request, EntityManagerInterface $manager, ClientRepository $clientRepository, ProjectRepository $projectRepository): Response
     {
         try {
@@ -116,21 +139,25 @@ class ApiInvoiceController extends AbstractController
                     'value' => 'invoice'
                 ]);
             }
-            if (!$invoice->getOwner() == $this->getUser()) {
+            if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
-                    'value' => 'invoice'
+                    'value' => 'project'
                 ]);
             }
+            if ($invoice->getProject()->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+
             $data = json_decode($request->getContent(), true);
 
             if ($data) {
 
-                if (!isset($data['description']) || empty(trim($data['description']))) {
-                    return $this->json([
-                        'state' => 'NED',
-                        'value' => 'description'
-                    ]);
+                if (isset($data['description']) && !empty(trim($data['description']))) {
+                    $invoice->setDescription($data['description']);
                 }
                 if (isset($data['price']) && !empty(trim($data['price']))) {
                     $isValid = $data['price'] > 0 && is_numeric($data['price']);
@@ -142,14 +169,20 @@ class ApiInvoiceController extends AbstractController
                     }
                     $invoice->setPrice($data['price']);
                 }
-
-                $invoice->setDescription($data['description']);
-                $invoice->setDate(new \DateTime());
-                $invoice->setOwner($this->getUser());
+                if (isset($data['date']) && !empty(trim($data['date']))) {
+                    $searchDate = \DateTime::createFromFormat('d/m/Y', $data['date']);
+                    if (!$searchDate) {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'date'
+                        ]);
+                    }
+                    $invoice->setDate($searchDate);
+                }
                 $manager->persist($invoice);
                 $manager->flush();
 
-                $this->logService->createLog('ACTION', ' Edit Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . ')', null);
+                $this->logService->createLog('ACTION', ' Edit Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail(), null);
 
                 return $this->json([
                     'state' => 'OK',
@@ -182,10 +215,16 @@ class ApiInvoiceController extends AbstractController
                     'value' => 'invoice'
                 ]);
             }
-            if (!$invoice->getOwner() == $this->getUser()) {
+            if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
-                    'value' => 'invoice'
+                    'value' => 'project'
+                ]);
+            }
+            if ($invoice->getProject()->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
                 ]);
             }
             $invoice->setPayed(true);
@@ -206,13 +245,31 @@ class ApiInvoiceController extends AbstractController
         }
     }
 
-    #[Route('/api/invoices', name: 'get_invoices', methods: 'get')]
-    public function getInvoices(InvoiceRepository $invoiceRepository): Response
+    #[Route('/api/{id}/invoices', name: 'get_invoices', methods: 'get')]
+    public function getInvoices(ProjectRepository $repository, $id): Response
     {
         try {
-
+            $project = $repository->find($id);
+            if (!$project) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
             $data = [];
-            foreach ($invoiceRepository->findBy(['owner' => $this->getUser()]) as $invoice) {
+            foreach ($project->getInvoices() as $invoice) {
                 $data[] = $this->getDataInvoice($invoice);
             }
             return $this->json([
@@ -248,11 +305,15 @@ class ApiInvoiceController extends AbstractController
                     'value' => 'client'
                 ]);
             }
-
+            if ($client->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'client'
+                ]);
+            }
             $data = [];
             foreach ($client->getProjects() as $project) {
                 foreach ($project->getInvoices() as $invoice) {
-
                     $data[] = $this->getDataInvoice($invoice);
                 }
             }
@@ -289,13 +350,13 @@ class ApiInvoiceController extends AbstractController
                     'value' => 'invoice'
                 ]);
             }
-            if($invoice->getProject()->getState() == 'deleted'){
+            if ($invoice->getProject()->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
                 ]);
             }
-            $message = ' Delete Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . ')';
+            $message = ' Delete Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail();
             $manager->remove($invoice);
             $manager->flush();
             $this->logService->createLog('DELETE', $message, null);

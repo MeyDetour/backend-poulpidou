@@ -27,9 +27,7 @@ class Invoice
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $owner = null;
+
 
     #[ORM\Column(nullable: true)]
     private ?bool $payed = null;
@@ -92,17 +90,6 @@ class Invoice
         return $this;
     }
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): static
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
 
     public function isPayed(): ?bool
     {
