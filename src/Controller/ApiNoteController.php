@@ -54,7 +54,7 @@ class ApiNoteController extends AbstractController
 
                 $manager->persist($note);
                 $manager->flush();
-                $this->logService->createLog('ACTION', $this->getUser()->getEmail() . ' edit his note (' . $note->getId() . ')', null);
+                $this->logService->createLog('ACTION', $this->getUser()->getEmail() . ' edit his note (' . $note->getId() . ')');
                 return $this->json([
                     'state' => 'OK',
                     'value' =>

@@ -19,13 +19,12 @@ class LogService
         $this->security = $security;
     }
 
-    public function createLog($type,$message, $error)
+    public function createLog($type,$message)
     {
         $log = new Logs();
         $log->setType($type);
         $log->setAuthor($this->security->getUser());
         $log->setDate(new \DateTime());
-        $log->setError($error);
         $log->setMessage($message);
         $log->setPatch(false);
         $this->entityManager->persist($log);

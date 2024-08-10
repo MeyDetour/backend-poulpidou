@@ -45,13 +45,13 @@ class ApiSettingController extends AbstractController
                 'value' => $this->getData($settings)]);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
     }
 
-    #[Route('/api/edit/settings', name: 'edit_api_setting', methods: ['post'])]
+    #[Route('/api/edit/settings', name: 'edit_api_setting', methods: ['put'])]
     public function editSettings(EntityManagerInterface $entityManager, Request $request): Response
     {
         try {
@@ -138,7 +138,7 @@ class ApiSettingController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
@@ -159,7 +159,7 @@ class ApiSettingController extends AbstractController
             $this->entityManager->flush();
             return $setting;
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }

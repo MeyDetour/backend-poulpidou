@@ -76,7 +76,7 @@ class ApiUserController extends AbstractController
                 }
                 $manager->persist($user);
                 $manager->flush();
-                $this->logService->createLog('ACTION', 'Edit profile (' . $user->getEmail() . ')', null);
+                $this->logService->createLog('ACTION', 'Edit profile (' . $user->getEmail() . ')');
                 return $this->json([
                     'state' => 'OK',
                     'value' => $this->getData($user)
@@ -112,8 +112,10 @@ class ApiUserController extends AbstractController
                 ]);
             }
         }
-
-        return $this->json($this->getData($user));
+        return $this->json([
+            "state" => 'OK',
+            "value" =>$this->getData($user)
+            ]);
 
     }
 

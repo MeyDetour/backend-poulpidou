@@ -312,7 +312,7 @@ class ApiProjectController extends AbstractController
                 $chat->addUser($this->getUser());
                 $manager->persist($chat);
                 $manager->flush();
-                $this->logService->createLog('ACTION', ' Create Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')', null);
+                $this->logService->createLog('ACTION', ' Create Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
 
                 return $this->json([
                     'state' => 'OK',
@@ -569,7 +569,7 @@ class ApiProjectController extends AbstractController
                     $chat->setName($project->getName() . ' Chat');
                     $manager->persist($chat);
                     $manager->flush();
-                    $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+                    $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
 
                     return $this->json([
                         'state' => 'OK',
@@ -666,7 +666,7 @@ class ApiProjectController extends AbstractController
                 $project->setNoteContent(implode(',', $data['contents']));
                 $manager->persist($project);
                 $manager->flush();
-                $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+                $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
 
                 return $this->json([
                     'state' => 'OK',
@@ -720,14 +720,12 @@ class ApiProjectController extends AbstractController
             }
             $route = $request->attributes->get('_route');
             if ($route == 'add_user_to_project') {
-                $this->logService->createLog('ACTION', ' Add User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
 
                 $project->addUserAuthorised($user);
             }
             if ($route == 'remove_user_to_project') {
 
                 $project->removeUserAuthorised($user);
-                $this->logService->createLog('ACTION', ' remove User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
 
             }
             $project->getChat()->addUser($user);
@@ -735,10 +733,10 @@ class ApiProjectController extends AbstractController
             $manager->persist($project->getChat());
             $manager->flush();
             if ($route == 'add_user_to_project') {
-                $this->logService->createLog('ACTION', ' Add User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+                $this->logService->createLog('ACTION', ' Add User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
             }
             if ($route == 'remove_user_to_project') {
-                $this->logService->createLog('ACTION', ' remove User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+                $this->logService->createLog('ACTION', ' remove User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
 
             }
             return $this->json([
@@ -746,7 +744,7 @@ class ApiProjectController extends AbstractController
             ]);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -785,14 +783,14 @@ class ApiProjectController extends AbstractController
             $project->setState('deleted');
             $manager->persist($project);
             $manager->flush();
-            $this->logService->createLog('DELETE', ' Delete Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+            $this->logService->createLog('DELETE', ' Delete Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
 
             return $this->json([
                 'state' => 'OK'
             ]);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -869,13 +867,13 @@ class ApiProjectController extends AbstractController
             $manager->remove($chat);
             $manager->remove($project);
             $manager->flush();
-            $this->logService->createLog('DELETE', $message, null);
+            $this->logService->createLog('DELETE', $message);
 
             return $this->json([
                 'state' => 'OK'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -914,7 +912,7 @@ class ApiProjectController extends AbstractController
                 'value' => $this->getDataProject($project)
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -956,7 +954,7 @@ class ApiProjectController extends AbstractController
                 'value' => $data
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -1007,7 +1005,7 @@ class ApiProjectController extends AbstractController
                 ]
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -1042,7 +1040,7 @@ class ApiProjectController extends AbstractController
                 'state' => 'ND'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -1139,7 +1137,7 @@ class ApiProjectController extends AbstractController
                 ]
             ];
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -1172,7 +1170,7 @@ class ApiProjectController extends AbstractController
 
             ];
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([

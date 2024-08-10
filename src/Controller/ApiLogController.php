@@ -35,7 +35,6 @@ class ApiLogController extends AbstractController
                     'date' => $this->dateService->formateDateWithHour( $log->getDate()),
                     'author' => $log->getAuthor()->getEmail(),
                     'message' => ucfirst($log->getMessage()) ,
-                    'error'=>$log->getError(),
                     'type'=>$log->getType(),
                 ];
             }
@@ -44,7 +43,7 @@ class ApiLogController extends AbstractController
                 'value' => $data,
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR',' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR',' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return $this->json([
                 'state' => 'ISE',
                 'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()

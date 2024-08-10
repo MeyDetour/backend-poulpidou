@@ -116,7 +116,7 @@ class ApiInvoiceController extends AbstractController
                 $invoice->setNumber($nb);
                 $manager->persist($invoice);
                 $manager->flush();
-                $this->logService->createLog('ACTION', ' Create Invoice (' . $invoice->getId() . ') for project  Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail(), null);
+                $this->logService->createLog('ACTION', ' Create Invoice (' . $invoice->getId() . ') for project  Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail());
 
 
                 return $this->json([
@@ -126,7 +126,7 @@ class ApiInvoiceController extends AbstractController
             }
             return $this->json(['state' => 'ND']);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json(['state' => 'ISE',
@@ -194,7 +194,7 @@ class ApiInvoiceController extends AbstractController
                 $manager->persist($invoice);
                 $manager->flush();
 
-                $this->logService->createLog('ACTION', ' Edit Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail(), null);
+                $this->logService->createLog('ACTION', ' Edit Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail());
 
                 return $this->json([
                     'state' => 'OK',
@@ -205,7 +205,7 @@ class ApiInvoiceController extends AbstractController
                 'state' => 'ND'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -246,7 +246,7 @@ class ApiInvoiceController extends AbstractController
                 'state' => 'OK'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -288,7 +288,7 @@ class ApiInvoiceController extends AbstractController
                 'state' => 'OK',
                 'value' => $data]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -333,7 +333,7 @@ class ApiInvoiceController extends AbstractController
                 'state' => 'OK',
                 'value' => $data]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -371,10 +371,10 @@ class ApiInvoiceController extends AbstractController
             $message = ' Delete Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail();
             $manager->remove($invoice);
             $manager->flush();
-            $this->logService->createLog('DELETE', $message, null);
+            $this->logService->createLog('DELETE', $message);
             return $this->json(['state' => 'OK']);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([

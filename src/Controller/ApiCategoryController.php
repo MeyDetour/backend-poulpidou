@@ -75,7 +75,7 @@ class ApiCategoryController extends AbstractController
                 $entityManager->persist($cat);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Create Category (' . $cat->getId() . ':' . $cat->getName() . ') for project : ' . $cat->getProject()->getName() . ' ) by '.($this->getUser()->getEmail()), null);
+                $this->logService->createLog('ACTION', ' Create Category (' . $cat->getId() . ':' . $cat->getName() . ') for project : ' . $cat->getProject()->getName() . ' ) by '.($this->getUser()->getEmail()));
 
                 return $this->json(['state' => 'OK',
 
@@ -85,7 +85,7 @@ class ApiCategoryController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
@@ -128,7 +128,7 @@ class ApiCategoryController extends AbstractController
                 $entityManager->persist($category);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Edit Category (' . $category->getId() . ':' . $category->getName() . ') for project : ' . $category->getProject()->getName() . ' ) by '.($this->getUser()->getEmail()), null);
+                $this->logService->createLog('ACTION', ' Edit Category (' . $category->getId() . ':' . $category->getName() . ') for project : ' . $category->getProject()->getName() . ' ) by '.($this->getUser()->getEmail()));
 
                 return $this->json(['state' => 'OK',
 
@@ -138,7 +138,7 @@ class ApiCategoryController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
@@ -177,13 +177,13 @@ class ApiCategoryController extends AbstractController
             $message = ' Delete Category (' . $category->getId() . ':' . $category->getName() . ') for project : ' . $category->getProject()->getName() . ' ) by '.($this->getUser()->getEmail());
             $manager->remove($category);
             $manager->flush();
-            $this->logService->createLog('DELETE', $message, null);
+            $this->logService->createLog('DELETE', $message);
 
             return $this->json([
                 'state' => 'OK'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -226,7 +226,7 @@ class ApiCategoryController extends AbstractController
                 'value' => $data
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([

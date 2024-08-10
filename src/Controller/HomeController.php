@@ -55,7 +55,7 @@ class HomeController extends AbstractController
             'payed' => false,
 
         ]];
-        return $this->render('/component/bubble.html.twig',
+        return $this->render('/component/termsAndConditions.html.twig',
             ['invoices' => $invoicesData]);
     }
 
@@ -277,6 +277,22 @@ class HomeController extends AbstractController
                         "project_id" => null
                     ],
                     'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour enlever le projet des projets courrents ",
+                    'need token ? ' => true],
+                [
+                    'get all chats of client' => '/api/chat/client/{id du client}',
+                    'methode' => 'get',
+                    "renvoie :" => [
+                        [
+                            'id'=>'id du chat',
+                            'name'=>'nom du chat',
+                            'lastMessage'=>[
+                                "content"=> 'contenu du dernier message',
+                                "date"=> 'date du dernier message',
+                            ]
+                        ]
+                    ],
+                    'parametres a mettre dans le body' =>   null,
+                    'utilisation' => "afficher dans la fiche client la liste de chats associé",
                     'need token ? ' => true],
 
 
@@ -1108,7 +1124,6 @@ class HomeController extends AbstractController
                         'date' => null,
                         'author' => null,
                         'message' => null,
-                        'error' => null,
                         'type' => null,
                     ],
                     'parametres a mettre dans le body' => "les logs se generent automatiquement",
@@ -1353,6 +1368,7 @@ class HomeController extends AbstractController
                     'parametres a mettre dans le body' => "nothing",
                     'utilisation' => "avoir une conversation",
                     'need token ? ' => true],
+
                 [
                     'envoyer un message depuis l interface client' => '/message',
                     'methode' => 'post',
@@ -1393,8 +1409,8 @@ class HomeController extends AbstractController
                     'need token ? ' => true],
                 [
                     "modifier les parametre de l'utilisateur " => '/api/edit/settings',
-                    'methode' => 'post',
-                    "renvoie :" =>  [
+                    'methode' => 'put',
+                    "renvoie :" => [
                         'formatDate' => "valeurs acceptées : UE(default),SUI,PB,US,AS,ISO (pour l'instant)",
                         'payments' => "valeurs acceptées : CHEQUE,CASH,BANKTRANSFER",
                         'delayDays' => "valeurs acceptées : 30,50,60",
@@ -1402,7 +1418,7 @@ class HomeController extends AbstractController
                         'freeMaintenance' => 'boolean',
                         'interfaceLangage' => "values : AG,FR"
                     ],
-                    'parametres a mettre dans le body' =>  [
+                    'parametres a mettre dans le body' => [
                         'formatDate' => "valeurs acceptées : UE(default),SUI,PB,US,AS,ISO (pour l'instant)",
                         'payments' => "valeurs acceptées : CHEQUE,CASH,BANKTRANSFER",
                         'delayDays' => "valeurs acceptées : 30,50,60",

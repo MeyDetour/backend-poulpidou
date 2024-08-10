@@ -9,8 +9,7 @@
 
     color: var(--grey);
     font-size: 16px;
-
-    clip-path: border-box;
+ 
 
 }
 
@@ -24,9 +23,12 @@
 
     background: var(--bleu4);
 
-    border-radius: 0px 0px 7px 7px;
-    border: 1px solid var(--bleu2);
+    border-radius: 10px 10px 7px 7px;
+    border-bottom: 1px solid var(--bleu2);
     padding: 17px;
+    
+    z-index: 1;
+    position: relative;
 }
 
 .termsAndConditionsOfPayementContainer .title h3 {

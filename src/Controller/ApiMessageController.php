@@ -42,11 +42,14 @@ class ApiMessageController extends AbstractController
                 }
 
             }
-            return $this->json($data);
+            return $this->json([
+                "state" => 'OK',
+                "value" =>
+                    $data]);
 
         } catch
         (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -86,11 +89,67 @@ class ApiMessageController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            return $this->json($this->chatData($chat));
+            return $this->json([
+                "state" => 'OK',
+                "value" =>
+                    $this->chatData($chat)]);
+        } catch
+        (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+    }
+
+    #[Route('/api/chat/client/{id}', name: 'api_get_chats_of_client', methods: ['get'])]
+    public function getChatClient($id, ClientRepository $clientRepository, MessageRepository $messageRepository): Response
+    {
+        try {
+            $client = $clientRepository->find($id);
+            if (!$client) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'client'
+                ]);
+            }
+            if (!$client->getOwner() == $this->getUser()) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'client'
+                ]);
+            }
+            if ($client->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'client'
+                ]);
+            }
+            $data = [];
+            foreach ($client->getChats() as $chat) {
+                if ($chat->getProject()->getState() != 'deleted') {
+                    $data[] = [
+                        'id' => $chat->getId(),
+                        'name' => $chat->getName(),
+                        'lastMessage' => [
+                            "content" => $chat->getMessages()[0]->getContent(),
+                            "date" => $this->dateService->formateDateWithHour($chat->getMessages()[0]->getCreatedAt()),
+                        ]
+                    ];
+                }
+            }
+            return $this->json([
+                "state" => 'OK',
+                "value" =>
+                    $data]);
 
         } catch
         (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -248,7 +307,7 @@ class ApiMessageController extends AbstractController
 
         } catch
         (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -325,7 +384,7 @@ class ApiMessageController extends AbstractController
             ]);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json([
                 'state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
@@ -382,7 +441,7 @@ class ApiMessageController extends AbstractController
 
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
@@ -419,7 +478,7 @@ class ApiMessageController extends AbstractController
                 'state' => 'ND'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -441,7 +500,7 @@ class ApiMessageController extends AbstractController
             $this->entityManager->flush();
             return true;
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return false;
         }
 

@@ -126,7 +126,7 @@ class ApiTaskController extends AbstractController
                 $entityManager->persist($task);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail(), null);
+                $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail());
 
                 return $this->json(['state' => 'OK',
 
@@ -136,7 +136,7 @@ class ApiTaskController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
@@ -231,7 +231,7 @@ class ApiTaskController extends AbstractController
                 $entityManager->persist($task);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Edit Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail(), null);
+                $this->logService->createLog('ACTION', ' Edit Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail());
 
                 return $this->json(['state' => 'OK',
 
@@ -241,7 +241,7 @@ class ApiTaskController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
@@ -292,7 +292,7 @@ class ApiTaskController extends AbstractController
                 $entityManager->persist($task);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Edit Status of Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail(), null);
+                $this->logService->createLog('ACTION', ' Edit Status of Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail());
 
                 return $this->json(['state' => 'OK',
 
@@ -302,7 +302,7 @@ class ApiTaskController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
@@ -334,13 +334,13 @@ class ApiTaskController extends AbstractController
             $message = ' Delete task (' . $task->getId() . ':' . $task->getName() . ') of project : (' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail();
             $manager->remove($task);
             $manager->flush();
-            $this->logService->createLog('DELETE', $message, null);
+            $this->logService->createLog('DELETE', $message);
 
             return $this->json([
                 'state' => 'OK'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -378,7 +378,7 @@ class ApiTaskController extends AbstractController
                 'value'=>$this->getData($task)
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
@@ -426,7 +426,7 @@ class ApiTaskController extends AbstractController
                 'value' => $data
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
 
 
             return $this->json([
