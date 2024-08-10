@@ -6,6 +6,7 @@ use App\Entity\Chat;
 use App\Entity\Project;
 use App\Repository\ClientRepository;
 use App\Repository\ProjectRepository;
+use App\Repository\UserRepository;
 use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,11 +52,11 @@ class ApiProjectController extends AbstractController
     #[Route('/api/project/new', name: 'app_api_project', methods: 'post')]
     public function index(Request $request, EntityManagerInterface $manager, ClientRepository $clientRepository): Response
     {
+        try {
+            $data = json_decode($request->getContent(), true);
 
-        $data = json_decode($request->getContent(), true);
+            if ($data) {
 
-        if ($data) {
-            try {
                 $project = new Project();
                 if (!isset($data['identity']['client_id'])) {
                     return $this->json([
@@ -223,6 +224,7 @@ class ApiProjectController extends AbstractController
                     }
                     $project->setMaintenance($data['composition']['maintenance']);
                 }
+
                 if (isset($data['composition']['type']) && !empty($data['composition']['type'])) {
                     $liste = [];
                     foreach ($data['composition']['type'] as $thing) {
@@ -263,6 +265,36 @@ class ApiProjectController extends AbstractController
                     $project->setDevice(implode(',', $liste));
 
                 }
+                if (isset($data['rules']['canEditInvoices'])) {
+                    if (gettype($data['rules']['canEditInvoices']) != 'string') {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'canEditInvoices'
+                        ]);
+                    }
+                    if ($data['rules']['canEditInvoices'] != 'false' && $data['rules']['canEditInvoices'] != 'true') {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'canEditInvoices'
+                        ]);
+                    }
+                    $project->setOtherUserCanEditInvoices($data['rules']['canEditInvoices']);
+                }
+                if (isset($data['rules']['canSeeClientProfile'])) {
+                    if (gettype($data['rules']['canSeeClientProfile']) != 'string') {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'canSeeClientProfile'
+                        ]);
+                    }
+                    if ($data['rules']['canSeeClientProfile'] != 'false' && $data['rules']['canSeeClientProfile'] != 'true') {
+                        return $this->json([
+                            'state' => 'IDT',
+                            'value' => 'canSeeClientProfile'
+                        ]);
+                    }
+                    $project->setCanOtherUserSeeClientProfile($data['rules']['canEditInvoices']);
+                }
                 $project->setUuid(uniqid());
                 $project->setCreatedAt(new \DateTimeImmutable());
                 $project->setOwner($this->getUser());
@@ -286,18 +318,18 @@ class ApiProjectController extends AbstractController
                     'state' => 'OK',
                     'value' => $this->getDataProject($project)
                 ]);
-            } catch (\Exception $exception) {
-                return $this->json([
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-                ]);
             }
-        }
-        return $this->json([
-            'state' => 'ND'
-        ]);
+            return $this->json([
+                'state' => 'ND'
+            ]);
+        } catch (\Exception $exception) {
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
+            ]);
+        }
     }
 
     #[Route('/api/project/edit/{id}', name: 'edit_api_project')]
@@ -317,7 +349,7 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($project->getState() == 'deleted'){
+            if ($project->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -357,7 +389,8 @@ class ApiProjectController extends AbstractController
 
                     if (isset($data['identity']['figmaLink']) && !empty(trim($data['identity']['figmaLink']))) {
                         $project->setFigmaLink($data['identity']['figmaLink']);
-                    } if (isset($data['identity']['websiteLink']) && !empty(trim($data['identity']['websiteLink']))) {
+                    }
+                    if (isset($data['identity']['websiteLink']) && !empty(trim($data['identity']['websiteLink']))) {
                         $project->setFigmaLink($data['identity']['websiteLink']);
                     }
                     if (isset($data['identity']['githubLink']) && !empty(trim($data['identity']['githubLink']))) {
@@ -496,7 +529,36 @@ class ApiProjectController extends AbstractController
                         $project->setDevice(implode(',', $liste));
 
                     }
-
+                    if (isset($data['rules']['canEditInvoices'])) {
+                        if (gettype($data['rules']['canEditInvoices']) != 'string') {
+                            return $this->json([
+                                'state' => 'IDT',
+                                'value' => 'canEditInvoices'
+                            ]);
+                        }
+                        if ($data['rules']['canEditInvoices'] != 'false' && $data['rules']['canEditInvoices'] != 'true') {
+                            return $this->json([
+                                'state' => 'IDT',
+                                'value' => 'canEditInvoices'
+                            ]);
+                        }
+                        $project->setOtherUserCanEditInvoices($data['rules']['canEditInvoices']);
+                    }
+                    if (isset($data['rules']['canSeeClientProfile'])) {
+                        if (gettype($data['rules']['canSeeClientProfile']) != 'string') {
+                            return $this->json([
+                                'state' => 'IDT',
+                                'value' => 'canSeeClientProfile'
+                            ]);
+                        }
+                        if ($data['rules']['canSeeClientProfile'] != 'false' && $data['rules']['canSeeClientProfile'] != 'true') {
+                            return $this->json([
+                                'state' => 'IDT',
+                                'value' => 'canSeeClientProfile'
+                            ]);
+                        }
+                        $project->setCanOtherUserSeeClientProfile($data['rules']['canEditInvoices']);
+                    }
 
                     $project->setCreatedAt(new \DateTimeImmutable());
                     $project->setOwner($this->getUser());
@@ -547,7 +609,7 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($project->getState() == 'deleted'){
+            if ($project->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -623,6 +685,78 @@ class ApiProjectController extends AbstractController
 
     }
 
+    #[Route('/api/project/{id}/remove/user/{userId}', name: 'remove_user_to_project', methods: 'delete')]
+    #[Route('/api/project/{id}/add/user/{userId}', name: 'add_user_to_project', methods: 'put')]
+    public function addUserToProject($id, ProjectRepository $repository, $userId, UserRepository $userRepository, EntityManagerInterface $manager, Request $request): Response
+    {
+
+
+        try {
+            $project = $repository->find($id);
+            if (!$project) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getOwner() != $this->getUser()) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+            $user = $userRepository->find($userId);
+            if (!$user) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'user'
+                ]);
+            }
+            $route = $request->attributes->get('_route');
+            if ($route == 'add_user_to_project') {
+                $this->logService->createLog('ACTION', ' Add User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+
+                $project->addUserAuthorised($user);
+            }
+            if ($route == 'remove_user_to_project') {
+
+                $project->removeUserAuthorised($user);
+                $this->logService->createLog('ACTION', ' remove User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+
+            }
+            $project->getChat()->addUser($user);
+            $manager->persist($project);
+            $manager->persist($project->getChat());
+            $manager->flush();
+            if ($route == 'add_user_to_project') {
+                $this->logService->createLog('ACTION', ' Add User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+            }
+            if ($route == 'remove_user_to_project') {
+                $this->logService->createLog('ACTION', ' remove User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')', null);
+
+            }
+            return $this->json([
+                'state' => 'OK'
+            ]);
+
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+    }
+
 
     #[
         Route('/api/project/delete/{id}', name: 'delete_project', methods: 'delete')]
@@ -642,7 +776,7 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($project->getState() == 'deleted'){
+            if ($project->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -686,7 +820,7 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($project->getState() == 'deleted'){
+            if ($project->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -695,18 +829,18 @@ class ApiProjectController extends AbstractController
             $message = ' Delete force Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')';
 
 
-            foreach ($project->getCategories() as $category){
+            foreach ($project->getCategories() as $category) {
 
                 $manager->remove($category);
             }
-            foreach ($project->getTasks() as $task){
+            foreach ($project->getTasks() as $task) {
                 $manager->remove($task);
             }
-            foreach ($project->getInvoices() as $invoice){
+            foreach ($project->getInvoices() as $invoice) {
                 $manager->remove($invoice);
             }
-            foreach ($project->getPdfs() as $pdf){
-                $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
+            foreach ($project->getPdfs() as $pdf) {
+                $filePath = $this->getParameter('upload_directory') . '/' . $pdf->getFileName();
 
 
                 if (!file_exists($filePath)) {
@@ -729,7 +863,7 @@ class ApiProjectController extends AbstractController
 
             }
             $chat = $project->getChat();
-            foreach ($chat->getMessages() as $message){
+            foreach ($chat->getMessages() as $message) {
                 $manager->remove($message);
             }
             $manager->remove($chat);
@@ -769,7 +903,7 @@ class ApiProjectController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($project->getState() == 'deleted'){
+            if ($project->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -820,6 +954,57 @@ class ApiProjectController extends AbstractController
             return $this->json([
                 'state' => 'OK',
                 'value' => $data
+            ]);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+    }
+
+    #[Route('/api/project/{id}/get/client', name: 'get_project_client', methods: 'get')]
+    public function getClientOfProject($id, ProjectRepository $repository): Response
+    {
+        try {
+            $project = $repository->find($id);
+            if (!$project) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if (!$project->isCanOtherUserSeeClientProfile() && $project->getOwner() != $this->getUser()) {
+                return $this->json([
+                    'state' => 'ASFO',
+                    'value' => 'project'
+                ]);
+            }
+
+            if ($project->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+            return $this->json([
+                'state' => 'OK',
+                'value' => [
+                    'id' => $project->getClient()->getId(),
+                    'firstName' => $project->getClient()->getFirstName(),
+                    'lastName' => $project->getClient()->getLastName(),
+                    'date' => $this->dateService->formateDate($project->getClient()->getCreatedAt()),
+                ]
             ]);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine(), $exception->getMessage());
@@ -894,11 +1079,14 @@ class ApiProjectController extends AbstractController
 
             $userAutorised = [];
             foreach ($project->getUserAuthorised() as $user) {
-                $userAutorised[] = [
-                    'address' => $user->getAdresse(),
-                    'firstName' => $user->getFirstName(),
-                    'lastName' => $user->getLastName(),
-                ];
+                if($user!=$project->getOwner()){
+                    $userAutorised[] = [
+                        'email' => $user->getEmail(),
+                        'firstName' => $user->getFirstName(),
+                        'lastName' => $user->getLastName(),
+                    ];
+                }
+
             }
 
             return [
@@ -906,6 +1094,7 @@ class ApiProjectController extends AbstractController
                 "estimatedPrice" => $project->getEstimatedPrice(),
                 "maintenancePercentage" => $project->getMaintenancePercentage(),
                 "members" => $userAutorised,
+
                 'identity' => [
                     "id" => $project->getId(),
                     'uuid' => $project->getUuid(),
@@ -919,7 +1108,11 @@ class ApiProjectController extends AbstractController
                     "chatName" => $chat,
                     "state" => $project->getState(),
                     "cratedAt" => $this->dateService->formateDate($project->getCreatedAt()),
-
+                    "owner" => [
+                        'email' => $project->getOWner()->getEmail(),
+                        'firstName' => $project->getOWner()->getFirstName(),
+                        'lastName' => $project->getOWner()->getLastName(),
+                    ]
                 ],
 
                 "note" => [
@@ -929,7 +1122,10 @@ class ApiProjectController extends AbstractController
                     [$notesNames[3], $notesContent[3]],
                     [$notesNames[4], $notesContent[4]],
                 ],
-
+                "rules" => [
+                    'canEditInvoices' => $project->isOtherUserCanEditInvoices(),
+                    'canSeeClientProfile' => $project->isCanOtherUserSeeClientProfile(),
+                ],
                 'composition' => [
                     'isPaying' => $project->isPaying(),
                     'database' => $project->isDatabase(),

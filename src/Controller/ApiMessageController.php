@@ -22,7 +22,7 @@ class ApiMessageController extends AbstractController
     private EntityManagerInterface $entityManager;
     private DateService $dateService;
 
-    public function __construct(LogService $logService,DateService $dateService ,EntityManagerInterface $entityManager)
+    public function __construct(LogService $logService, DateService $dateService, EntityManagerInterface $entityManager)
     {
         $this->logService = $logService;
         $this->entityManager = $entityManager;
@@ -33,10 +33,11 @@ class ApiMessageController extends AbstractController
     public function getChats(Request $request, EntityManagerInterface $manager, ChatRepository $chatRepository): Response
     {
         try {
-            $data = [];
-            foreach ($chatRepository->findAll() as $chat) {
 
-                if ( ($chat->getProject()->getOwner() == $this->getUser() || $chat->getProject()->hasUserInUserAuthorised($this->getUser())) &&  $chat->getProject()->getState() != 'deleted' ) {
+            $data = [];
+            foreach ($this->getUser()->getChats() as $chat) {
+
+                if (($chat->getProject()->getOwner() == $this->getUser() || $chat->getProject()->hasUserInUserAuthorised($this->getUser())) && $chat->getProject()->getState() != 'deleted') {
                     $data[] = $this->chatDataShortData($chat);
                 }
 
@@ -67,19 +68,19 @@ class ApiMessageController extends AbstractController
                     'value' => 'chat'
                 ]);
             }
-            if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser()) ) {
+            if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
                     'value' => 'project'
                 ]);
             }
-            if($chat->getProject()->getState() == 'deleted'){
+            if ($chat->getProject()->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
                 ]);
             }
-            if($chat->getProject()->getState() == 'deleted'){
+            if ($chat->getProject()->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -123,11 +124,10 @@ class ApiMessageController extends AbstractController
                 'email' => $author->getMail(),
             ];
 
-
             $formattedMessages[] = [
                 'id' => $message->getId(),
                 'content' => $message->getContent(),
-                'datetime' => $this->dateService->formateDateWithHour( $message->getCreatedAt()),
+                'datetime' => $this->dateService->formateDateWithHour($message->getCreatedAt()),
                 'author' => $authorData,
                 'type' => $type
             ];
@@ -138,7 +138,7 @@ class ApiMessageController extends AbstractController
             'value' => [
                 'id' => $chat->getId(),
                 'name' => $chat->getName(),
-                'date' => $this->dateService->formateDate( $chat->getCreatedAt()),
+                'date' => $this->dateService->formateDate($chat->getCreatedAt()),
                 'project_id' => $chat->getProject()->getId(),
                 'project_uuid' => $chat->getProject()->getUuid(),
                 'client' => [
@@ -146,7 +146,7 @@ class ApiMessageController extends AbstractController
                     'firstName' => $client->getFirstName(),
                     'lastName' => $client->getLastName(),
                     'online' => $client->isOnline(),
-                    'date' => $this->dateService->formateDate( $client->getCreatedAt()),
+                    'date' => $this->dateService->formateDate($client->getCreatedAt()),
                     'projectNumber' => count($client->getProjects()),
                 ],
                 'messages' => $formattedMessages
@@ -158,20 +158,29 @@ class ApiMessageController extends AbstractController
 
     public function chatDataShortData($chat)
     {
-
+        $users = [];
+        foreach ($chat->getUsers() as $user) {
+            $users[] = [
+                'id' => $user->getId(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'email' => $user->getMail(),
+            ];
+        }
 
         return [
             'state' => 'OK',
             'value' => [
                 'id' => $chat->getId(),
                 'name' => $chat->getName(),
-                'date' => $this->dateService->formateDate( $chat->getCreatedAt()),
+                'date' => $this->dateService->formateDate($chat->getCreatedAt()),
                 'client' => [
                     'id' => $chat->getClient()->getId(),
                     'firstName' => $chat->getClient()->getFirstName(),
                     'lastName' => $chat->getClient()->getLastName(),
 
                 ],
+                'users' => $users
 
             ]
 
@@ -179,13 +188,13 @@ class ApiMessageController extends AbstractController
     }
 
     #[Route('/message', name: 'new_message', methods: ['post'])]
-    public function index(Request $request, EntityManagerInterface $manager, ClientRepository $clientRepository, ProjectRepository $projectRepository): Response
+    public function index(Request $request, ProjectRepository $projectRepository): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
             if ($data) {
 
-                //verifying if needed data are set
+                // id can be uuid of project
                 if (!isset($data['id']) || empty(trim($data['id']))) {
                     return $this->json([
                         'state' => 'NED',
@@ -206,6 +215,12 @@ class ApiMessageController extends AbstractController
                 if (!$project) {
                     return $this->json([
                         'state' => 'NDF',
+                        'value' => 'project'
+                    ]);
+                }
+                if ($project->getState() == 'deleted') {
+                    return $this->json([
+                        'state' => 'DD',
                         'value' => 'project'
                     ]);
                 }
@@ -286,7 +301,7 @@ class ApiMessageController extends AbstractController
                         'value' => 'project'
                     ]);
                 }
-                if($project->getState() == 'deleted'){
+                if ($project->getState() == 'deleted') {
                     return $this->json([
                         'state' => 'DD',
                         'value' => 'project'
@@ -339,7 +354,7 @@ class ApiMessageController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($message->getProject()->getState() == 'deleted'){
+            if ($message->getProject()->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -373,8 +388,9 @@ class ApiMessageController extends AbstractController
         }
 
     }
+
     #[Route('/api/search/chat', name: 'search_chat', methods: 'get')]
-    public function searchClients(Request $request, ChatRepository $chatRepository): Response
+    public function searchChat(Request $request, ChatRepository $chatRepository): Response
     {
         try {
             $datum = json_decode($request->getContent(), true);
@@ -386,9 +402,9 @@ class ApiMessageController extends AbstractController
                     $dataToReturn = [];
                     foreach ($chats as $chat) {
                         $dataToReturn[] = [
-                                "id" => $chat->getId(),
-                             "name"=>$chat->getName()
-                               ];
+                            "id" => $chat->getId(),
+                            "name" => $chat->getName()
+                        ];
 
 
                     }
@@ -420,7 +436,6 @@ class ApiMessageController extends AbstractController
         try {
             $message->setCreatedAt(new \DateTimeImmutable());
             $message->setContent($content);
-            $message->setAuthorUser($this->getUser());
             $message->setChat($project->getChat());
             $this->entityManager->persist($message);
             $this->entityManager->flush();

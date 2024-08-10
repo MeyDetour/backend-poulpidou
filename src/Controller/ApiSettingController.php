@@ -21,6 +21,7 @@ class ApiSettingController extends AbstractController
     ];  private $associationPayementKey = [
         "CHEQUE","CASH","BANKTRANSFER"
     ];
+    private $delayDaysKey = [30,60,50];
     private LogService $logService;
     private EntityManagerInterface $entityManager;
 
@@ -92,7 +93,7 @@ class ApiSettingController extends AbstractController
                     $settings->setPayment(implode(',', $data['payments']));
                 }
                 if (isset($data['delayDays'])) {
-                    if (!is_numeric($data['delayDays']) || !in_array($data['delayDays'], [30, 50, 60])) {
+                    if (!is_numeric($data['delayDays']) || !in_array($data['delayDays'], $this->delayDaysKey)) {
                         return $this->json([
                             'state' => 'IDT',
                             'value' => 'formatDate',

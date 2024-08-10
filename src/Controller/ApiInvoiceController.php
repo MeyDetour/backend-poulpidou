@@ -67,6 +67,12 @@ class ApiInvoiceController extends AbstractController
                         'value' => 'project'
                     ]);
                 }
+                if(!$project->isOtherUserCanEditInvoices() && $project->getOwner() != $this->getUser()){
+                    return $this->json([
+                        'state' => 'ASFO',
+                        'value' => 'project'
+                    ]);
+                }
                 if ($project->getState() == 'deleted') {
                     return $this->json([
                         'state' => 'DD',
@@ -142,6 +148,12 @@ class ApiInvoiceController extends AbstractController
             if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return $this->json([
                     'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if(!$invoice->getProject()->isOtherUserCanEditInvoices() && $invoice->getProject()->getOwner() != $this->getUser()){
+                return $this->json([
+                    'state' => 'ASFO',
                     'value' => 'project'
                 ]);
             }

@@ -332,7 +332,21 @@ class HomeController extends AbstractController
                         "totalPrice" => null,
                         "estimatedPrice" => null,
                         "maintenancePercentage" => 10,
-                        "members" => [],
+                        "members" => [
+                            [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ], [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ]
+                        ],
+                        "rules" => [
+                            'canEditInvoices' => "boolean",
+                            'canSeeClientProfile' => "boolean",
+                        ],
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
@@ -346,6 +360,11 @@ class HomeController extends AbstractController
                                 "firstName" => "Mey ",
                                 "lastName" => "DETOUR",
                                 "online" => false
+                            ],
+                            "owner" => [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
                             ],
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
@@ -411,15 +430,234 @@ class HomeController extends AbstractController
                 [
                     'get project' => '/api/project/{id du client}',
                     'methode' => 'get',
-                    "renvoie :" => "le projet",
+                    "renvoie :" => [
+                        "totalPrice" => null,
+                        "estimatedPrice" => null,
+                        "maintenancePercentage" => 10,
+                        "members" => [
+                            [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ], [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ]
+                        ],
+                        "rules" => [
+                            'canEditInvoices' => "boolean",
+                            'canSeeClientProfile' => "boolean",
+                        ],
+                        "identity" => [
+                            "id" => 35,
+                            "name" => "nouveau 2",
+                            "figmaLink" => null,
+                            "githubLink" => null,
+                            "websiteLink" => null,
+                            "startDate" => "15/08/2024",
+                            "endDate" => null,
+                            "client" => [
+                                "id" => 25,
+                                "firstName" => "Mey ",
+                                "lastName" => "DETOUR",
+                                "online" => false
+                            ],
+                            "owner" => [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ],
+                            "chatName" => "nouveau 2 Chat",
+                            "state" => "active",
+                            "cratedAt" => "09/08/2024"
+                        ],
+                        "note" => [
+                            [
+                                "Note 1",
+                                " "
+                            ],
+                            [
+                                "Note 2",
+                                " "
+                            ],
+                            [
+                                "Note 3",
+                                " "
+                            ],
+                            [
+                                "Note 4",
+                                " "
+                            ],
+                            [
+                                "Note 5",
+                                " "
+                            ]
+                        ],
+                        "composition" => [
+                            "isPaying" => null,
+                            "database" => null,
+                            "maquette" => null,
+                            "maintenance" => null,
+                            "type" => [],
+                            "framework" => [],
+                            "options" => [],
+                            "devices" => []
+                        ]],
                     'parametres a mettre dans le body' => null,
                     'utilisation' => "passer en parametre l'id du projet pour obtenir les informations",
                     'need token ? ' => true],
                 [
                     'get projects' => '/api/clients',
                     'methode' => 'get',
-                    "renvoie :" => "tous les projet associés au compte de l'utilisateur selon le parametre entré",
-                    'parametres a mettre dans le body' => "display_deleted (boolean)",
+                    "renvoie :" => [[
+                        "totalPrice" => null,
+                        "estimatedPrice" => null,
+                        "maintenancePercentage" => 10,
+                        "members" => [
+                            [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ], [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ]
+                        ],
+                        "rules" => [
+                            'canEditInvoices' => "boolean",
+                            'canSeeClientProfile' => "boolean",
+                        ],
+                        "identity" => [
+                            "id" => 35,
+                            "name" => "nouveau 2",
+                            "figmaLink" => null,
+                            "githubLink" => null,
+                            "websiteLink" => null,
+                            "startDate" => "15/08/2024",
+                            "endDate" => null,
+                            "client" => [
+                                "id" => 25,
+                                "firstName" => "Mey ",
+                                "lastName" => "DETOUR",
+                                "online" => false
+                            ],
+                            "owner" => [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ],
+                            "chatName" => "nouveau 2 Chat",
+                            "state" => "active",
+                            "cratedAt" => "09/08/2024"
+                        ],
+                        "note" => [
+                            [
+                                "Note 1",
+                                " "
+                            ],
+                            [
+                                "Note 2",
+                                " "
+                            ],
+                            [
+                                "Note 3",
+                                " "
+                            ],
+                            [
+                                "Note 4",
+                                " "
+                            ],
+                            [
+                                "Note 5",
+                                " "
+                            ]
+                        ],
+                        "composition" => [
+                            "isPaying" => null,
+                            "database" => null,
+                            "maquette" => null,
+                            "maintenance" => null,
+                            "type" => [],
+                            "framework" => [],
+                            "options" => [],
+                            "devices" => []
+                        ]], [
+                        "totalPrice" => null,
+                        "estimatedPrice" => null,
+                        "maintenancePercentage" => 10,
+                        "members" => [
+                            [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ], [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ]
+                        ],
+                        "rules" => [
+                            'canEditInvoices' => "boolean",
+                            'canSeeClientProfile' => "boolean",
+                        ],
+                        "identity" => [
+                            "id" => 35,
+                            "name" => "nouveau 2",
+                            "figmaLink" => null,
+                            "githubLink" => null,
+                            "websiteLink" => null,
+                            "startDate" => "15/08/2024",
+                            "endDate" => null,
+                            "client" => [
+                                "id" => 25,
+                                "firstName" => "Mey ",
+                                "lastName" => "DETOUR",
+                                "online" => false
+                            ],
+                            "owner" => [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ],
+                            "chatName" => "nouveau 2 Chat",
+                            "state" => "active",
+                            "cratedAt" => "09/08/2024"
+                        ],
+                        "note" => [
+                            [
+                                "Note 1",
+                                " "
+                            ],
+                            [
+                                "Note 2",
+                                " "
+                            ],
+                            [
+                                "Note 3",
+                                " "
+                            ],
+                            [
+                                "Note 4",
+                                " "
+                            ],
+                            [
+                                "Note 5",
+                                " "
+                            ]
+                        ],
+                        "composition" => [
+                            "isPaying" => null,
+                            "database" => null,
+                            "maquette" => null,
+                            "maintenance" => null,
+                            "type" => [],
+                            "framework" => [],
+                            "options" => [],
+                            "devices" => []
+                        ]]],
+                    'parametres a mettre dans le body' => ["display_deleted" => " (boolean)"],
                     'utilisation' => "passer en parametre l'id du projet pour obtenir les informations et renvoie tous les projets actifs par défaut ou tous les projets (actifs et supprimés) si display_deleted = true ",
                     'need token ? ' => true],
                 [
@@ -429,7 +667,21 @@ class HomeController extends AbstractController
                         "totalPrice" => null,
                         "estimatedPrice" => null,
                         "maintenancePercentage" => 10,
-                        "members" => [],
+                        "members" => [
+                            [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ], [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ]
+                        ],
+                        "rules" => [
+                            'canEditInvoices' => "boolean",
+                            'canSeeClientProfile' => "boolean",
+                        ],
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
@@ -446,6 +698,11 @@ class HomeController extends AbstractController
                             ],
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
+                            "owner" => [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ],
                             "cratedAt" => "09/08/2024"
                         ],
                         "note" => [
@@ -506,6 +763,32 @@ class HomeController extends AbstractController
                     'utilisation' => "passer en parametre l'id du project et mettre dans le body les parametre a changer",
                     'need token ? ' => true],
                 [
+                    'get client of the project ' => '/api/project/{id}/get/client',
+                    'methode' => 'get',
+                    "renvoie :" => [
+                        'id' => null,
+                        'firstName' => null,
+                        'lastName' => null,
+                        'date' => null,
+                    ],
+                    'parametres a mettre dans le body' => null,
+                    'utilisation' => "passer en parametre l'id du project",
+                    'need token ? ' => true],
+                [
+                    'add an user to the project ' => '/api/project/{id du project}/add/user/{user id}',
+                    'methode' => 'put',
+                    "renvoie :" => "ok",
+                    'parametres a mettre dans le body' => null,
+                    'utilisation' => "passer en parametre l'id du project et l'utilisateur visé, seul le propriétaire du projet peut le faire ",
+                    'need token ? ' => true],
+                [
+                    'remove an user to the project ' => '/api/project/{id du project}/remove/user/{user id}',
+                    'methode' => 'delete',
+                    "renvoie :" => "ok",
+                    'parametres a mettre dans le body' => null,
+                    'utilisation' => "passer en parametre l'id du project et l'utilisateur visé, seul le propriétaire du projet peut le faire ",
+                    'need token ? ' => true],
+                [
                     'delete ' => '/api/project/delete/{id}',
                     'methode' => 'delete',
                     "renvoie :" => "ok si l'action a bien été faite",
@@ -519,18 +802,100 @@ class HomeController extends AbstractController
                     'parametres a mettre dans le body' => null,
                     'utilisation' => "passer en parametre l'id du project pour supprimer vraiment la fiche project",
                     'need token ? ' => true],
-                [
-                    'editer les notes du projet' => '/api/project/{id du projet}/note',
-                    'methode' => 'put',
-                    "renvoie :" => "renvoie les notes modifiés",
-                    'parametres a mettre dans le body' => "notes,remembers ",
-                    'utilisation' => "Créer une note, la modifier ou la renvoie",
-                    'need token ? ' => true],
+
                 [
                     'edit note of project' => '/api/project/id/note',
                     'methode' => 'put',
-                    "renvoie :" => "renvoie les notes",
-                    'parametres a mettre dans le body' => "names ( dico avec les clés de 0 à 4 contenant les noms) et content ( dico de clé 0 à 5 cpontenant le contenu)",
+                    "renvoie :" => [
+                        "totalPrice" => null,
+                        "estimatedPrice" => null,
+                        "maintenancePercentage" => 10,
+                        "members" => [
+                            [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ], [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ]
+                        ],
+                        "rules" => [
+                            'canEditInvoices' => "boolean",
+                            'canSeeClientProfile' => "boolean",
+                        ],
+                        "identity" => [
+                            "id" => 35,
+                            "name" => "nouveau 2",
+                            "figmaLink" => null,
+                            "githubLink" => null,
+                            "websiteLink" => null,
+                            "startDate" => "15/08/2024",
+                            "endDate" => null,
+                            "client" => [
+                                "id" => 25,
+                                "firstName" => "Mey ",
+                                "lastName" => "DETOUR",
+                                "online" => false
+                            ],
+                            "chatName" => "nouveau 2 Chat",
+                            "state" => "active",
+                            "owner" => [
+                                'email' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                            ],
+                            "cratedAt" => "09/08/2024"
+                        ],
+                        "note" => [
+                            [
+                                "Note 1",
+                                " "
+                            ],
+                            [
+                                "Note 2",
+                                " "
+                            ],
+                            [
+                                "Note 3",
+                                " "
+                            ],
+                            [
+                                "Note 4",
+                                " "
+                            ],
+                            [
+                                "Note 5",
+                                " "
+                            ]
+                        ],
+                        "composition" => [
+                            "isPaying" => null,
+                            "database" => null,
+                            "maquette" => null,
+                            "maintenance" => null,
+                            "type" => [],
+                            "framework" => [],
+                            "options" => [],
+                            "devices" => []
+                        ]],
+                    'parametres a mettre dans le body' => [
+                        'names' => [
+                            "0" => "name1",
+                            "1" => "name1",
+                            "2" => "name1",
+                            "3" => "name1",
+                            "4" => "name1",
+                        ],
+                        'contents' => [
+                            "0" => "content1",
+                            "1" => "content1",
+                            "2" => "content1",
+                            "3" => "content1",
+                            "4" => "content1",
+                        ]
+                    ],
                     'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour enlever le projet des projets courrents ",
                     'need token ? ' => true],],
             'user' => [
@@ -548,6 +913,19 @@ class HomeController extends AbstractController
                     ],
                     'parametres a mettre dans le body' => null,
                     'utilisation' => "permet d'avoir l'utilisateur a partir du token",
+                    'need token ? ' => true
+                ], [
+                    'get users' => '/api/users',
+                    'methode' => 'get',
+                    "renvoie :" => [
+                        'id' => null,
+                        'mail' => null,
+                        'phone' => null,
+                        'firstName' => null,
+                        'lastName' => null,
+                    ],
+                    'parametres a mettre dans le body' => null,
+                    'utilisation' => "avoir tous les utilisateursn",
                     'need token ? ' => true
                 ],
                 [
@@ -850,8 +1228,18 @@ class HomeController extends AbstractController
                     'need token ? ' => true],
                 [
                     'search chat' => '/api/search/chat',
-                    'methode' => 'get',
-                    "renvoie :" => "renvoie les clients trouvés",
+                    'methode' => 'get', [
+                    [
+                        "id" => null,
+                        "name" => null,
+                    ], [
+                        "id" => null,
+                        "name" => null,
+                    ], [
+                        "id" => null,
+                        "name" => null,
+                    ]
+                ],
                     'parametres a mettre dans le body' => [
                         "searchTerm" => null,
                     ],
@@ -862,14 +1250,106 @@ class HomeController extends AbstractController
                 [
                     'gets all chats' => '/api/chats',
                     'methode' => 'get',
-                    "renvoie :" => "renvoie les chats dans lequels vous vous trouvez",
+                    "renvoie :" => [[
+
+                        'id' => null,
+                        'name' => null,
+                        'date' => null,
+                        'client' => [
+                            'id' => null,
+                            'firstName' => null,
+                            'lastName' => null,
+
+                        ],
+                        'users' => [
+                            [
+                                'id' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                                'email' => null,
+                            ],
+                            [
+                                'id' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                                'email' => null,
+                            ]
+                        ]
+                    ], [
+
+                        'id' => null,
+                        'name' => null,
+                        'date' => null,
+                        'client' => [
+                            'id' => null,
+                            'firstName' => null,
+                            'lastName' => null,
+
+                        ],
+                        'users' => [
+                            [
+                                'id' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                                'email' => null,
+                            ],
+                            [
+                                'id' => null,
+                                'firstName' => null,
+                                'lastName' => null,
+                                'email' => null,
+                            ]
+                        ]
+                    ]
+                    ],
                     'parametres a mettre dans le body' => "nothin",
-                    'utilisation' => "avoir les chats",
+                    'utilisation' => "renvoie les chats dans lequels vous vous trouver + les chats des projets que l'on vous a partager",
                     'need token ? ' => true],
                 [
                     'get one chat' => '/api/chat/{id du chat}',
                     'methode' => 'get',
-                    "renvoie :" => "renvoie le chat avec les données du client et les messages",
+                    "renvoie :" => [
+                        'id' => null,
+                        'name' => null,
+                        'date' => null,
+                        'project_id' => null,
+                        'project_uuid' => null,
+                        'client' => [
+                            'id' => null,
+                            'firstName' => null,
+                            'lastName' => null,
+                            'online' => null,
+                            'date' => null,
+                            'projectNumber' => null,
+                        ],
+                        'messages' => [
+                            [
+                                'id' => null,
+                                'content' => null,
+                                'datetime' => null,
+                                'author' => [
+                                    'id' => null,
+                                    'firstname' => null,
+                                    'lastname' => null,
+                                    'email' => null,
+                                ],
+                                'type' => 'client or user',
+                            ],
+                            [
+                                'id' => null,
+                                'content' => null,
+                                'datetime' => null,
+                                'author' => [
+                                    'id' => null,
+                                    'firstname' => null,
+                                    'lastname' => null,
+                                    'email' => null,
+                                ],
+                                'type' => 'client or user',
+                            ]
+                        ]
+
+                    ],
                     'parametres a mettre dans le body' => "nothing",
                     'utilisation' => "avoir une conversation",
                     'need token ? ' => true],
@@ -877,14 +1357,22 @@ class HomeController extends AbstractController
                     'envoyer un message depuis l interface client' => '/message',
                     'methode' => 'post',
                     "renvoie :" => "ok",
-                    'parametres a mettre dans le body' => "id (uuid du projet) , content",
+                    'parametres a mettre dans le body' =>
+                        [
+                            "id" => "uuid of project",
+                            "content" => null
+                        ],
                     'utilisation' => "envoyer un message",
                     'need token ? ' => false],
                 [
                     'envoyer un message depuis l app' => '/api/message',
                     'methode' => 'post',
                     "renvoie :" => "ok",
-                    'parametres a mettre dans le body' => "id (id du projet) , content",
+                    'parametres a mettre dans le body' =>
+                        [
+                            "id" => "uuid of project",
+                            "content" => null
+                        ],
                     'utilisation' => "envoyer un message",
                     'need token ? ' => true],
             ],
@@ -892,21 +1380,42 @@ class HomeController extends AbstractController
                 [
                     "recuperer les parametre de l'utilisateur " => '/api/settings',
                     'methode' => 'get',
-                    "renvoie :" => "ok",
-                    'parametres a mettre dans le body' => "nothing",
+                    "renvoie :" => [
+                        'formatDate' => "valeurs acceptées : UE(default),SUI,PB,US,AS,ISO (pour l'instant)",
+                        'payments' => "valeurs acceptées : CHEQUE,CASH,BANKTRANSFER",
+                        'delayDays' => "valeurs acceptées : 30,50,60",
+                        'installmentPayments' => 'boolean',
+                        'freeMaintenance' => 'boolean',
+                        'interfaceLangage' => "values : AG,FR"
+                    ],
+                    'parametres a mettre dans le body' => null,
                     'utilisation' => "appeller la route c'est deja un bon debut..",
                     'need token ? ' => true],
                 [
                     "modifier les parametre de l'utilisateur " => '/api/edit/settings',
                     'methode' => 'post',
-                    "renvoie :" => "ok",
-                    'parametres a mettre dans le body' => "formatDate,InterfaceLangage,payments,delayDays,installmentPayments,freeMaintenance",
+                    "renvoie :" =>  [
+                        'formatDate' => "valeurs acceptées : UE(default),SUI,PB,US,AS,ISO (pour l'instant)",
+                        'payments' => "valeurs acceptées : CHEQUE,CASH,BANKTRANSFER",
+                        'delayDays' => "valeurs acceptées : 30,50,60",
+                        'installmentPayments' => 'boolean',
+                        'freeMaintenance' => 'boolean',
+                        'interfaceLangage' => "values : AG,FR"
+                    ],
+                    'parametres a mettre dans le body' =>  [
+                        'formatDate' => "valeurs acceptées : UE(default),SUI,PB,US,AS,ISO (pour l'instant)",
+                        'payments' => "valeurs acceptées : CHEQUE,CASH,BANKTRANSFER",
+                        'delayDays' => "valeurs acceptées : 30,50,60",
+                        'installmentPayments' => 'boolean',
+                        'freeMaintenance' => 'boolean',
+                        'interfaceLangage' => "values : AG,FR"
+                    ],
                     'utilisation' => "envoyer les données a remplacer",
                     'need token ? ' => true],
             ],
             'task' => [
                 [
-                    "Nouvelle tas:k " => '/api/task/new',
+                    "Nouvelle task " => '/api/task/new',
                     'methode' => 'post',
                     "renvoie :" => [
                         'name' => 'New task',

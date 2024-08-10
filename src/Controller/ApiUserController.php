@@ -32,7 +32,24 @@ class ApiUserController extends AbstractController
             'value' => $this->getData($this->getUser())
         ]);
     }
-
+    #[Route('/api/users', name: 'users', methods: 'get')]
+    public function getUsers(UserRepository $userRepository): Response
+    {
+        $data = [];
+        foreach ($userRepository->findAll() as $user) {
+            $data[]=[
+                'id' => $user->getId(),
+                'mail' => $user->getMail(),
+                'phone' => $user->getPhone(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+            ];
+        }
+        return $this->json([
+            'state' => 'OK',
+            'value' => $data
+        ]);
+    }
     #[Route('/api/edit/me', name: 'edit_me', methods: 'put')]
     public function edit(Request $request, EntityManagerInterface $manager): Response
     {

@@ -88,7 +88,7 @@ class ApiRegisterController extends AbstractController
 
 
         $setting = new Setting();
-        $setting->setOwner($this->getUser());
+        $setting->setOwner($user);
         $setting->setDateFormat('UE');
         $setting->setPayment('');
         $setting->setDelayDays(30);
@@ -98,7 +98,7 @@ class ApiRegisterController extends AbstractController
 
 
         $note = new Note();
-        $note->setOwner($this->getUser());
+        $note->setOwner($user);
         $note->setNotes("");
         $note->setRemembers("");
         $this->entityManager->persist($note);

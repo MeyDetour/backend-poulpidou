@@ -129,6 +129,12 @@ class Project
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $websiteLink = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $otherUserCanEditInvoices = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $canOtherUserSeeClientProfile = null;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
@@ -623,4 +629,29 @@ class Project
 
         return $this;
     }
+
+    public function isOtherUserCanEditInvoices(): ?bool
+    {
+        return $this->otherUserCanEditInvoices;
+    }
+
+    public function setOtherUserCanEditInvoices(?bool $otherUserCanEditInvoices): static
+    {
+        $this->otherUserCanEditInvoices = $otherUserCanEditInvoices;
+
+        return $this;
+    }
+
+    public function isCanOtherUserSeeClientProfile(): ?bool
+    {
+        return $this->canOtherUserSeeClientProfile;
+    }
+
+    public function setCanOtherUserSeeClientProfile(?bool $canOtherUserSeeClientProfile): static
+    {
+        $this->canOtherUserSeeClientProfile = $canOtherUserSeeClientProfile;
+
+        return $this;
+    }
+
 }
