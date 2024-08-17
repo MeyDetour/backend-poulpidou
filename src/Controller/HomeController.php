@@ -227,71 +227,38 @@ class HomeController extends AbstractController
                     'get projects of client' => '/api/client/{id}/projects',
                     'methode' => 'get',
                     "renvoie :" => [[
-                        'id' => null,
-                        'name' => null,
-                        'startDate' => null,
-                        'endDate' => null,
-                    ], [
-                        'id' => null,
-                        'name' => null,
-                        'startDate' => null,
-                        'endDate' => null,
+                        "id" => null,
+                        "name" => null,
+                        "uuid"=>null,
+                        "cratedAt" => null,
+                        'totalTasks' => null,
+                        'doneTasks' => null,
+                    ],[
+                        "id" => null,
+                        "name" => null,
+                        "uuid"=>null,
+                        "cratedAt" => null,
+                        'totalTasks' => null,
+                        'doneTasks' => null,
                     ]],
                     'parametres a mettre dans le body' => null,
                     'utilisation' => "passer en parametre l'id du client pour obtenir la liste de ses projets",
                     'need token ? ' => true],
+
                 [
-                    'get currents projects of client' => '/api/client/{id}/currentProjects',
-                    'methode' => 'post',
-                    "renvoie :" => [[
-                        'id' => null,
-                        'name' => null,
-                        'startDate' => null,
-                        'endDate' => null,
-                    ], [
-                        'id' => null,
-                        'name' => null,
-                        'startDate' => null,
-                        'endDate' => null,
-                    ]],
-                    'parametres a mettre dans le body' => [
-                        "displayDeleted" => "BOOLEAN",
-                        "order_by" => null,
-                    ],
-                    'utilisation' => "passer en parametre l'id du client pour obtenir la liste de ses projets courrants",
-                    'need token ? ' => true],
-                [
-                    'add  currents projects to client' => '/api/client/{id}/currentProjects/add',
-                    'methode' => 'post',
-                    "renvoie :" => "ok si c'est bien passé",
-                    'parametres a mettre dans le body' => [
-                        "project_id" => null
-                    ],
-                    'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour ajouter un projet dans les projets courrents ",
-                    'need token ? ' => true],
-                [
-                    'remove client currents projects' => '/api/client/{id}/currentProjects/remove',
-                    'methode' => 'delete',
-                    "renvoie :" => "ok si c'est bien passé",
-                    'parametres a mettre dans le body' => [
-                        "project_id" => null
-                    ],
-                    'utilisation' => "passer en parametre l'id du client et mettre project_id dans le body pour enlever le projet des projets courrents ",
-                    'need token ? ' => true],
-                [
-                    'get all chats of client' => '/api/chat/client/{id du client}',
+                    'get all chats of client' => '/api/client/{id du client}/chat/',
                     'methode' => 'get',
                     "renvoie :" => [
                         [
-                            'id'=>'id du chat',
-                            'name'=>'nom du chat',
-                            'lastMessage'=>[
-                                "content"=> 'contenu du dernier message',
-                                "date"=> 'date du dernier message',
+                            'id' => 'id du chat',
+                            'name' => 'nom du chat',
+                            'lastMessage' => [
+                                "content" => 'contenu du dernier message',
+                                "date" => 'date du dernier message',
                             ]
                         ]
                     ],
-                    'parametres a mettre dans le body' =>   null,
+                    'parametres a mettre dans le body' => null,
                     'utilisation' => "afficher dans la fiche client la liste de chats associé",
                     'need token ? ' => true],
 
@@ -384,6 +351,7 @@ class HomeController extends AbstractController
                             ],
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
+                            "isCurrent" => true,
                             "cratedAt" => "09/08/2024"
                         ],
                         "note" => [
@@ -484,6 +452,7 @@ class HomeController extends AbstractController
                                 'firstName' => null,
                                 'lastName' => null,
                             ],
+                            "isCurrent" => true,
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
                             "cratedAt" => "09/08/2024"
@@ -524,7 +493,7 @@ class HomeController extends AbstractController
                     'utilisation' => "passer en parametre l'id du projet pour obtenir les informations",
                     'need token ? ' => true],
                 [
-                    'get projects' => '/api/clients',
+                    'get projects (can show deleted)' => '/api/projects',
                     'methode' => 'get',
                     "renvoie :" => [[
                         "totalPrice" => null,
@@ -564,6 +533,7 @@ class HomeController extends AbstractController
                                 'firstName' => null,
                                 'lastName' => null,
                             ],
+                            "isCurrent" => true,
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
                             "cratedAt" => "09/08/2024"
@@ -637,6 +607,7 @@ class HomeController extends AbstractController
                                 'firstName' => null,
                                 'lastName' => null,
                             ],
+                            "isCurrent" => true,
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
                             "cratedAt" => "09/08/2024"
@@ -674,7 +645,57 @@ class HomeController extends AbstractController
                             "devices" => []
                         ]]],
                     'parametres a mettre dans le body' => ["display_deleted" => " (boolean)"],
-                    'utilisation' => "passer en parametre l'id du projet pour obtenir les informations et renvoie tous les projets actifs par défaut ou tous les projets (actifs et supprimés) si display_deleted = true ",
+                    'utilisation' => "obtenir les informations et renvoie tous les projets de tout le monde actifs par défaut ou tous les projets (actifs et supprimés) si display_deleted = true ",
+                    'need token ? ' => true],
+                [
+                    'get projects to render' => '/api/your/projects',
+                    'methode' => 'get',
+                    "renvoie :" => [
+                        'currents' => [
+                            [
+                                "id" => null,
+                                "name" => null,
+                                "uuid"=>null,
+                                "cratedAt" => null,
+                                'totalTasks' => null,
+                                'doneTasks' => null,
+                            ],
+                            [
+                                "id" => null,
+                                "name" => null,
+                                "uuid"=>null,
+                                "cratedAt" => null,
+                                'totalTasks' => null,
+                                'doneTasks' => null,
+                            ]
+                        ],
+                        'others' => [
+                            [
+                                "id" => null,
+                                "name" => null,
+                                "uuid"=>null,
+                                "cratedAt" => null,
+                                'totalTasks' => null,
+                                'doneTasks' => null,
+                            ], [
+                                "id" => null,
+                                "name" => null,
+                                "uuid"=>null,
+                                "cratedAt" => null,
+                                'totalTasks' => null,
+                                'doneTasks' => null,
+                            ], [
+                                "id" => null,
+                                "name" => null,
+                                "uuid"=>null,
+                                "cratedAt" => null,
+                                'totalTasks' => null,
+                                'doneTasks' => null,
+                            ]
+                        ],
+                    ],
+                    'parametres a mettre dans le body' => [],
+                    'utilisation' => "renvoie les projets courrents et autre appartenant a l'utilisateur ",
                     'need token ? ' => true],
                 [
                     'edit project' => '/api/project/edit/{id du client}',
@@ -719,6 +740,7 @@ class HomeController extends AbstractController
                                 'firstName' => null,
                                 'lastName' => null,
                             ],
+                            "isCurrent" => true,
                             "cratedAt" => "09/08/2024"
                         ],
                         "note" => [
@@ -818,6 +840,15 @@ class HomeController extends AbstractController
                     'parametres a mettre dans le body' => null,
                     'utilisation' => "passer en parametre l'id du project pour supprimer vraiment la fiche project",
                     'need token ? ' => true],
+                [
+                    'set project current/no current' => '/api/project/{id du projet}/switch/current',
+                    'methode' => 'put',
+                    "renvoie :" => "ok si l'action a bien été faite",
+                    'parametres a mettre dans le body' => [
+                        'isCurrent' => "boolean",
+                    ],
+                    'utilisation' => "passer en parametre  true si le projet est actif false si il est en attend ou temriné",
+                    'need token ? ' => true],
 
                 [
                     'edit note of project' => '/api/project/id/note',
@@ -862,6 +893,7 @@ class HomeController extends AbstractController
                                 'firstName' => null,
                                 'lastName' => null,
                             ],
+                            "isCurrent" => true,
                             "cratedAt" => "09/08/2024"
                         ],
                         "note" => [
@@ -1010,7 +1042,7 @@ class HomeController extends AbstractController
                     'utilisation' => "permet de créer une nouvelle facture liée a un projet ",
                     'need token ? ' => true],
                 [
-                    'edit invoice' => '/api/invoice/edit/{id}',
+                    'edit invoice' => '/api/invoice/edit/{unique number of invoice}',
                     'methode' => 'put',
                     "renvoie :" => [
                         'id' => null,
@@ -1068,7 +1100,7 @@ class HomeController extends AbstractController
                     'utilisation' => "permet d'btenir toutes les factures d'un projet ",
                     'need token ? ' => true],
                 [
-                    'get all of a client' => '/api/invoices/of/client/{id of client}',
+                    'get all of a client' => '/api/invoices/of/client/{unique number of client}',
                     'methode' => 'get',
                     "renvoie :" => [[
                         'id' => null,
@@ -1101,19 +1133,20 @@ class HomeController extends AbstractController
                     'utilisation' => "obtenir les factures d'un seul client",
                     'need token ? ' => true],
                 [
-                    'to pay invoice' => '/api/invoice/{id of invoice}/pay',
+                    'to pay invoice' => '/api/invoice/{unique number of invoice}/pay',
                     'methode' => 'PUT',
                     "renvoie :" => "ok",
                     'parametres a mettre dans le body' => "nothing",
                     'utilisation' => "marqué une facture comme payé",
                     'need token ? ' => true],
                 [
-                    'to pay invoice' => '/api/invoice/delete/{id of invoice}',
+                    'delete invoice' => '/api/invoice/delete/{unique number of invoice}',
                     'methode' => 'delete',
                     "renvoie :" => "ok",
                     'parametres a mettre dans le body' => "nothing",
                     'utilisation' => "supprimer une facture",
                     'need token ? ' => true],
+
             ],
             'logs' => [
                 [

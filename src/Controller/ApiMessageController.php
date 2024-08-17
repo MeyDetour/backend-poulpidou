@@ -106,7 +106,7 @@ class ApiMessageController extends AbstractController
         }
     }
 
-    #[Route('/api/chat/client/{id}', name: 'api_get_chats_of_client', methods: ['get'])]
+    #[Route('/api/client/{id}/chat', name: 'api_get_chats_of_client', methods: ['get'])]
     public function getChatClient($id, ClientRepository $clientRepository, MessageRepository $messageRepository): Response
     {
         try {

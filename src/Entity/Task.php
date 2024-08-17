@@ -36,6 +36,7 @@ class Task
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $col = null;
+    //['waiting','progress','done']
 
     public function getId(): ?int
     {

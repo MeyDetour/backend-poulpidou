@@ -399,7 +399,7 @@ class ApiClientController extends AbstractController
     }
 
     #[Route('/api/client/{id}/projects', name: 'get_clients_projects', methods: 'get')]
-    public function getClientProjects($id, ClientRepository $repository): Response
+    public function getClientProjects($id, ClientRepository $repository, ApiProjectController $apiProjectController): Response
     {
         try {
             $client = $repository->find($id);
@@ -424,7 +424,7 @@ class ApiClientController extends AbstractController
             $this->formatNames($client);
             $data = [];
             foreach ($client->getProjects() as $project) {
-                $data[] = $this->getShortDataProject($project);
+                $data[] = $apiProjectController->getDataProjectForMiniature($project);
             }
 
             return $this->json([
@@ -443,212 +443,7 @@ class ApiClientController extends AbstractController
 
     }
 
-    #[Route('/api/client/{id}/currentProjects', name: 'get_clients_currentprojects', methods: 'post')]
-    public function getCurrentsProjectsOfClient($id, ClientRepository $repository, Request $request): Response
-    {
-        try {
-            $client = $repository->find($id);
-            if (!$client) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'client'
-                ]);
-            }
-            if (!$client->getOwner() == $this->getUser()) {
-                return $this->json([
-                    'state' => 'FO',
-                    'value' => 'client'
-                ]);
-            }
-            if ($client->getState() == 'deleted') {
-                return $this->json([
-                    'state' => 'DD',
-                    'value' => 'client'
-                ]);
-            }
-            $datum = json_decode($request->getContent(), true);
 
-            if ($datum) {
-
-                if (isset($datum['displayDeleted'])) {
-                    if ($datum['displayDeleted']==true) {
-                        $data = [];
-                        foreach ($client->getCurrentProject() as $project) {
-
-                            if ($project->getOwner() == $this->getUser()) {
-                                $data[] = $this->getShortDataProject($project);
-                            }
-                        }
-                        return $this->json([
-                            'state' => 'OK',
-                            'value' => $data]);
-                    }
-                }
-            }
-
-            $data = [];
-            foreach ($client->getCurrentProject() as $project) {
-                if ($project->getState() != 'deleted') {
-
-                    $data[] = $this->getShortDataProject($project);
-                }
-            }
-            return $this->json([
-                'state' => 'OK',
-                'value' => $data]);
-        } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-
-
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-            ]);
-        }
-    }
-
-    #[Route('/api/client/{id}/currentProjects/add', name: 'add_clients_currentprojects', methods: 'post')]
-    public function addClientCurrentProjects($id, ClientRepository $repository, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
-    {
-        try {
-            $client = $repository->find($id);
-            if (!$client) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'client'
-                ]);
-            }
-            if (!$client->getOwner() == $this->getUser()) {
-                return $this->json([
-                    'state' => 'FO',
-                    'value' => 'client'
-                ]);
-            }
-            if ($client->getState() == 'deleted') {
-                return $this->json([
-                    'state' => 'DD',
-                    'value' => 'client'
-                ]);
-            }
-            $datum = json_decode($request->getContent(), true);
-
-            if ($datum) {
-                if (isset($datum['project_id']) && !empty(trim($datum['project_id']))) {
-                    $project = $projectRepository->find($datum['project_id']);
-                    if (!$project) {
-                        return $this->json([
-                            'state' => 'NDF',
-                            'value' => 'project'
-                        ]);
-                    }
-                    if (!$project->getOwner() == $this->getUser()) {
-                        return $this->json([
-                            'state' => 'FO',
-                            'value' => 'project'
-                        ]);
-                    }
-                    $client->addCurrentProject($project);
-                    $manager->persist($client);
-                    $manager->flush();
-                    $this->logService->createLog('ACTION', ' add current Project (' . $project->getId() . ':' . $project->getName() . ') to client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
-
-                    return $this->json([
-                        'state' => 'OK'
-                    ]);
-                } else {
-                    return $this->json([
-                        'state' => 'NED',
-                        'value' => 'project_id'
-                    ]);
-                }
-            }
-            return $this->json([
-                'state' => 'ND'
-            ]);
-        } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-
-
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-            ]);
-        }
-    }
-
-    #[Route('/api/client/{id}/currentProjects/remove', name: 'remove_clients_currentprojects', methods: 'delete')]
-    public function removeClientCurrentProjects($id, ClientRepository $repository, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
-    {
-        try {
-
-            $client = $repository->find($id);
-            if (!$client) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'client'
-                ]);
-            }
-            if (!$client->getOwner() == $this->getUser()) {
-                return $this->json([
-                    'state' => 'FO',
-                    'value' => 'client'
-                ]);
-            }
-            if ($client->getState() == 'deleted') {
-                return $this->json([
-                    'state' => 'DD',
-                    'value' => 'client'
-                ]);
-            }
-            $datum = json_decode($request->getContent(), true);
-
-            if ($datum) {
-                if (!isset($datum['project_id']) || empty(trim($datum['project_id']))) {
-                    return $this->json([
-                        'state' => 'NED',
-                        'value' => 'project_id'
-                    ]);
-                }
-                $project = $projectRepository->find($datum['project_id']);
-                if (!$project) {
-                    return $this->json([
-                        'state' => 'NDF',
-                        'value' => 'project'
-                    ]);
-                }
-                if (!$project->getOwner() == $this->getUser()) {
-                    return $this->json([
-                        'state' => 'FO',
-                        'value' => 'project'
-                    ]);
-                }
-                $client->removeCurrentProject($project);
-                $manager->persist($client);
-                $this->logService->createLog('ACTION', ' remove current Project (' . $project->getId() . ':' . $project->getName() . ') to client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
-
-                $manager->flush();
-                return $this->json([
-                    'state' => 'OK'
-                ]);
-
-            }
-            return $this->json([
-                'state' => 'ND'
-            ]);
-        } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-
-
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-            ]);
-        }
-
-    }
 
     #[Route('/interface/{uuid}', name: 'interface_client', methods: 'get')]
     public function getDataForClientInterface($uuid, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
@@ -813,10 +608,7 @@ class ApiClientController extends AbstractController
 
     public function getDataClient($client)
     {
-        $links = [];
-        foreach ($client->getProjects() as $project) {
-            $links[] = 'interface/' . $project->getUuid();
-        }
+
         return [
             "id" => $client->getId(),
             "firstName" => $client->getFirstName(),
@@ -830,21 +622,11 @@ class ApiClientController extends AbstractController
             "createdAt" => $this->dateService->formateDate($client->getCreatedAt()),
             "state" => $client->getState(),
             "online" => $client->isOnline(),
-            'links' => $links
 
         ];
     }
 
-    public function getShortDataProject($project)
-    {
-
-        return [
-            'id' => $project->getId(),
-            'name' => $project->getName(),
-            'startDate' => $this->dateService->formateDate($project->getStartDate()),
-            'endDate' => $this->dateService->formateDate($project->getEndDate()),
-        ];
-    }
+    
 
     public function formatNames($client)
     {

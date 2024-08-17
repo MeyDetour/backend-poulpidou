@@ -55,11 +55,7 @@ class Client
     #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'client')]
     private Collection $projects;
 
-    /**
-     * @var Collection<int, Project>
-     */
-    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'currentProjetOfThisClient')]
-    private Collection $currentProject;
+
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $siret = null;
@@ -245,35 +241,7 @@ class Client
         return $this;
     }
 
-    /**
-     * @return Collection<int, Project>
-     */
-    public function getCurrentProject(): Collection
-    {
-        return $this->currentProject;
-    }
 
-    public function addCurrentProject(Project $currentProject): static
-    {
-        if (!$this->currentProject->contains($currentProject)) {
-            $this->currentProject->add($currentProject);
-            $currentProject->setCurrentProjetOfThisClient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCurrentProject(Project $currentProject): static
-    {
-        if ($this->currentProject->removeElement($currentProject)) {
-            // set the owning side to null (unless already changed)
-            if ($currentProject->getCurrentProjetOfThisClient() === $this) {
-                $currentProject->setCurrentProjetOfThisClient(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getSiret(): ?string
     {

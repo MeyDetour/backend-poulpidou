@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Chat;
 use App\Entity\Client;
 use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -41,6 +42,9 @@ class ClientRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
+
     public function searchAcrossTables($searchTerm)
     {
         $entityManager = $this->getEntityManager();

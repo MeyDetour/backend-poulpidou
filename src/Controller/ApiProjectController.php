@@ -301,6 +301,7 @@ class ApiProjectController extends AbstractController
                 $project->setState('active');
                 $project->setNoteNames('Note 1,Note 2,Note 3,Note 4,Note 5');
                 $project->setNoteContent(' , , , , ');
+                $project->setCurrent(true);
                 $manager->persist($project);
                 $manager->flush();
 
@@ -591,6 +592,126 @@ class ApiProjectController extends AbstractController
         }
     }
 
+    #[Route('/api/project/{id}/switch/current', name: 'set_project_no_current', methods: 'put')]
+    public function switchProjectToUnccurent($id, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
+    {
+        try {
+            $project = $projectRepository->find($id);
+            if (!$project) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+
+            $data = json_decode($request->getContent(), true);
+
+            if (!isset($data['isCurrent'])) {
+                return $this->json([
+                    'state' => 'NED',
+                    'value' => 'isCurrent'
+                ]);
+
+            }
+            if (!is_bool($data['isCurrent'])) {
+                return $this->json([
+                    'state' => 'IDT',
+                    'value' => 'isCurrent'
+                ]);
+
+            }
+
+            $project->setCurrent($data['isCurrent']);
+            $manager->persist($project);
+            $manager->flush();
+            return $this->json([
+                'state' => 'OK',
+            ]);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+
+    }
+
+    #[Route('/api/projects/{id}/switch/current', name: 'set_project_no_current', methods: 'put')]
+    public function getCurrentsProjects($id, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
+    {
+        try {
+            $project = $projectRepository->find($id);
+            if (!$project) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+
+            $data = json_decode($request->getContent(), true);
+
+            if (!isset($data['isCurrent'])) {
+                return $this->json([
+                    'state' => 'NED',
+                    'value' => 'isCurrent'
+                ]);
+
+            }
+            if (!is_bool($data['isCurrent'])) {
+                return $this->json([
+                    'state' => 'IDT',
+                    'value' => 'isCurrent'
+                ]);
+
+            }
+
+            $project->setCurrent($data['isCurrent']);
+            $manager->persist($project);
+            $manager->flush();
+            return $this->json([
+                'state' => 'OK',
+            ]);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+
+    }
+
     #[Route('/api/project/{id}/note', name: 'edit_note_project', methods: 'put')]
     public function editNote(Request $request, $id, EntityManagerInterface $manager, ProjectRepository $repository): Response
     {
@@ -744,7 +865,7 @@ class ApiProjectController extends AbstractController
             ]);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -790,7 +911,7 @@ class ApiProjectController extends AbstractController
             ]);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -873,7 +994,7 @@ class ApiProjectController extends AbstractController
                 'state' => 'OK'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -912,7 +1033,7 @@ class ApiProjectController extends AbstractController
                 'value' => $this->getDataProject($project)
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -940,9 +1061,45 @@ class ApiProjectController extends AbstractController
                 }
             }
             foreach ($arrayToIterate as $project) {
-                if ($project->getOwner() == $this->getUser() || $project->hasUserInUserAuthorised($this->getUser())) {
-                    if ($display_delete && $project->getState() == 'deleted' || $project->getState() != 'deleted') {
-                        $data[] = $this->getDataProject($project);
+                if ($display_delete && $project->getState() == 'deleted' || $project->getState() != 'deleted') {
+                    $data[] = $this->getDataProject($project);
+                }
+
+
+            }
+
+            return $this->json([
+                'state' => 'OK',
+                'value' => $data
+            ]);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+    }
+
+    #[Route('/api/your/projects', name: 'get_projects_current_and_other', methods: 'get')]
+    public function getProjectsToRender(ProjectRepository $repository, Request $request, EntityManagerInterface $manager): Response
+    {
+        try {
+            $projects = $this->getUser()->getProjects();
+            $projects[] = $this->getUser()->getAutorisedInProjects();
+            $data = [
+                'currents' => [],
+                'others' => [],
+            ];
+            foreach ($projects as $project) {
+                if ($project->getState() != 'deleted') {
+                    if ($project->isCurrent() == true) {
+                        $data['currents'][] = $this->getDataProjectForMiniature($project);
+                    } else {
+                        $data['others'][] = $this->getDataProjectForMiniature($project);
                     }
                 }
 
@@ -954,7 +1111,7 @@ class ApiProjectController extends AbstractController
                 'value' => $data
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -1005,7 +1162,7 @@ class ApiProjectController extends AbstractController
                 ]
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -1040,7 +1197,7 @@ class ApiProjectController extends AbstractController
                 'state' => 'ND'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -1077,7 +1234,7 @@ class ApiProjectController extends AbstractController
 
             $userAutorised = [];
             foreach ($project->getUserAuthorised() as $user) {
-                if($user!=$project->getOwner()){
+                if ($user != $project->getOwner()) {
                     $userAutorised[] = [
                         'email' => $user->getEmail(),
                         'firstName' => $user->getFirstName(),
@@ -1105,6 +1262,7 @@ class ApiProjectController extends AbstractController
                     "client" => $client,
                     "chatName" => $chat,
                     "state" => $project->getState(),
+                    "isCurrent" => $project->isCurrent(),
                     "cratedAt" => $this->dateService->formateDate($project->getCreatedAt()),
                     "owner" => [
                         'email' => $project->getOWner()->getEmail(),
@@ -1137,7 +1295,38 @@ class ApiProjectController extends AbstractController
                 ]
             ];
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+    }
+
+    public function getDataProjectForMiniature($project)
+    {
+        try {
+
+            $count = 0;
+            foreach ($project->getTasks() as $task) {
+                if ($task->getCol() == 'done') {
+                    $count++;
+                }
+            }
+            return [
+
+                "id" => $project->getId(),
+                "name" => $project->getName(),
+                'uuid'=>$project->getUuid(),
+                "cratedAt" => $this->dateService->formateDate($project->getCreatedAt()),
+                'totalTasks' => count($project->getTasks()),
+                'doneTasks' => $count,
+            ];
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -1170,7 +1359,7 @@ class ApiProjectController extends AbstractController
 
             ];
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([

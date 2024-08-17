@@ -135,6 +135,9 @@ class Project
     #[ORM\Column(nullable: true)]
     private ?bool $canOtherUserSeeClientProfile = null;
 
+    #[ORM\Column]
+    private ?bool $isCurrent = null;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
@@ -269,17 +272,7 @@ class Project
         return $this;
     }
 
-    public function getCurrentProjetOfThisClient(): ?Client
-    {
-        return $this->currentProjetOfThisClient;
-    }
 
-    public function setCurrentProjetOfThisClient(?Client $currentProjetOfThisClient): static
-    {
-        $this->currentProjetOfThisClient = $currentProjetOfThisClient;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Invoice>
@@ -650,6 +643,18 @@ class Project
     public function setCanOtherUserSeeClientProfile(?bool $canOtherUserSeeClientProfile): static
     {
         $this->canOtherUserSeeClientProfile = $canOtherUserSeeClientProfile;
+
+        return $this;
+    }
+
+    public function isCurrent(): ?bool
+    {
+        return $this->isCurrent;
+    }
+
+    public function setCurrent(bool $isCurrent): static
+    {
+        $this->isCurrent = $isCurrent;
 
         return $this;
     }

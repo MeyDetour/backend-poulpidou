@@ -67,7 +67,7 @@ class ApiInvoiceController extends AbstractController
                         'value' => 'project'
                     ]);
                 }
-                if(!$project->isOtherUserCanEditInvoices() && $project->getOwner() != $this->getUser()){
+                if (!$project->isOtherUserCanEditInvoices() && $project->getOwner() != $this->getUser()) {
                     return $this->json([
                         'state' => 'ASFO',
                         'value' => 'project'
@@ -105,14 +105,12 @@ class ApiInvoiceController extends AbstractController
                     $invoice->setDate($searchDate);
                 }
 
-                $nb = mt_rand(1000, 9999);
+                $nb = mt_rand(100000, 999999);
                 while (count($invoiceRepository->findBy(['number' => $nb])) != 0) {
-                    $nb = mt_rand(1000, 9999);
+                    $nb = mt_rand(100000, 999999);
                 }
-
-
+                $invoice->setCreatedAt(new \DateTimeImmutable());
                 $invoice->setPayed(false);
-
                 $invoice->setNumber($nb);
                 $manager->persist($invoice);
                 $manager->flush();
@@ -138,7 +136,7 @@ class ApiInvoiceController extends AbstractController
     public function edit($id, InvoiceRepository $invoiceRepository, Request $request, EntityManagerInterface $manager, ClientRepository $clientRepository, ProjectRepository $projectRepository): Response
     {
         try {
-            $invoice = $invoiceRepository->find($id);
+            $invoice = $invoiceRepository->findOneBy(['number'=>$id]);
             if (!$invoice) {
                 return $this->json([
                     'state' => 'NDF',
@@ -151,7 +149,7 @@ class ApiInvoiceController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if(!$invoice->getProject()->isOtherUserCanEditInvoices() && $invoice->getProject()->getOwner() != $this->getUser()){
+            if (!$invoice->getProject()->isOtherUserCanEditInvoices() && $invoice->getProject()->getOwner() != $this->getUser()) {
                 return $this->json([
                     'state' => 'ASFO',
                     'value' => 'project'
@@ -220,7 +218,7 @@ class ApiInvoiceController extends AbstractController
     public function payInvoice($id, InvoiceRepository $invoiceRepository, Request $request, EntityManagerInterface $manager): Response
     {
         try {
-            $invoice = $invoiceRepository->find($id);
+            $invoice = $invoiceRepository->findOneBy(['number'=>$id]);
             if (!$invoice) {
                 return $this->json([
                     'state' => 'NDF',
@@ -301,7 +299,7 @@ class ApiInvoiceController extends AbstractController
     }
 
     #[Route('/api/invoices/of/client/{id}', name: 'get_invoices_of_client', methods: 'get')]
-    public function getInvoicesOfClient(ClientRepository $repository, $id): Response
+    public function getInvoicesOfClient(ClientRepository $repository, InvoiceRepository $invoiceRepository, $id): Response
     {
         try {
             $client = $repository->find($id);
@@ -324,10 +322,9 @@ class ApiInvoiceController extends AbstractController
                 ]);
             }
             $data = [];
-            foreach ($client->getProjects() as $project) {
-                foreach ($project->getInvoices() as $invoice) {
-                    $data[] = $this->getDataInvoice($invoice);
-                }
+            foreach ($invoiceRepository->findInvoicesOfClient() as $invoice) {
+                $data[] = $this->getDataInvoiceForClient($invoice);
+
             }
             return $this->json([
                 'state' => 'OK',
@@ -349,7 +346,7 @@ class ApiInvoiceController extends AbstractController
     public function delete($id, InvoiceRepository $repository, EntityManagerInterface $manager): Response
     {
         try {
-            $invoice = $repository->find($id);
+            $invoice = $repository->findOneBy(['number'=>$id]);
             if (!$invoice) {
                 return $this->json([
                     'state' => 'NDF',
@@ -400,6 +397,20 @@ class ApiInvoiceController extends AbstractController
                 "firstName" => $client->getFirstName(),
                 "lastName" => $client->getLastName(),
             ],
+            'payed' => $invoice->isPayed(),
+
+        ];
+    }
+
+    public function getDataInvoiceForClient($invoice)
+    {
+        return [
+            'id' => $invoice->getNumber(),
+            'reason' => $invoice->getDescription(),
+            'date' => $this->dateService->formateDate($invoice->getDate()),
+            'projectName' => $invoice->getProject()->getName(),
+            'number' => $invoice->getNumber(),
+
             'payed' => $invoice->isPayed(),
 
         ];

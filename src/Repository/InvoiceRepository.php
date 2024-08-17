@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Chat;
+use App\Entity\Client;
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -40,4 +42,20 @@ class InvoiceRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findInvoicesOfClient(Client $client): ?Chat
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+          $queryBuilder
+            ->select('i')
+            ->from(Invoice::class, 'i')
+            ->leftJoin('i.project', 'p')
+            ->where($queryBuilder->expr()->eq('p.client', ':client'))
+            ->setParameter('client', $client)
+            ->orderBy('i.createdAt', 'ASC');
+
+        // Execute the query and return the result
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
 }

@@ -35,6 +35,9 @@ class Invoice
     #[ORM\Column(type: Types::TEXT)]
     private ?string $number = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
 
 
     public function getId(): ?int
@@ -111,6 +114,18 @@ class Invoice
     public function setNumber(string $number): static
     {
         $this->number = $number;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

@@ -40,7 +40,8 @@ class ChatRepository extends ServiceEntityRepository
     //            ->getQuery()
     //            ->getOneOrNullResult()
     //        ;
-    //    }
+     //   }
+
     public function searchAcrossTables($searchTerm)
     {
         $entityManager = $this->getEntityManager();

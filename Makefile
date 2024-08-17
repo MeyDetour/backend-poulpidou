@@ -14,7 +14,6 @@ SYMFONY_CONSOLE = symfony console
 
 init: ## Initialize project
 	$(MAKE) db-create
-
 ip:
 	hostname -I
 
@@ -115,12 +114,13 @@ install-composer:
 
 install-webpack:
 	$(COMPOSER) require symfony/webpack-encore-bundle
-	npm install
+	sudo apt install npm
 	npm install bootstrap --save-dev
 	#import 'bootstrap/dist/css/bootstrap.min.css'; {% block stylesheets %} {{ encore_entry_link_tags('app') }} {% endblock %}   {% block javascripts %}{{ encore_entry_script_tags('app') }}  {% endblock %}
 
 	npm install bootstrap --save-dev
 	npm install jquery @popperjs/core --save-dev
+	npm run build
 	npm run dev
 install-vich:
 	$(COMPOSER) require vich/uploader-bundle
