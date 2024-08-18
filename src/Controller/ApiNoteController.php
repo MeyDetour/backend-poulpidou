@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Note;
+
 use App\Entity\Project;
 use App\Repository\ClientRepository;
 use App\Repository\NoteRepository;
@@ -28,37 +28,28 @@ class ApiNoteController extends AbstractController
     public function edit(Request $request, EntityManagerInterface $manager): Response
     {
         try {
-            $note = $this->getUser()->getNotes();
-            if (!$note) {
-                $note = new Note();
-                $note->setOwner($this->getUser());
-                $note->setNotes("");
-                $note->setRemembers("");
 
-                $manager->persist($note);
-                $manager->flush();
-
-            }
+           $user = $this->getUser();
             $data = json_decode($request->getContent(), true);
 
             if ($data) {
 
                 if (isset($data['notes']) && !empty($data['notes'])) {
 
-                    $note->setNotes($data['notes']);
+                    $user->setNote($data['notes']);
                 }
                 if (isset($data['remembers']) && !empty($data['remembers'])) {
 
-                    $note->setRemembers($data['remembers']);
+                    $user->setRemember($data['remembers']);
                 }
 
-                $manager->persist($note);
+                $manager->persist($user);
                 $manager->flush();
-                $this->logService->createLog('ACTION', $this->getUser()->getEmail() . ' edit his note (' . $note->getId() . ')');
+                $this->logService->createLog('ACTION', $this->getUser()->getEmail() .')');
                 return $this->json([
                     'state' => 'OK',
                     'value' =>
-                        $this->getDataNote($note)
+                        $this->getDataNote()
                 ]);
 
             }
@@ -78,21 +69,11 @@ class ApiNoteController extends AbstractController
     public function index( EntityManagerInterface $manager): Response
     {
         try {
-            $note = $this->getUser()->getNotes();
-            if (!$note) {
-                $note = new Note();
-                $note->setOwner($this->getUser());
-                $note->setNotes("");
-                $note->setRemembers("");
 
-                $manager->persist($note);
-                $manager->flush();
-
-            }
             return $this->json([
                 'state' => 'OK',
                 'value' =>
-                    $this->getDataNote($note)
+                    $this->getDataNote()
             ]);
         } catch (\Exception $exception) {
             return $this->json([
@@ -103,12 +84,12 @@ class ApiNoteController extends AbstractController
         }
     }
 
-    public function getDataNote(Note $note): array
+    public function getDataNote(): array
     {
         return [
-            'id' => $note->getId(),
-            'notes' => $note->getNotes(),
-            'remembers' => $note->getRemembers(),
+
+            'notes' => $this->getUser()->getNote(),
+            'remembers' => $this->getUser()->getRemember(),
         ];
     }
 }

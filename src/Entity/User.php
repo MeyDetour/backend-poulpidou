@@ -85,11 +85,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Pdf::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $pdfs;
 
-    /**
-     * @var Collection<int, Note>
-     */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'owner', orphanRemoval: true)]
-    private Collection $notes;
 
     /**
      * @var Collection<int, Chat>
@@ -119,6 +114,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'owner')]
     private Collection $tasks;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $note = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $remember = null;
+
 
     public function __construct()
     {
@@ -127,8 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->invoices = new ArrayCollection();
         $this->logs = new ArrayCollection();
         $this->pdfs = new ArrayCollection();
-        $this->notes = new ArrayCollection();
-        $this->chats = new ArrayCollection();
+         $this->chats = new ArrayCollection();
         $this->autorisedInProjects = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->tasks = new ArrayCollection();
@@ -229,7 +229,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Client>
      */
-    public function getOwner(): Collection
+    public function getClients(): Collection
     {
         return $this->owner;
     }
@@ -436,35 +436,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Note>
-     */
-    public function getNotes(): Collection
-    {
-        return $this->notes;
-    }
-
-    public function addNote(Note $note): static
-    {
-        if (!$this->notes->contains($note)) {
-            $this->notes->add($note);
-            $note->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNote(Note $note): static
-    {
-        if ($this->notes->removeElement($note)) {
-            // set the owning side to null (unless already changed)
-            if ($note->getOwner() === $this) {
-                $note->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Chat>
@@ -594,6 +565,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $task->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(?string $note): static
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function getRemember(): ?string
+    {
+        return $this->remember;
+    }
+
+    public function setRemember(?string $remember): static
+    {
+        $this->remember = $remember;
 
         return $this;
     }

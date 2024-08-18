@@ -1221,7 +1221,6 @@ class HomeController extends AbstractController
                     'edit les note' => '/api/edit/note',
                     'methode' => 'post',
                     "renvoie :" => [
-                        "id" => null,
                         'notes' => null,
                         'remembers' => null,
                     ],
@@ -1235,7 +1234,6 @@ class HomeController extends AbstractController
                     'get les note' => '/api/note',
                     'methode' => 'get',
                     "renvoie :" => [
-                        "id" => null,
                         'notes' => null,
                         'remembers' => null,
                     ],

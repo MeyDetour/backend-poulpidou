@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Note;
 use App\Entity\Setting;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -39,11 +38,6 @@ class AppFixtures extends Fixture
         $setting->setInterfaceLangage('FR');
 
 
-        $note = new Note();
-        $note->setOwner($user);
-        $note->setNotes("");
-        $note->setRemembers("");
-       $manager->persist($note);
        $manager->persist($setting);
        $manager->flush();
     }

@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ApiExportImportDataController extends AbstractController
@@ -54,17 +55,18 @@ class ApiExportImportDataController extends AbstractController
 
     }
 
-    #[Route('/api/export/data', name: 'app_api_import_data', methods: 'get')]
+    #[Route('/api/export/data', name: 'app_api_export_data', methods: 'get')]
     public function export(): Response
     {
         try {
-            $file = new Filesystem();
+            $fileSystem = new Filesystem();
+
             try {
-                $this->getUser()->getClients();
+
                 $user = $this->getUser();
 
                 $clients = [];
-                foreach ($user->getClient() as $client) {
+                foreach ($user->getClients() as $client) {
                     $clients[] = [
                         "firstName" => $client->getFirstName(),
                         "lastName" => $client->getLastName(),
@@ -183,17 +185,23 @@ class ApiExportImportDataController extends AbstractController
                         'address' => $user->getAdresse(),
                         'firstName' => $user->getFirstName(),
                         'lastName' => $user->getLastName(),
+                        'notes' => $user->getNote(),
+                        'remembers' => $user->getRemember(),
                     ],
-                    'clients' => [
-
-
-                    ]
+                    'clients' => $clients
+                    , 'projects' => $projects
 
 
                 ];
 
                 $todayDate = new \DateTime();
-                $file->dumpFile('exportFile/' . $todayDate->format('YmdHis') . '.poulpidou', $json);
+                $fileName = 'exportFile/' . $todayDate->format('YmdHis') . '.poulpidou';
+                $fileSystem->dumpFile($fileName, json_encode($json));
+                return $this->json($json);
+                return $this->file($fileName, $todayDate->format('YmdHis') . '.poulpidou', ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+
+
+
             } catch (IOException $e) {
                 $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $e->getFile() . ' | line |' . $e->getLine());
                 return $this->json(['state' => 'ISE',
@@ -231,26 +239,32 @@ class ApiExportImportDataController extends AbstractController
             }
 
 
-            $currentUSer = $this->getUser();
+            $currentUser = $this->getUser();
 
             $user = $data['user'];
             $clients = $data['clients'];
             $projects = $data['projects'];
 
             if ($this->verifyType($user, "firstName", 'string')) {
-                $user->setFirstName($user['firstName']);
+                $currentUser->setFirstName($user['firstName']);
             }
             if ($this->verifyType($user, "lastName", 'string')) {
-                $user->setLastName($user['lastName']);
+                $currentUser->setLastName($user['lastName']);
             }
             if ($this->verifyType($user, "phone", 'string')) {
-                $user->setPhone($user['phone']);
+                $currentUser->setPhone($user['phone']);
             }
             if ($this->verifyType($user, "address", 'string')) {
-                $user->setAdresse($user['address']);
+                $currentUser->setAdresse($user['address']);
             }
             if ($this->verifyType($user, "siret", 'string')) {
-                $user->setSiret($user['siret']);
+                $currentUser->setSiret($user['siret']);
+            }
+            if ($this->verifyType($user, "notes", 'string')) {
+                $currentUser->setNote($currentUser->getNote() ."\n \n\n". $user['notes']);
+            }
+            if ($this->verifyType($user, "remembers", 'string')) {
+                $currentUser->setRemember($currentUser->getRemember()."\n \n \n".$user['remembers']);
             }
 
             $entityManager->persist($user);
@@ -293,9 +307,9 @@ class ApiExportImportDataController extends AbstractController
                         $client->setLocation($clientData['location']);
                     }
                     if ($this->verifyType($clientData, "state", 'string') && in_array($clientData['state'], $this->states)) {
-                        $currentUSer->setState($clientData['state']);
+                        $client->setState($clientData['state']);
                     } else {
-                        $currentUSer->setState('active');
+                        $client->setState('active');
                     }
 
                     $entityManager->persist($client);
@@ -566,6 +580,9 @@ class ApiExportImportDataController extends AbstractController
 
                 }
 
+                return $this->json([
+                    'state' => 'OK'
+                ]);
             }
 
         } catch

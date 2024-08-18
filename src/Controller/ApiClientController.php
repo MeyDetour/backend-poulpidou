@@ -36,22 +36,29 @@ class ApiClientController extends AbstractController
 
             if ($data) {
                 $client = new Client();
-                if (!isset($data['first_name']) || empty(trim($data['first_name']))) {
+                if (!isset($data['firstName']) || empty(trim($data['firstName']))) {
                     return $this->json([
                         'state' => 'NED',
-                        'value' => 'first_name'
+                        'value' => 'firstName'
+
+                    ]);
+                }    if (!isset($data['mail']) || empty(trim($data['mail']))) {
+                    return $this->json([
+                        'state' => 'NED',
+                        'value' => 'mail'
 
                     ]);
                 }
-                if (!isset($data['last_name']) || empty(trim($data['last_name']))) {
+                if (!isset($data['lastName']) || empty(trim($data['lastName']))) {
                     return $this->json([
                         'state' => 'NED',
-                        'value' => 'last_name'
+                        'value' => 'lastName'
                     ]);
                 }
 
-                $client->setFirstName(ucfirst($data['first_name']));
-                $client->setLastName(strtoupper($data['last_name']));
+                $client->setFirstName(ucfirst($data['firstName']));
+                $client->setLastName(strtoupper($data['lastName']));
+                $client->setMail($data['mail']);
 
                 if (isset($data['job']) && !empty(trim($data['job']))) {
                     $client->setJob($data['job']);
@@ -133,11 +140,11 @@ class ApiClientController extends AbstractController
             $data = json_decode($request->getContent(), true);
 
             if ($data) {
-                if (isset($data['first_name']) && !empty(trim($data['first_name']))) {
-                    $client->setFirstName($data['first_name']);
+                if (isset($data['firstName']) && !empty(trim($data['firstName']))) {
+                    $client->setFirstName($data['firstName']);
                 }
-                if (isset($data['last_name']) && !empty(trim($data['last_name']))) {
-                    $client->setLastName($data['last_name']);
+                if (isset($data['lastName']) && !empty(trim($data['lastName']))) {
+                    $client->setLastName($data['lastName']);
                 }
                 if (isset($data['job']) && !empty(trim($data['job']))) {
                     $client->setJob($data['job']);
