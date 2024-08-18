@@ -843,13 +843,16 @@ class ApiProjectController extends AbstractController
             if ($route == 'add_user_to_project') {
 
                 $project->addUserAuthorised($user);
+
+                $project->getChat()->addUser($user);
             }
             if ($route == 'remove_user_to_project') {
 
                 $project->removeUserAuthorised($user);
 
+                $project->getChat()->removeUser($user);
+
             }
-            $project->getChat()->addUser($user);
             $manager->persist($project);
             $manager->persist($project->getChat());
             $manager->flush();
@@ -860,6 +863,55 @@ class ApiProjectController extends AbstractController
                 $this->logService->createLog('ACTION', ' remove User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
 
             }
+            return $this->json([
+                'state' => 'OK'
+            ]);
+
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+
+
+            return $this->json([
+                'state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+            ]);
+        }
+    }
+
+    #[Route('/api/project/{id}/left', name: 'left_user_to_project', methods: 'delete')]
+    public function leftProject($id, ProjectRepository $repository,  EntityManagerInterface $manager): Response
+    {
+        try {
+            $project = $repository->find($id);
+            if (!$project) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getOwner() != $this->getUser()) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+            if ($project->hasUserInUserAuthorised($this->getUser())) {
+                $project->removeUserAuthorised($this->getUser());
+                $project->getChat()->removeUser($this->getUser());
+            }
+
+
+            $manager->persist($project);
+            $manager->persist($project->getChat());
+            $manager->flush();
+
             return $this->json([
                 'state' => 'OK'
             ]);
@@ -1320,7 +1372,7 @@ class ApiProjectController extends AbstractController
 
                 "id" => $project->getId(),
                 "name" => $project->getName(),
-                'uuid'=>$project->getUuid(),
+                'uuid' => $project->getUuid(),
                 "cratedAt" => $this->dateService->formateDate($project->getCreatedAt()),
                 'totalTasks' => count($project->getTasks()),
                 'doneTasks' => $count,

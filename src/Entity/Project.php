@@ -7,8 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['uuid'])]
+#[UniqueEntity(fields: ['uuid'], message: 'There is already an project with this name')]
 class Project
 {
     #[ORM\Id]
@@ -47,8 +50,6 @@ class Project
     #[ORM\ManyToOne(inversedBy: 'projects')]
     private ?Client $client = null;
 
-    #[ORM\ManyToOne(inversedBy: 'currentProject')]
-    private ?Client $currentProjetOfThisClient = null;
 
     /**
      * @var Collection<int, Invoice>
@@ -99,7 +100,7 @@ class Project
     #[ORM\Column(type: Types::TEXT, nullable: false)]
     private ?string $noteNames = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
     private ?string $noteContent = null;
 
     #[ORM\OneToOne(mappedBy: 'project', cascade: ['persist', 'remove'])]

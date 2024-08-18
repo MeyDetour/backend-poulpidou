@@ -165,7 +165,7 @@ class ApiMessageController extends AbstractController
         $client = $chat->getClient();
         $formattedMessages = [];
         foreach ($chat->getMessages() as $message) {
-            $authorData = [];
+
             $type = null;
             if ($message->getClient()) {
                 $author = $message->getClient();

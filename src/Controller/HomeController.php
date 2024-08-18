@@ -11,6 +11,8 @@ class HomeController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(): Response
     {
+
+
         $invoicesData = [[
             'id' => '1',
             'price' => 12.5,
@@ -87,6 +89,21 @@ class HomeController extends AbstractController
                     ],
                     'renvoie' => 'ok si utilisateur bien crée',
                     'need token ? ' => false
+                ],[
+                    '(non testé) export data' => '/api/export/data',
+                    'methode' => 'get',
+                    'parametres a mettre dans le body' => [
+                    ],
+                    'renvoie' => 'telecharge un fichier contenant les donnée du compte',
+                    'need token ? ' => true
+                ],[
+                    '(non testé) import data' => '/api/import/data',
+                    'methode' => 'get',
+                    'parametres a mettre dans le body' => [
+                        'save'=> "fichier d'importation .poulpidou "
+                    ],
+                    'renvoie' => "ok si c'est bon sinon ASFO",
+                    'need token ? ' => true
                 ]
             ],
             'clients' => [
@@ -834,11 +851,18 @@ class HomeController extends AbstractController
                     'utilisation' => "passer en parametre l'id du project pour mettre la fiche project sur state = 'deleted' ",
                     'need token ? ' => true],
                 [
+                    'quitter un projet' => '/api/project/{id}/left',
+                    'methode' => 'delete',
+                    "renvoie :" => "ok si l'action a bien été faite",
+                    'parametres a mettre dans le body' => null,
+                    'utilisation' => "passer en parametre l'id du project pour mettre la fiche project sur state = 'deleted' ",
+                    'need token ? ' => true],
+                [
                     'delete force' => '/api/project/deleteforce/{id du project}',
                     'methode' => 'delete',
                     "renvoie :" => "ok si l'action a bien été faite",
                     'parametres a mettre dans le body' => null,
-                    'utilisation' => "passer en parametre l'id du project pour supprimer vraiment la fiche project",
+                    'utilisation' => "quitter un projet",
                     'need token ? ' => true],
                 [
                     'set project current/no current' => '/api/project/{id du projet}/switch/current',

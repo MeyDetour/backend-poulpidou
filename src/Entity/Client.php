@@ -7,8 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['mail'])]
+#[UniqueEntity(fields: ['mail'], message: 'There is already an account with this email')]
 class Client
 {
     #[ORM\Id]
@@ -31,7 +34,7 @@ class Client
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $location = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
     private ?string $mail = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

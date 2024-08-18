@@ -19,6 +19,16 @@ class AppFixtures extends Fixture
 
         $manager->flush();
 
+        $user2 = new User();
+        $user2->setPassword('$2y$13$1zFD2rA5vmlRDdx8asgaH.K.3iyaIvlS8HmYMASbcpJB.mNzEnchS');
+        $user2->setEmail('larbin@gmail.com');
+        $user2->setVerified(false);
+        $user2->setFirstName('Mr');
+        $user2->setLastName('LARBIN');
+        $manager->persist($user2);
+
+        $manager->flush();
+
         $setting = new Setting();
         $setting->setOwner($user);
         $setting->setDateFormat('UE');
