@@ -90,8 +90,10 @@ init-on-server:
 	$(MAKE) db-create
 	$(MAKE) reload-migrations
 	$(MAKE) save
+	$(MAKE) apache-pack
 
-
+apache-pack:
+	$(COMPOSER) require symfony/apache-pack
 ## -------- Get PHp 8.3 on symfony --------
 php-version:
 	sudo update-alternatives --install /usr/bin/php php /usr/bin/php8.3 1
