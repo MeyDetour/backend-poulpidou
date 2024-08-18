@@ -24,7 +24,7 @@ height: 100vh;
 
 .invoiceListContainer .payed {
     background: var(--greenBackground);
-    color: var(--green);
+    color: #348926;
     width: 133px;
     display: block;
     padding: 7px 0px;

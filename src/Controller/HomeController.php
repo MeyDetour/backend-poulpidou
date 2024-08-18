@@ -55,7 +55,7 @@ class HomeController extends AbstractController
             'payed' => false,
 
         ]];
-        return $this->render('/component/termsAndConditions.html.twig',
+        return $this->render('/component/invoiceList.html.twig',
             ['invoices' => $invoicesData]);
     }
 
