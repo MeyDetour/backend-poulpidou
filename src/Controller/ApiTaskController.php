@@ -590,7 +590,12 @@ class ApiTaskController extends AbstractController
             foreach ($tasks as $task) {
                 $data[$task->getCol()][] = $this->getData($task);
             }
-
+            return $this->json(
+                [
+                    'state' => 'OK',
+                    'value' => $data
+                ]
+            );
             return new JsonResponse(json_encode(
                 [
                     'state' => 'OK',
