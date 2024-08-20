@@ -241,7 +241,7 @@ class HomeController extends AbstractController
                     'utilisation' => "passer en parametre l'id du client pour supprimer vraiment la fiche client",
                     'need token ? ' => true],
                 [
-                    'get projects of client' => '/api/client/{id}/projects',
+                    'get projects of client' => '/api/client/{id du client}/projects',
                     'methode' => 'get',
                     "renvoie :" => [[
                         "id" => null,
@@ -429,7 +429,7 @@ class HomeController extends AbstractController
                         ]],
                     'need token ? ' => true],
                 [
-                    'get project' => '/api/project/{id du client}',
+                    'get project' => '/api/project/{id du projet}',
                     'methode' => 'get',
                     "renvoie :" => [
                         "totalPrice" => null,
