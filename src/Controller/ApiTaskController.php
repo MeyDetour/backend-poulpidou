@@ -325,21 +325,28 @@ class ApiTaskController extends AbstractController
             $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col]);
             dump($tasks);
             foreach ($tasks as $task) {
-                dump($task,$task != $taskElement);
-                if ($task != $taskElement) {
-                    dump($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
+                if(  $order != 0) {
 
-                    if (  $order >= $taskElement->getTaskOrder() && $taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
-                        dump($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
-                        $task->setTaskOrder($task->getTaskOrder() - 1);
+                    dump($task->getId(), $task != $taskElement);
+                    if ($task != $taskElement) {
+                        dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
+
+                    else
+                        if ($order >= $taskElement->getTaskOrder() && $taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
+                            dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
+                            $task->setTaskOrder($task->getTaskOrder() - 1);
+                        }
+                        if ($taskElement->getTaskOrder() >= $order && $taskElement->getTaskOrder() >= $task->getTaskOrder() && $task->getTaskOrder() >= $order) {
+                            dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
+
+
+                        }
+                        $this->entityManager->persist($task);
+
                     }
-                    if ($taskElement->getTaskOrder() >= $order && $taskElement->getTaskOrder() >= $task->getTaskOrder() && $task->getTaskOrder() >= $order) {
-                        dump($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
-                        $task->setTaskOrder($task->getTaskOrder() + 1);
-
-                    }
-                    $this->entityManager->persist($task);
-
+                }
+                else{
+                    $task->setTaskOrder($task->getTaskOrder() + 1);
                 }
             }
             $taskElement->setTaskOrder($order);
