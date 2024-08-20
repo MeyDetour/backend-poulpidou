@@ -716,7 +716,7 @@ class HomeController extends AbstractController
                     'utilisation' => "renvoie les projets courrents et autre appartenant a l'utilisateur ",
                     'need token ? ' => true],
                 [
-                    'edit project' => '/api/project/edit/{id du client}',
+                    'edit project' => '/api/project/edit/{id du projet}',
                     'methode' => 'put',
                     "renvoie :" => [
                         "totalPrice" => null,
@@ -819,7 +819,7 @@ class HomeController extends AbstractController
                     'utilisation' => "passer en parametre l'id du project et mettre dans le body les parametre a changer",
                     'need token ? ' => true],
                 [
-                    'get client of the project ' => '/api/project/{id}/get/client',
+                    'get client of the project ' => '/api/project/{id du projet}/get/client',
                     'methode' => 'get',
                     "renvoie :" => [
                         'id' => null,
