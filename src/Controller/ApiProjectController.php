@@ -1191,7 +1191,7 @@ class ApiProjectController extends AbstractController
 
             }
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse($this->json([
                     'state' => 'OK',
                     'value' => $data
                 ]
