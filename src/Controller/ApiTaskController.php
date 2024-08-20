@@ -129,10 +129,10 @@ class ApiTaskController extends AbstractController
                 $task->setOwner($this->getUser());
                 $task->setCol('waiting');
                 $task->setTaskOrder(0);
+                $this->reorderTask($task, 'waiting', $this->getUser(), 0);
 
                 $entityManager->persist($task);
                 $entityManager->flush();
-                $this->reorderTask($task, 'waiting', $this->getUser(), 0);
 
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
