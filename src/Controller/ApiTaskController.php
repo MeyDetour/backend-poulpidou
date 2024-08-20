@@ -352,8 +352,7 @@ class ApiTaskController extends AbstractController
             $taskElement->setTaskOrder($order);
             $this->entityManager->persist($taskElement);
             $this->entityManager->flush();
-            dd($taskElement->getTaskOrder());
-            return Null;
+             return Null;
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return $this->json(['state' => 'ISE',
