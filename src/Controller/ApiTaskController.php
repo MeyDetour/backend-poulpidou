@@ -319,6 +319,72 @@ class ApiTaskController extends AbstractController
         }
     }
 
+    #[Route('/api/task/{id}/edit/order', name: 'edit_order_api_task', methods: ['PUT'])]
+    public function editTaskOrder(EntityManagerInterface $entityManager, $id, Request $request, CategoryRepository $categoryRepository, TaskRepository $repository): Response
+    {
+        try {
+            $task = $repository->find($id);
+            if (!$task) {
+                return $this->json([
+                    'state' => 'NDF',
+                    'value' => 'task'
+                ]);
+            }
+            if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
+                return $this->json([
+                    'state' => 'FO',
+                    'value' => 'project'
+                ]);
+            }
+            if ($task->getProject()->getState() == 'deleted') {
+                return $this->json([
+                    'state' => 'DD',
+                    'value' => 'project'
+                ]);
+            }
+
+            $data = json_decode($request->getContent(), true);
+            if ($data) {
+
+                if (!isset($data['order']) || is_numeric(trim($data['order']))) {
+                    return $this->json([
+                        'state' => 'NEF',
+                        'value' => 'order',
+                    ]);
+                }
+                if (filter_var($data['order'], FILTER_VALIDATE_INT) === false || $data['order'] <= 0) {
+                    return $this->json([
+                        'state' => 'IDT',
+                        'value' => 'order',
+                    ]);
+                }
+
+                $tasks = $this->taskRepository->findBy(['project' => $task->getProject(), 'col' => $task->getCol()]);
+
+                if ($data['order'] > count($tasks)) {
+                    return $this->json([
+                        'state' => 'IDV',
+                        'value' => 'order',
+                    ]);
+                }
+
+                $this->reorderTask($task->getProject(), $task->getCol(), $task, $data['order']);
+
+
+                return $this->json(['state' => 'OK',
+
+                    'value' => $this->getData($task)]);
+
+            }
+            return $this->json(['state' => 'ND']);
+
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return $this->json(['state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
+        }
+    }
+
     public function reorderTask($project, $col, $taskElement, $order)
     {
         try {
@@ -352,7 +418,7 @@ class ApiTaskController extends AbstractController
             $taskElement->setTaskOrder($order);
             $this->entityManager->persist($taskElement);
             $this->entityManager->flush();
-             return Null;
+            return Null;
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return $this->json(['state' => 'ISE',

@@ -1564,7 +1564,7 @@ class HomeController extends AbstractController
                         ]
                     ],
                     'parametres a mettre dans le body' => [
-                        'status' => "waiting','progress','done"
+                        'order' => "int"
                     ],
                     'utilisation' => "modifier le status d' une tache  (waiting , done , progress)",
                     'need token ? ' => true],
