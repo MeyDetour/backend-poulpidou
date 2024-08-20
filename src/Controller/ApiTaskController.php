@@ -394,7 +394,9 @@ class ApiTaskController extends AbstractController
             dump($tasks);
             if ($newOrder == 0) {
                 foreach ($tasks as $task) {
+
                     if ($task != $taskElement ) {
+                        dump($task->getId());
                         $task->setTaskOrder($task->getTaskOrder() + 1);
                         $this->entityManager->persist($task);
                     }
@@ -421,7 +423,6 @@ class ApiTaskController extends AbstractController
 
             $taskElement->setTaskOrder($newOrder);
             $this->entityManager->persist($taskElement);
-            dd($taskElement);
             $this->entityManager->flush();
             return Null;
         } catch (\Exception $exception) {
