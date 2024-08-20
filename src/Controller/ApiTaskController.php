@@ -346,7 +346,7 @@ class ApiTaskController extends AbstractController
             $data = json_decode($request->getContent(), true);
             if ($data) {
 
-                if (!isset($data['order']) || is_numeric(trim($data['order']))) {
+                if (!isset($data['order'])) {
                     return $this->json([
                         'state' => 'NEF',
                         'value' => 'order',
