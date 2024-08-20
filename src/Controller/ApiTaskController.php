@@ -392,7 +392,7 @@ class ApiTaskController extends AbstractController
             $currentOrder = $taskElement->getTaskOrder();
 
             dump($tasks);
-            if ($newOrder != 0) {
+            if ($newOrder == 0) {
                 foreach ($tasks as $task) {
                     if ($task != $taskElement ) {
                         $task->setTaskOrder($task->getTaskOrder() + 1);
