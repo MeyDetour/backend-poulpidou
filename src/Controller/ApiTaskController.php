@@ -324,10 +324,10 @@ class ApiTaskController extends AbstractController
             $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col]);
             foreach ($tasks as $task) {
                 if ($task != $taskElement) {
-                    if ($taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
+                    if (  $order >= $taskElement->getTaskOrder() && $taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
                         $task->setTaskOrder($task->getTaskOrder() - 1);
                     }
-                    if ($taskElement->getTaskOrder() >= $task->getTaskOrder() && $task->getTaskOrder() >= $order) {
+                    if ($taskElement->getTaskOrder() >= $order && $taskElement->getTaskOrder() >= $task->getTaskOrder() && $task->getTaskOrder() >= $order) {
 
                         $task->setTaskOrder($task->getTaskOrder() + 1);
 
