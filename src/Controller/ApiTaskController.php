@@ -132,6 +132,9 @@ class ApiTaskController extends AbstractController
 
                 $this->reorderTask($task, 'waiting', $this->getUser(), 0);
 
+                $this->entityManager->persist($task);
+                $this->entityManager->flush();
+                dd($task);
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
                 return $this->json(['state' => 'OK',
@@ -333,7 +336,7 @@ class ApiTaskController extends AbstractController
 
                 }
             }
-            $taskElement->setOrder($order);
+            $taskElement->setTaskOrder($order);
             $this->entityManager->persist($taskElement);
             $this->entityManager->flush();
         } catch (\Exception $exception) {
