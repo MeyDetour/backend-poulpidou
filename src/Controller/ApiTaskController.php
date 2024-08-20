@@ -31,7 +31,7 @@ class ApiTaskController extends AbstractController
     }
 
     #[Route('/api/task/new', name: 'new_api_task', methods: ['post'])]
-    public function newTask( ProjectRepository $projectRepository, Request $request, CategoryRepository $categoryRepository): Response
+    public function newTask(ProjectRepository $projectRepository, Request $request, CategoryRepository $categoryRepository): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -134,7 +134,7 @@ class ApiTaskController extends AbstractController
                 $this->entityManager->persist($task);
                 $this->entityManager->flush();
 
-                $this->reorderTask($project, 'waiting',$task, 0);
+                $this->reorderTask($project, 'waiting', $task, 0);
 
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
@@ -325,10 +325,11 @@ class ApiTaskController extends AbstractController
             $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col]);
             dump($tasks);
             foreach ($tasks as $task) {
-                if(  $order != 0) {
+                if ($task != $taskElement) {
 
-                    dump($task->getId(), $task != $taskElement);
-                    if ($task != $taskElement) {
+                    if ($order != 0) {
+
+                        dump($task->getId(), $task != $taskElement);
                         dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
 
                         if ($order >= $taskElement->getTaskOrder() && $taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
@@ -342,10 +343,10 @@ class ApiTaskController extends AbstractController
                         }
                         $this->entityManager->persist($task);
 
+
+                    } else {
+                        $task->setTaskOrder($task->getTaskOrder() + 1);
                     }
-                }
-                else{
-                    $task->setTaskOrder($task->getTaskOrder() + 1);
                 }
             }
             $taskElement->setTaskOrder($order);
