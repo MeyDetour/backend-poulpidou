@@ -22,8 +22,9 @@ class ApiTaskController extends AbstractController
     private EntityManagerInterface $entityManager;
     private $statusArray = ['waiting', 'progress', 'done'];
 
-    public function __construct(LogService $logService,TaskRepository $repository ,DateService $dateService, EntityManagerInterface $entityManager )
-    {   $this->taskRepository = $repository;
+    public function __construct(LogService $logService, TaskRepository $repository, DateService $dateService, EntityManagerInterface $entityManager)
+    {
+        $this->taskRepository = $repository;
         $this->logService = $logService;
         $this->dateService = $dateService;
         $this->entityManager = $entityManager;
@@ -131,7 +132,7 @@ class ApiTaskController extends AbstractController
 
                 $entityManager->persist($task);
                 $entityManager->flush();
-                $this->reorderTask($task,'waiting',$this->getUser(),0);
+                $this->reorderTask($task, 'waiting', $this->getUser(), 0);
 
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
@@ -315,25 +316,33 @@ class ApiTaskController extends AbstractController
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
     }
-    public function reorderTask($project,$col, $taskElement,$order){
-         $tasks = $this->taskRepository->findBy(['project'=>$project,'col'=>$col]);
-         foreach ($tasks as $task) {
-             if($task != $taskElement ){
-                 if(  $taskElement->getTaskOrder() <= $task->getOrder() && $task->getOrder() <= $order){
-                     $task->setTaskOrder($task->getOrder() -1);
-                 }
-                 if(  $taskElement->getTaskOrder() >= $task->getOrder() && $task->getOrder() >= $order){
 
-                     $task->setTaskOrder($task->getOrder() +1);
+    public function reorderTask($project, $col, $taskElement, $order)
+    {
+        try {
+            $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col]);
+            foreach ($tasks as $task) {
+                if ($task != $taskElement) {
+                    if ($taskElement->getTaskOrder() <= $task->getOrder() && $task->getOrder() <= $order) {
+                        $task->setTaskOrder($task->getOrder() - 1);
+                    }
+                    if ($taskElement->getTaskOrder() >= $task->getOrder() && $task->getOrder() >= $order) {
 
-                 }
-                 $this->entityManager->persist($task);
+                        $task->setTaskOrder($task->getOrder() + 1);
 
-             }
-         }
-        $taskElement->setOrder($order);
-         $this->entityManager->persist($taskElement);
-         $this->entityManager->flush();
+                    }
+                    $this->entityManager->persist($task);
+
+                }
+            }
+            $taskElement->setOrder($order);
+            $this->entityManager->persist($taskElement);
+            $this->entityManager->flush();
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return $this->json(['state' => 'ISE',
+                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
+        }
     }
 
     #[Route('/api/task/{id}/delete', name: 'delete_task', methods: 'delete')]
