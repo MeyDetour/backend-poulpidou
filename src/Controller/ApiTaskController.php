@@ -324,12 +324,12 @@ class ApiTaskController extends AbstractController
             $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col]);
             foreach ($tasks as $task) {
                 if ($task != $taskElement) {
-                    if ($taskElement->getTaskOrder() <= $task->getOrder() && $task->getOrder() <= $order) {
-                        $task->setTaskOrder($task->getOrder() - 1);
+                    if ($taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
+                        $task->setTaskOrder($task->getTaskOrder() - 1);
                     }
-                    if ($taskElement->getTaskOrder() >= $task->getOrder() && $task->getOrder() >= $order) {
+                    if ($taskElement->getTaskOrder() >= $task->getTaskOrder() && $task->getTaskOrder() >= $order) {
 
-                        $task->setTaskOrder($task->getOrder() + 1);
+                        $task->setTaskOrder($task->getTaskOrder() + 1);
 
                     }
                     $this->entityManager->persist($task);
@@ -339,6 +339,7 @@ class ApiTaskController extends AbstractController
             $taskElement->setTaskOrder($order);
             $this->entityManager->persist($taskElement);
             $this->entityManager->flush();
+            return Null;
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return $this->json(['state' => 'ISE',
