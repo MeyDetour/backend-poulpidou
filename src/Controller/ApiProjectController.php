@@ -1141,7 +1141,7 @@ class ApiProjectController extends AbstractController
     {
         try {
             $projects = $this->getUser()->getProjects();
-            $projects[] = $this->getUser()->getAutorisedInProjects();
+            $projects[] = [$this->getUser()->getAutorisedInProjects()];
             $data = [
                 'currents' => [],
                 'others' => [],
