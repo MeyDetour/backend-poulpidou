@@ -1190,10 +1190,7 @@ class ApiProjectController extends AbstractController
 
 
             }
-            dd([
-                'state' => 'OK',
-                'value' => $data
-            ]);
+
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                     'value' => $data
