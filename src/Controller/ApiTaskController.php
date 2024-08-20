@@ -18,12 +18,15 @@ class ApiTaskController extends AbstractController
 {
     private LogService $logService;
     private DateService $dateService;
-    private $statusArray = ['waiting','progress','done'];
+    private TaskRepository $taskRepository;
+    private EntityManagerInterface $entityManager;
+    private $statusArray = ['waiting', 'progress', 'done'];
 
-    public function __construct(LogService $logService ,DateService $dateService)
-    {
+    public function __construct(LogService $logService,TaskRepository $repository ,DateService $dateService, EntityManagerInterface $entityManager )
+    {   $this->taskRepository = $repository;
         $this->logService = $logService;
         $this->dateService = $dateService;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/api/task/new', name: 'new_api_task', methods: ['post'])]
@@ -64,7 +67,8 @@ class ApiTaskController extends AbstractController
                         'state' => 'FO',
                         'value' => 'project'
                     ]);
-                }   if($project->getState() == 'deleted'){
+                }
+                if ($project->getState() == 'deleted') {
                     return $this->json([
                         'state' => 'DD',
                         'value' => 'project'
@@ -92,7 +96,8 @@ class ApiTaskController extends AbstractController
                             'state' => 'FO',
                             'value' => 'category'
                         ]);
-                    }   if($cat->getProject()->getState() == 'deleted'){
+                    }
+                    if ($cat->getProject()->getState() == 'deleted') {
                         return $this->json([
                             'state' => 'DD',
                             'value' => 'project'
@@ -122,11 +127,13 @@ class ApiTaskController extends AbstractController
                 $task->setName($data['name']);
                 $task->setOwner($this->getUser());
                 $task->setCol('waiting');
+                $task->setTaskOrder(0);
 
                 $entityManager->persist($task);
                 $entityManager->flush();
+                $this->reorderTask($task,'waiting',$this->getUser(),0);
 
-                $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail());
+                $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
                 return $this->json(['state' => 'OK',
 
@@ -136,7 +143,7 @@ class ApiTaskController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
@@ -160,7 +167,7 @@ class ApiTaskController extends AbstractController
                 ]);
             }
 
-            if($task->getProject()->getState() == 'deleted'){
+            if ($task->getProject()->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -197,7 +204,7 @@ class ApiTaskController extends AbstractController
                             'value' => 'category'
                         ]);
                     }
-                    if($cat->getProject()->getState() == 'deleted'){
+                    if ($cat->getProject()->getState() == 'deleted') {
                         return $this->json([
                             'state' => 'DD',
                             'value' => 'project'
@@ -231,7 +238,7 @@ class ApiTaskController extends AbstractController
                 $entityManager->persist($task);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Edit Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail());
+                $this->logService->createLog('ACTION', ' Edit Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
                 return $this->json(['state' => 'OK',
 
@@ -241,11 +248,12 @@ class ApiTaskController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
     }
+
     #[Route('/api/task/{id}/edit/status', name: 'edit_status_api_task', methods: ['PUT'])]
     public function editTaskStatut(EntityManagerInterface $entityManager, $id, Request $request, CategoryRepository $categoryRepository, TaskRepository $repository): Response
     {
@@ -263,7 +271,7 @@ class ApiTaskController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($task->getProject()->getState() == 'deleted'){
+            if ($task->getProject()->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -279,7 +287,7 @@ class ApiTaskController extends AbstractController
                         'value' => 'status',
                     ]);
                 }
-                if(!in_array($data['status'], $this->statusArray)){
+                if (!in_array($data['status'], $this->statusArray)) {
                     return $this->json([
                         'state' => 'IDV',
                         'value' => 'status',
@@ -292,7 +300,7 @@ class ApiTaskController extends AbstractController
                 $entityManager->persist($task);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Edit Status of Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail());
+                $this->logService->createLog('ACTION', ' Edit Status of Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
                 return $this->json(['state' => 'OK',
 
@@ -302,10 +310,30 @@ class ApiTaskController extends AbstractController
             return $this->json(['state' => 'ND']);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return $this->json(['state' => 'ISE',
                 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
+    }
+    public function reorderTask($project,$col, $taskElement,$order){
+         $tasks = $this->taskRepository->findBy(['project'=>$project,'col'=>$col]);
+         foreach ($tasks as $task) {
+             if($task != $taskElement ){
+                 if(  $taskElement->getTaskOrder() <= $task->getOrder() && $task->getOrder() <= $order){
+                     $task->setTaskOrder($task->getOrder() -1);
+                 }
+                 if(  $taskElement->getTaskOrder() >= $task->getOrder() && $task->getOrder() >= $order){
+
+                     $task->setTaskOrder($task->getOrder() +1);
+
+                 }
+                 $this->entityManager->persist($task);
+
+             }
+         }
+        $taskElement->setOrder($order);
+         $this->entityManager->persist($taskElement);
+         $this->entityManager->flush();
     }
 
     #[Route('/api/task/{id}/delete', name: 'delete_task', methods: 'delete')]
@@ -325,13 +353,13 @@ class ApiTaskController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($task->getProject()->getState() == 'deleted'){
+            if ($task->getProject()->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
                 ]);
             }
-            $message = ' Delete task (' . $task->getId() . ':' . $task->getName() . ') of project : (' . $task->getProject()->getName() . ' ), action by '. $this->getUser()->getEmail();
+            $message = ' Delete task (' . $task->getId() . ':' . $task->getName() . ') of project : (' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail();
             $manager->remove($task);
             $manager->flush();
             $this->logService->createLog('DELETE', $message);
@@ -340,7 +368,7 @@ class ApiTaskController extends AbstractController
                 'state' => 'OK'
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -350,6 +378,7 @@ class ApiTaskController extends AbstractController
             ]);
         }
     }
+
     #[Route('/api/task/{id}/get', name: 'get_task', methods: 'get')]
     public function getTask($id, TaskRepository $repository, EntityManagerInterface $manager): Response
     {
@@ -367,7 +396,7 @@ class ApiTaskController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($task->getProject()->getState() == 'deleted'){
+            if ($task->getProject()->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -375,10 +404,10 @@ class ApiTaskController extends AbstractController
             }
             return $this->json([
                 'state' => 'OK',
-                'value'=>$this->getData($task)
+                'value' => $this->getData($task)
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -388,6 +417,7 @@ class ApiTaskController extends AbstractController
             ]);
         }
     }
+
     #[Route('/api/{id}/tasks', name: 'get_tasks', methods: 'get')]
     public function getTasks(ProjectRepository $projectRepository, $id, Request $request, EntityManagerInterface $manager): Response
     {
@@ -405,7 +435,7 @@ class ApiTaskController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            if($project->getState() == 'deleted'){
+            if ($project->getState() == 'deleted') {
                 return $this->json([
                     'state' => 'DD',
                     'value' => 'project'
@@ -426,7 +456,7 @@ class ApiTaskController extends AbstractController
                 'value' => $data
             ]);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return $this->json([
@@ -440,7 +470,7 @@ class ApiTaskController extends AbstractController
     public function getData($task)
     {
         $categorName = null;
-        if($task->getCategory() != null){
+        if ($task->getCategory() != null) {
             $categorName = $task->getCategory()->getName();
         }
         return [

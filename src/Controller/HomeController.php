@@ -1544,9 +1544,28 @@ class HomeController extends AbstractController
                         ]
                     ],
                     'parametres a mettre dans le body' => [
-                        'status' => null,
+                        'status' => "waiting','progress','done"
                     ],
-                    'utilisation' => "modifier le status d' une tache ",
+                    'utilisation' => "modifier le status d' une tache  (waiting , done , progress)",
+                    'need token ? ' => true],
+                ["modifier l'ordre de la tache " => '/api/task/{id de la task}/edit/order',
+                    'methode' => 'put',
+                    "renvoie :" => [
+                        'name' => 'New task',
+                        'content' => 'Labore fugiat amet voluptate sit quis reprehenderit dolor eiusmod ad fugiat mollit officia est minim ut sint officia voluptate ut laboris aute consectetur labore minim eiusmod sint aute in sed incididunt.',
+                        'category' => 'dev',
+                        'status' => 'waiting',
+                        'order'=>1,
+                        'dueDate' => '07/08/2024',
+                        'author' => [
+                            'firstName' => 'Maxence',
+                            'lastName' => 'ABRILE'
+                        ]
+                    ],
+                    'parametres a mettre dans le body' => [
+                        'status' => "waiting','progress','done"
+                    ],
+                    'utilisation' => "modifier le status d' une tache  (waiting , done , progress)",
                     'need token ? ' => true],
 
                 [

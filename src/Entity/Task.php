@@ -36,6 +36,9 @@ class Task
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $col = null;
+
+    #[ORM\Column]
+    private ?int $taskOrder = null;
     //['waiting','progress','done']
 
     public function getId(): ?int
@@ -123,6 +126,18 @@ class Task
     public function setCol(string $col): static
     {
         $this->col = $col;
+
+        return $this;
+    }
+
+    public function getTaskOrder(): ?int
+    {
+        return $this->taskOrder;
+    }
+
+    public function setTaskOrder(int $taskOrder): static
+    {
+        $this->taskOrder = $taskOrder;
 
         return $this;
     }
