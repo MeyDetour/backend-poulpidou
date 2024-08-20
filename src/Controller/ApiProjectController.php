@@ -60,46 +60,46 @@ class ApiProjectController extends AbstractController
 
                 $project = new Project();
                 if (!isset($data['identity']['client_id'])) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'client_id',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!is_numeric($data['identity']['client_id'])) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'IDT',
                         'value' => 'client_id',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 if (!isset($data['identity']['name']) || empty(trim($data['identity']['name']))) {
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'name',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 $client = $clientRepository->find($data['identity']['client_id']);
                 if (!$client) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'client',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
                 if ($client->getOwner() != $this->getUser()) {
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                             'state' => 'FO',
                             'value' => 'client'
                         ]
-                    ), Response::HTTP_FORBIDDEN);
+                     , Response::HTTP_FORBIDDEN);
                 }
                 if ($client->getState() == 'deleted') {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'DD',
                         'value' => 'client',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
 
                 $project->setClient($client);
@@ -117,20 +117,20 @@ class ApiProjectController extends AbstractController
                 if (isset($data['estimatedPrice']) && !empty(trim($data['estimatedPrice']))) {
                     $isValid = $data['estimatedPrice'] > 0 && is_numeric($data['estimatedPrice']);
                     if (!$isValid) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'estimatedPrice',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setEstimatedPrice($data['estimatedPrice']);
                 }
                 if (isset($data['maintenancePercentage']) && !empty(trim($data['maintenancePercentage']))) {
                     $isValid = $data['maintenancePercentage'] > 0 && is_numeric($data['maintenancePercentage']);
                     if (!$isValid) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'maintenancePErcentage',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setMaintenancePercentage($data['maintenancePercentage']);
                 }
@@ -139,91 +139,91 @@ class ApiProjectController extends AbstractController
 
                     $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['startDate']);
                     if (!$searchDate) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'startDate',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setStartDate($searchDate);
                 }
                 if (isset($data['identity']['endDate']) && !empty(trim($data['identity']['endDate']))) {
                     $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['endDate']);
                     if (!$searchDate) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'endDate',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setStartDate($searchDate);
                 }
                 if (isset($data['totalPrice']) && !empty(trim($data['totalPrice']))) {
                     $isValid = $data['totalPrice'] > 0 && is_numeric($data['totalPrice']);
                     if (!$isValid) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'totalPrice',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setTotalPrice($data['totalPrice']);
                 }
 
                 if (isset($data['composition']['isPaying'])) {
                     if (gettype($data['composition']['isPaying']) != 'string') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'isPaying',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if ($data['composition']['isPaying'] != 'false' && $data['composition']['isPaying'] != 'true') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'isPAying',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setPaying($data['composition']['isPaying']);
                 }
                 if (isset($data['composition']['database'])) {
                     if (gettype($data['composition']['database']) != 'string') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'database',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if ($data['composition']['database'] != 'false' && $data['composition']['database'] != 'true') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'database',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setDatabase($data['composition']['database']);
                 }
                 if (isset($data['composition']['maquette'])) {
                     if (gettype($data['composition']['maquette']) != 'string') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'maquette',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if ($data['composition']['maquette'] != 'false' && $data['composition']['maquette'] != 'true') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'maquette',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setMaquette($data['composition']['maquette']);
                 }
                 if (isset($data['composition']['maintenance'])) {
                     if (gettype($data['composition']['maintenance']) != 'string') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'maintenance',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if ($data['composition']['maintenance'] != 'false' && $data['composition']['maintenance'] != 'true') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'maintenance',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setMaintenance($data['composition']['maintenance']);
                 }
@@ -270,31 +270,31 @@ class ApiProjectController extends AbstractController
                 }
                 if (isset($data['rules']['canEditInvoices'])) {
                     if (gettype($data['rules']['canEditInvoices']) != 'string') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'canEditInvoices',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if ($data['rules']['canEditInvoices'] != 'false' && $data['rules']['canEditInvoices'] != 'true') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'canEditInvoices',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setOtherUserCanEditInvoices($data['rules']['canEditInvoices']);
                 }
                 if (isset($data['rules']['canSeeClientProfile'])) {
                     if (gettype($data['rules']['canSeeClientProfile']) != 'string') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'canSeeClientProfile',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if ($data['rules']['canSeeClientProfile'] != 'false' && $data['rules']['canSeeClientProfile'] != 'true') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'canSeeClientProfile',
-                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                         ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $project->setCanOtherUserSeeClientProfile($data['rules']['canEditInvoices']);
                 }
@@ -318,21 +318,21 @@ class ApiProjectController extends AbstractController
                 $manager->flush();
                 $this->logService->createLog('ACTION', ' Create Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'OK', 'value' => $this->getDataProject($project)
                     ]
-                ), Response::HTTP_OK);
+                 , Response::HTTP_OK);
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -342,22 +342,22 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $data = json_decode($request->getContent(), true);
 
@@ -370,10 +370,10 @@ class ApiProjectController extends AbstractController
                     if (isset($data['estimatedPrice']) && !empty(trim($data['estimatedPrice']))) {
                         $isValid = $data['estimatedPrice'] > 0 && is_numeric($data['estimatedPrice']);
                         if (!$isValid) {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'estimatedPrice',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setEstimatedPrice($data['estimatedPrice']);
                     }
@@ -383,10 +383,10 @@ class ApiProjectController extends AbstractController
 
                         $isValid = $data['totalPrice'] > 0 && is_numeric($data['totalPrice']);
                         if (!$isValid) {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'totalPrice',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setTotalPrice($data['totalPrice']);
                     }
@@ -405,50 +405,50 @@ class ApiProjectController extends AbstractController
 
                         $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['startDate']);
                         if (!$searchDate) {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'startDate',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setStartDate($searchDate);
                     }
                     if (isset($data['identity']['endDate']) && !empty(trim($data['identity']['endDate']))) {
                         $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['endDate']);
                         if (!$searchDate) {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'endDate',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setStartDate($searchDate);
                     }
                     if (isset($data['composition']['isPaying'])) {
                         if (gettype($data['composition']['isPaying']) != 'string') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'isPaying',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['composition']['isPaying'] != 'false' && $data['composition']['isPaying'] != 'true') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'canSeeClientProfile',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setPaying($data['composition']['isPaying']);
                     }
                     if (isset($data['composition']['database'])) {
                         if (gettype($data['composition']['database']) != 'string') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'database',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['composition']['database'] != 'false' && $data['composition']['database'] != 'true') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'database',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setDatabase($data['composition']['database']);
                     }
@@ -456,41 +456,41 @@ class ApiProjectController extends AbstractController
                         $isValid = $data['maintenancePercentage'] > 0 && is_numeric($data['maintenancePercentage']);
                         if (!$isValid) {
 
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                     'state' => 'IDT',
                                     'value' => 'maintenancePercentage'
                                 ]
-                            ), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setMaintenancePercentage($data['maintenancePercentage']);
                     }
                     if (isset($data['composition']['maquette'])) {
                         if (gettype($data['composition']['maquette']) != 'string') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'maquette',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['composition']['maquette'] != 'false' && $data['composition']['maquette'] != 'true') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'maquette',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setMaquette($data['composition']['maquette']);
                     }
                     if (isset($data['composition']['maintenance'])) {
                         if (gettype($data['composition']['maintenance']) != 'string') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'maintenance',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['composition']['maintenance'] != 'false' && $data['composition']['maintenance'] != 'true') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'maintenance',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setMaintenance($data['composition']['maintenance']);
                     }
@@ -537,31 +537,31 @@ class ApiProjectController extends AbstractController
                     }
                     if (isset($data['rules']['canEditInvoices'])) {
                         if (gettype($data['rules']['canEditInvoices']) != 'string') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'canEditInvoices',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['rules']['canEditInvoices'] != 'false' && $data['rules']['canEditInvoices'] != 'true') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'canEditInvoices',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setOtherUserCanEditInvoices($data['rules']['canEditInvoices']);
                     }
                     if (isset($data['rules']['canSeeClientProfile'])) {
                         if (gettype($data['rules']['canSeeClientProfile']) != 'string') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'canSeeClientProfile',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['rules']['canSeeClientProfile'] != 'false' && $data['rules']['canSeeClientProfile'] != 'true') {
-                            return new JsonResponse(json_encode([
+                            return new JsonResponse( [
                                 'state' => 'IDT',
                                 'value' => 'canSeeClientProfile',
-                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setCanOtherUserSeeClientProfile($data['rules']['canEditInvoices']);
                     }
@@ -578,23 +578,23 @@ class ApiProjectController extends AbstractController
                     $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
 
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                             'state' => 'OK', 'value' => $this->getDataProject($project)
                         ]
-                    ), Response::HTTP_OK);
+                     , Response::HTTP_OK);
 
                 }
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -604,59 +604,59 @@ class ApiProjectController extends AbstractController
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
 
             if (!isset($data['isCurrent'])) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NED',
                     'value' => 'isCurrent',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                 ] , Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
             if (!is_bool($data['isCurrent'])) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'IDT',
                     'value' => 'isCurrent',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                 ] , Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
 
             $project->setCurrent($data['isCurrent']);
             $manager->persist($project);
             $manager->flush();
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -667,59 +667,59 @@ class ApiProjectController extends AbstractController
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
 
             if (!isset($data['isCurrent'])) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NED',
                     'value' => 'isCurrent',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                 ] , Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
             if (!is_bool($data['isCurrent'])) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'IDT',
                     'value' => 'isCurrent',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                 ] , Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
 
             $project->setCurrent($data['isCurrent']);
             $manager->persist($project);
             $manager->flush();
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -730,23 +730,23 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -755,41 +755,41 @@ class ApiProjectController extends AbstractController
 
 
                 if (!isset($data['names'])) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'names',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (gettype($data['names']) != 'array') {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'IDT',
                         'value' => 'name',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (count($data['names']) !== 5) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'names',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!isset($data['contents'])) {
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'contents',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (gettype($data['contents']) != 'array') {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'IDT',
                         'value' => 'contents',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (count($data['contents']) !== 5) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'contents',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
 
@@ -801,21 +801,21 @@ class ApiProjectController extends AbstractController
                 $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
 
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'OK', 'value' => $this->getDataProject($project)
                     ]
-                ), Response::HTTP_OK);
+                 , Response::HTTP_OK);
             }
 
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -829,29 +829,29 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser()) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $user = $userRepository->find($userId);
             if (!$user) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'user',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $route = $request->attributes->get('_route');
             if ($route == 'add_user_to_project') {
@@ -877,22 +877,22 @@ class ApiProjectController extends AbstractController
                 $this->logService->createLog('ACTION', ' remove User (' . $user->getId() . ' | ' . $user->getEmail() . ') to Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
 
             }
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -902,22 +902,22 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser()) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->hasUserInUserAuthorised($this->getUser())) {
                 $project->removeUserAuthorised($this->getUser());
@@ -928,22 +928,22 @@ class ApiProjectController extends AbstractController
             $manager->persist($project);
             $manager->persist($project->getChat());
             $manager->flush();
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -955,42 +955,42 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $project->setState('deleted');
             $manager->persist($project);
             $manager->flush();
             $this->logService->createLog('DELETE', ' Delete Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1000,22 +1000,22 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $message = ' Delete force Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')';
 
@@ -1035,10 +1035,10 @@ class ApiProjectController extends AbstractController
 
 
                 if (!file_exists($filePath)) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'pdf',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
 
                 $filePath = 'pdf/' . $pdf->getFileName();
@@ -1047,11 +1047,11 @@ class ApiProjectController extends AbstractController
 
                 } else {
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                             'state' => 'ISE',
                             'value' => 'Failed to remove pdf'
                         ]
-                    ), Response::HTTP_INTERNAL_SERVER_ERROR);
+                     , Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
             }
@@ -1064,21 +1064,21 @@ class ApiProjectController extends AbstractController
             $manager->flush();
             $this->logService->createLog('DELETE', $message);
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1088,38 +1088,38 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK', 'value' => $this->getDataProject($project)
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1148,21 +1148,21 @@ class ApiProjectController extends AbstractController
             }
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK', 'value' => $data
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1200,13 +1200,13 @@ class ApiProjectController extends AbstractController
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1216,34 +1216,34 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if (!$project->isCanOtherUserSeeClientProfile() && $project->getOwner() != $this->getUser()) {
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'ASFO',
                         'value' => 'project'
                     ]
-                ), Response::HTTP_OK);
+                 , Response::HTTP_OK);
             }
 
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK', 'value' => [
                         'id' => $project->getClient()->getId(),
                         'firstName' => $project->getClient()->getFirstName(),
@@ -1251,18 +1251,18 @@ class ApiProjectController extends AbstractController
                         'date' => $this->dateService->formateDate($project->getClient()->getCreatedAt()),
                     ]
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1280,25 +1280,25 @@ class ApiProjectController extends AbstractController
                         $dataToReturn[] = $this->getDataProjectForSearch($project);
                     }
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                             'state' => 'OK', 'value' => $dataToReturn
                         ]
-                    ), Response::HTTP_OK);
+                     , Response::HTTP_OK);
                 }
             }
 
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1392,13 +1392,13 @@ class ApiProjectController extends AbstractController
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1425,13 +1425,13 @@ class ApiProjectController extends AbstractController
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -1458,13 +1458,13 @@ class ApiProjectController extends AbstractController
             ];
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

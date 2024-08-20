@@ -197,7 +197,7 @@ class ApiExportImportDataController extends AbstractController
 
                 $todayDate = new \DateTime();
                 $fileName = 'exportFile/' . $todayDate->format('YmdHis') . '.poulpidou';
-                $fileSystem->dumpFile($fileName, json_encode($json));
+                $fileSystem->dumpFile($fileName, $json);
                 return $this->json($json);
                 return $this->file($fileName, $todayDate->format('YmdHis') . '.poulpidou', ResponseHeaderBag::DISPOSITION_ATTACHMENT);
 
@@ -205,24 +205,25 @@ class ApiExportImportDataController extends AbstractController
 
             } catch (IOException $e) {
                 $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $e->getFile() . ' | line |' . $e->getLine());
-               return new JsonResponse(json_encode([
+                return new JsonResponse([
 
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$e->getMessage().' at |' . $e->getFile() . ' | line |' . $e->getLine()
+                        'state' => 'ISE',
+                        'value' => ' Internal Servor Error : ' . $e->getMessage() . ' at |' . $e->getFile() . ' | line |' . $e->getLine()
 
-                ]
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+                    ]
+                    , Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);     }
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     #[Route('/api/import/data', name: 'app_api_import_data')]
@@ -268,10 +269,10 @@ class ApiExportImportDataController extends AbstractController
                 $currentUser->setSiret($user['siret']);
             }
             if ($this->verifyType($user, "notes", 'string')) {
-                $currentUser->setNote($currentUser->getNote() ."\n \n\n". $user['notes']);
+                $currentUser->setNote($currentUser->getNote() . "\n \n\n" . $user['notes']);
             }
             if ($this->verifyType($user, "remembers", 'string')) {
-                $currentUser->setRemember($currentUser->getRemember()."\n \n \n".$user['remembers']);
+                $currentUser->setRemember($currentUser->getRemember() . "\n \n \n" . $user['remembers']);
             }
 
             $entityManager->persist($user);
@@ -587,30 +588,30 @@ class ApiExportImportDataController extends AbstractController
 
                 }
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse([
                         'state' => 'OK',
                     ]
-                ),Response::HTTP_OK);
+                    , Response::HTTP_OK);
             }
 
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-            return new JsonResponse(json_encode([
-                    'state' => 'ISE',  'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse([
+                    'state' => 'ISE', 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
                 ]
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
 
         }
     }
 
     public function error()
     {
-        return new JsonResponse(json_encode([
-                'state' => 'OK',  'value' => "fichier corrompu"
+        return new JsonResponse([
+                'state' => 'OK', 'value' => "fichier corrompu"
             ]
-        ),Response::HTTP_UNPROCESSABLE_ENTITY);
+            , Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     private function verifyType($data, $field, $type)

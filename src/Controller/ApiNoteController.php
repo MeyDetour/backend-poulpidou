@@ -46,22 +46,22 @@ class ApiNoteController extends AbstractController
                 $manager->persist($user);
                 $manager->flush();
                 $this->logService->createLog('ACTION', $this->getUser()->getEmail() .')');
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'OK',
                     'value' =>
                         $this->getDataNote()]
-                ),Response::HTTP_OK);
+                 ,Response::HTTP_OK);
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+             ,Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -70,19 +70,19 @@ class ApiNoteController extends AbstractController
     {
         try {
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK', 'value' =>
                         $this->getDataNote()
                 ]
-            ),Response::HTTP_OK);
+             ,Response::HTTP_OK);
         } catch (\Exception $exception) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+             ,Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

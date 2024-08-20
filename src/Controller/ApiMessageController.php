@@ -43,24 +43,24 @@ class ApiMessageController extends AbstractController
                 }
 
             }
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK', "value" =>
                         $data
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
 
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -70,46 +70,46 @@ class ApiMessageController extends AbstractController
         try {
             $chat = $chatRepository->find($id);
             if (!$chat) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'chat',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($chat->getProject()->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($chat->getProject()->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK', "value" => $this->chatData($chat)
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -119,22 +119,22 @@ class ApiMessageController extends AbstractController
         try {
             $client = $clientRepository->find($id);
             if (!$client) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'client',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if (!$client->getOwner() == $this->getUser()) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'client',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($client->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'client',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $data = [];
             foreach ($client->getChats() as $chat) {
@@ -150,23 +150,23 @@ class ApiMessageController extends AbstractController
                 }
             }
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK', "value" => $data
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
 
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -265,67 +265,67 @@ class ApiMessageController extends AbstractController
 
                 // id can be uuid of project
                 if (!isset($data['id']) || empty(trim($data['id']))) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'id',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 if (!isset($data['content']) || empty(trim($data['content']))) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'content',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 //get the project from the id (from user messagerie) or uuid (from interface client)
                 $project = $projectRepository->findOneBy(["uuid" => $data['id']]);
 
                 if (!$project) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
                 if ($project->getState() == 'deleted') {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'DD',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
                 $message = new Message();
 
 
                 $message->setClient($project->getClient());
                 if ($this->newMessage($message, $data['content'], $project)) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                             'state' => 'OK',
                         ]
-                    ), Response::HTTP_OK);
+                     , Response::HTTP_OK);
                 }
 
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'OK', 'value' => 'failed to send message'
                     ]
-                ), Response::HTTP_INTERNAL_SERVER_ERROR);
+                 , Response::HTTP_INTERNAL_SERVER_ERROR);
 
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
 
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -339,71 +339,71 @@ class ApiMessageController extends AbstractController
 
                 //verifying if needed data are set
                 if (!isset($data['id'])) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'id',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!is_numeric($data['id'])) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'IDT',
                         'value' => 'id',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!isset($data['content']) || empty(trim($data['content']))) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'content',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 //get the project from the id (from user messagerie) or uuid (from interface client)
                 $project = $projectRepository->find($data['id']);
                 if (!$project) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
                 if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'FO',
                         'value' => 'project',
-                    ]), Response::HTTP_FORBIDDEN);
+                     ] , Response::HTTP_FORBIDDEN);
                 }
                 if ($project->getState() == 'deleted') {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'DD',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
                 $message = new Message();
                 $message->setAuthorUser($this->getUser());
                 if ($this->newMessage($message, $data['content'], $project)) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                             'state' => 'OK',
                         ]
-                    ), Response::HTTP_OK);
+                     , Response::HTTP_OK);
                 }
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'ISE',
                         'value' => 'failed to send message'
                     ]
-                ), Response::HTTP_OK);
+                 , Response::HTTP_OK);
 
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -416,56 +416,56 @@ class ApiMessageController extends AbstractController
 
             $message = $messageRepository->find($id);
             if (!$message) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'NDF',
                     'value' => 'message',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($message->getChat()->getProject()->getOwner() != $this->getUser() && !$message->getChat()->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($message->getProject()->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             if ($message->getAuthorUser() != $this->getUser()) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'message',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             $array = $message->getChat()->getMessages();
             $messagesArray = $array->toArray();
             if ($messagesArray[0] == $message) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'ASFO',
                         'value' => 'message'
                     ]
-                ), Response::HTTP_FORBIDDEN);
+                 , Response::HTTP_FORBIDDEN);
             }
 
             $manager->remove($message);
             $manager->flush();
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                 ]
-            ), Response::HTTP_OK);
+             , Response::HTTP_OK);
 
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -489,25 +489,25 @@ class ApiMessageController extends AbstractController
 
 
                     }
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                             'state' => 'OK', 'value' => $dataToReturn
                         ]
-                    ), Response::HTTP_OK);
+                     , Response::HTTP_OK);
                 }
             }
 
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

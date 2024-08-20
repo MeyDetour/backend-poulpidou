@@ -32,39 +32,39 @@ class ApiRegisterController extends AbstractController
     {
         $create = true;
         if (!$create) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                 'state' => 'ISE',
                 'value' => 'cannot create account',
-            ]), Response::HTTP_INTERNAL_SERVER_ERROR);
+              ] , Response::HTTP_INTERNAL_SERVER_ERROR);
 
         }
 
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['username']) || empty(trim($data['username']))) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                 'state' => 'NED',
                 'value' => 'username',
-            ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+            ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         if (!isset($data['password']) || empty(trim($data['password']))) {
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                 'state' => 'NED',
                 'value' => 'password',
-            ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+            ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         if (strlen($data['password'] <= 5)) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                 'state' => 'LTS',
                 'value' => 'password',
-            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         if ($repository->findOneBy(['email' => $data['username']])) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                 'state' => 'NU',
                 'value' => 'email',
-            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+             ] , Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $user = new User();
         $user->setEmail($data['username']);
@@ -78,10 +78,10 @@ class ApiRegisterController extends AbstractController
         $errors = $this->validator->validate($user);
         if (count($errors) > 0) {
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                 'state' => 'ISE',
                 'value' => $this->json($errors[0])
-            ]), Response::HTTP_INTERNAL_SERVER_ERROR);
+             ] , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
 
@@ -107,8 +107,8 @@ class ApiRegisterController extends AbstractController
         $this->entityManager->persist($setting);
         $this->entityManager->flush();
 
-        return new JsonResponse(json_encode([
+        return new JsonResponse( [
             'state' => 'ok'
-        ]), Response::HTTP_INTERNAL_SERVER_ERROR);
+         ] , Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

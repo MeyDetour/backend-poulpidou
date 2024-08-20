@@ -1692,10 +1692,10 @@ class HomeController extends AbstractController
          try {
              $invoice = $invoiceRepository->find($id);
              if (!$invoice) {
-                  return new JsonResponse(json_encode([
+                  return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'invoice',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
              }
 
              $data = json_decode($request->getContent(), true);
@@ -1703,10 +1703,10 @@ class HomeController extends AbstractController
              if ($data) {
 
                  if (!isset($data['description']) || empty(trim($data['description']))) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'description',
-                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
                  }
 
 
@@ -1721,7 +1721,7 @@ class HomeController extends AbstractController
                      'value' => $this->getDataInvoice($invoice)
                  ]);
              }
-              return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
+              return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
 
      }
 

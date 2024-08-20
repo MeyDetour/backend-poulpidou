@@ -29,10 +29,10 @@ class ApiUserController extends AbstractController
     public function index(): Response
     {
 
-        return new JsonResponse(json_encode([
+        return new JsonResponse( [
                 'state' => 'OK','value' => $this->getData($this->getUser())
             ]
-        ),Response::HTTP_OK);
+         ,Response::HTTP_OK);
     }
     #[Route('/api/users', name: 'users', methods: 'get')]
     public function getUsers(UserRepository $userRepository): Response
@@ -48,10 +48,10 @@ class ApiUserController extends AbstractController
             ];
         }
 
-        return new JsonResponse(json_encode([
+        return new JsonResponse( [
                 'state' => 'OK',   'value' => $data
             ]
-        ),Response::HTTP_OK);
+         ,Response::HTTP_OK);
     }
     #[Route('/api/edit/me', name: 'edit_me', methods: 'put')]
     public function edit(Request $request, EntityManagerInterface $manager)
@@ -81,21 +81,21 @@ class ApiUserController extends AbstractController
                 $manager->flush();
                 $this->logService->createLog('ACTION', 'Edit profile (' . $user->getEmail() . ')');
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'OK','value' => $this->getData($user)
                     ]
-                ),Response::HTTP_OK);
+                 ,Response::HTTP_OK);
 
             }
-             return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
+             return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+             ,Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -105,25 +105,25 @@ class ApiUserController extends AbstractController
         $user = $repository->find($id);
         if (!$user) {
             try {
-                 return new JsonResponse(json_encode([
+                 return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'user',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
             } catch (\Exception $exception) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
 
                   'state' => 'ISE',
                 'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+             ,Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
 
-        return new JsonResponse(json_encode([
+        return new JsonResponse( [
                 'state' => 'OK',"value" =>$this->getData($user)
             ]
-        ),Response::HTTP_OK);
+         ,Response::HTTP_OK);
 
     }
 

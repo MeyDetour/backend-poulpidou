@@ -39,19 +39,19 @@ class ApiLogController extends AbstractController
                     'type'=>$log->getType(),
                 ];
             }
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                     'value' =>$data]
-            ),Response::HTTP_UNPROCESSABLE_ENTITY);
+             ,Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR',' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                   'state' => 'ISE',
                 'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+             ,Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

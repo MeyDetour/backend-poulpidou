@@ -40,71 +40,71 @@ class ApiTaskController extends AbstractController
                 $task = new Task();
 
                 if (!isset($data['name']) || empty(trim($data['name']))) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'name',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!isset($data['project_id'])) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NEF',
                         'value' => 'project_id',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!is_numeric($data['project_id'])) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'IDT',
                         'value' => 'project_id',
-                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 $project = $projectRepository->find($data['project_id']);
                 if (!$project) {
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
                 if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'FO',
                         'value' => 'project',
-                    ]), Response::HTTP_FORBIDDEN);
+                     ] , Response::HTTP_FORBIDDEN);
                 }
                 if ($project->getState() == 'deleted') {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'DD',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                 }
                 $task->setProject($project);
 
                 if (isset($data['category_id'])) {
                     if (!is_numeric($data['category_id'])) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'category_id',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $cat = $categoryRepository->find($data['category_id']);
                     if (!$cat) {
-                         return new JsonResponse(json_encode([
+                         return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'category',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                     }
 
                     if ($cat->getProject()->getOwner() != $this->getUser() && !$cat->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'FO',
                             'value' => 'category',
-                        ]), Response::HTTP_FORBIDDEN);
+                         ] , Response::HTTP_FORBIDDEN);
                     }
                     if ($cat->getProject()->getState() == 'deleted') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'DD',
                             'value' => 'project',
-                        ]), Response::HTTP_NOT_FOUND);
+                         ] , Response::HTTP_NOT_FOUND);
                     }
                 }
 
@@ -112,10 +112,10 @@ class ApiTaskController extends AbstractController
 
                     $searchDate = \DateTime::createFromFormat('d/m/Y', $data['dueDate']);
                     if (!$searchDate) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'dueDate',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $task->setDueDate($searchDate);
                 }
@@ -141,23 +141,23 @@ class ApiTaskController extends AbstractController
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'OK', 'value' => $this->getData($task)
                     ]
-                ),Response::HTTP_OK);
+                 ,Response::HTTP_OK);
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -167,61 +167,61 @@ class ApiTaskController extends AbstractController
         try {
             $task = $repository->find($id);
             if (!$task) {
-                 return new JsonResponse(json_encode([
+                 return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
 
             if ($task->getProject()->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $data = json_decode($request->getContent(), true);
             if ($data) {
 
                 if (!isset($data['name']) || empty(trim($data['name']))) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'name',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 if (isset($data['category_id'])) {
 
-                    if (!is_numeric($data['category_id'])) { return new JsonResponse(json_encode([
+                    if (!is_numeric($data['category_id'])) { return new JsonResponse( [
                         'state' => 'IDT',
                         'value' => 'category_id',
-                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     $cat = $categoryRepository->find($data['category_id']);
                     if (!$cat) {
-                         return new JsonResponse(json_encode([
+                         return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'category',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
                     }
 
                     if ($cat->getProject()->getOwner() != $this->getUser() && !$cat->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'FO',
                             'value' => 'category',
-                        ]), Response::HTTP_FORBIDDEN);
+                         ] , Response::HTTP_FORBIDDEN);
                     }
                     if ($cat->getProject()->getState() == 'deleted') {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'DD',
                             'value' => 'project',
-                        ]), Response::HTTP_NOT_FOUND);
+                         ] , Response::HTTP_NOT_FOUND);
                         $task->setCategory($cat);
                     }
                 }
@@ -229,10 +229,10 @@ class ApiTaskController extends AbstractController
 
                     $searchDate = \DateTime::createFromFormat('d/m/Y', $data['dueDate']);
                     if (!$searchDate) {
-                        return new JsonResponse(json_encode([
+                        return new JsonResponse( [
                             'state' => 'IDT',
                             'value' => 'dueDate',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $task->setDueDate($searchDate);
                 }
@@ -252,24 +252,24 @@ class ApiTaskController extends AbstractController
 
                 $this->logService->createLog('ACTION', ' Edit Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'OK', 'value' => $this->getData($task)
                     ]
-                ),Response::HTTP_OK);
+                 ,Response::HTTP_OK);
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
 
         } catch
             (\Exception $exception) {
                 $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
 
                         'state' => 'ISE',
                         'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                     ]
-                ), Response::HTTP_INTERNAL_SERVER_ERROR);
+                 , Response::HTTP_INTERNAL_SERVER_ERROR);
             }
     }
 
@@ -279,40 +279,40 @@ class ApiTaskController extends AbstractController
         try {
             $task = $repository->find($id);
             if (!$task) {
-                 return new JsonResponse(json_encode([
+                 return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($task->getProject()->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
             if ($data) {
 
                 if (!isset($data['status']) || empty(trim($data['status']))) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'name',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!in_array($data['status'], $this->statusArray)) {
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                               'state' => 'IDV',
                             'value' => 'status',
                         ]
-                    ),Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ,Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
 
@@ -323,23 +323,23 @@ class ApiTaskController extends AbstractController
 
                 $this->logService->createLog('ACTION', ' Edit Status of Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'OK',  'value' => $this->getData($task)
                     ]
-                ),Response::HTTP_OK);
+                 ,Response::HTTP_OK);
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -349,71 +349,71 @@ class ApiTaskController extends AbstractController
         try {
             $task = $repository->find($id);
             if (!$task) {
-                 return new JsonResponse(json_encode([
+                 return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($task->getProject()->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
             if ($data) {
 
                 if (!isset($data['order'])) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'NED',
                         'value' => 'name',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (filter_var($data['order'], FILTER_VALIDATE_INT) === false || $data['order'] < 0) {
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                         'state' => 'IDT',
                         'value' => 'order',
-                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 $tasks = $this->taskRepository->findBy(['project' => $task->getProject(), 'col' => $task->getCol()]);
 
                 if ($data['order'] > count($tasks) - 1) {
 
-                    return new JsonResponse(json_encode([
+                    return new JsonResponse( [
                              'state' => 'IDV',
                             'value' => 'order',
                         ]
-                    ),Response::HTTP_UNPROCESSABLE_ENTITY);
+                     ,Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 $this->reorderTask($task->getProject(), $task->getCol(), $task, $data['order']);
 
 
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                         'state' => 'OK', 'value' => $this->getData($task)
                     ]
-                ),Response::HTTP_OK);
+                 ,Response::HTTP_OK);
 
             }
-            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
+            return new JsonResponse( ['state' => 'ND' ] , Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -459,13 +459,13 @@ class ApiTaskController extends AbstractController
             return Null;
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -475,43 +475,43 @@ class ApiTaskController extends AbstractController
         try {
             $task = $repository->find($id);
             if (!$task) {
-                 return new JsonResponse(json_encode([
+                 return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($task->getProject()->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $message = ' Delete task (' . $task->getId() . ':' . $task->getName() . ') of project : (' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail();
             $manager->remove($task);
             $manager->flush();
             $this->logService->createLog('DELETE', $message);
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',
                 ]
-            ),Response::HTTP_OK);
+             ,Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -521,39 +521,39 @@ class ApiTaskController extends AbstractController
         try {
             $task = $repository->find($id);
             if (!$task) {
-                 return new JsonResponse(json_encode([
+                 return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($task->getProject()->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
                     'state' => 'OK',  'value' => $this->getData($task)
                 ]
-            ),Response::HTTP_OK);
+             ,Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -563,22 +563,22 @@ class ApiTaskController extends AbstractController
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
+                 return new JsonResponse( [
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                     ] , Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'FO',
                     'value' => 'project',
-                ]), Response::HTTP_FORBIDDEN);
+                 ] , Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return new JsonResponse(json_encode([
+                return new JsonResponse( [
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                 ] , Response::HTTP_NOT_FOUND);
             }
             $tasks = $taskRepository->findBy(['project' => $project], ['taskOrder' => 'ASC']);
 
@@ -601,13 +601,13 @@ class ApiTaskController extends AbstractController
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse( [
 
                     'state' => 'ISE',
                     'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-            ), Response::HTTP_INTERNAL_SERVER_ERROR);
+             , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
