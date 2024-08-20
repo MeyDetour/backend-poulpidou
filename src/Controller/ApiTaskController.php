@@ -323,14 +323,18 @@ class ApiTaskController extends AbstractController
     {
         try {
             $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col]);
+            dump($tasks);
             foreach ($tasks as $task) {
+                dump($task,$task != $taskElement);
                 if ($task != $taskElement) {
+                    dump($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
+
                     if (  $order >= $taskElement->getTaskOrder() && $taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
-                        dd($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
+                        dump($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
                         $task->setTaskOrder($task->getTaskOrder() - 1);
                     }
                     if ($taskElement->getTaskOrder() >= $order && $taskElement->getTaskOrder() >= $task->getTaskOrder() && $task->getTaskOrder() >= $order) {
-                        dd($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
+                        dump($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
                         $task->setTaskOrder($task->getTaskOrder() + 1);
 
                     }
@@ -341,6 +345,7 @@ class ApiTaskController extends AbstractController
             $taskElement->setTaskOrder($order);
             $this->entityManager->persist($taskElement);
             $this->entityManager->flush();
+            dd($taskElement->getTaskOrder());
             return Null;
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
