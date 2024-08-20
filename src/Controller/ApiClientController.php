@@ -121,7 +121,7 @@ class ApiClientController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'client',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (!$client->getOwner() == $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -132,7 +132,7 @@ class ApiClientController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'client',
-                ]),Response::HTTP_NOT_FOUND);
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $this->formatNames($client);
 
@@ -205,7 +205,7 @@ class ApiClientController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'client',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($client->getOwner() != $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -249,7 +249,7 @@ class ApiClientController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'client',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (!$client->getOwner() == $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -279,7 +279,7 @@ class ApiClientController extends AbstractController
                          return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'pdf',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     $filePath = 'pdf/' . $pdf->getFileName();
@@ -336,7 +336,7 @@ class ApiClientController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'client',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (!$client->getOwner() == $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -430,7 +430,7 @@ class ApiClientController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'client',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (!$client->getOwner() == $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -442,7 +442,7 @@ class ApiClientController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'client',
-                ]),Response::HTTP_NOT_FOUND);
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $this->formatNames($client);
             $data = [];
@@ -480,7 +480,7 @@ class ApiClientController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             $client = $project->getClient();
@@ -542,7 +542,7 @@ class ApiClientController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
 

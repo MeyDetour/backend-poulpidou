@@ -57,7 +57,7 @@ class ApiCategoryController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                     return new JsonResponse(json_encode([
@@ -69,7 +69,7 @@ class ApiCategoryController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'DD',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 $cat->setName($data['name']);
                 $cat->setProject($project);
@@ -109,7 +109,7 @@ class ApiCategoryController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'NDF',
                     'value' => 'category',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($category->getProject()->getOwner() != $this->getUser() && !$category->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -122,7 +122,7 @@ class ApiCategoryController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
             $data = json_decode($request->getContent(), true);
@@ -172,7 +172,7 @@ class ApiCategoryController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'NDF',
                     'value' => 'category',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($category->getProject()->getOwner() != $this->getUser() && !$category->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -184,7 +184,7 @@ class ApiCategoryController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (count($category->getTasks()) != 0) {
 
@@ -224,7 +224,7 @@ class ApiCategoryController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'NDF',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -236,7 +236,7 @@ class ApiCategoryController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $cats = $project->getCategories();
             $data = [];

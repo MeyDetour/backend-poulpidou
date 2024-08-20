@@ -63,7 +63,7 @@ class ApiTaskController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                     return new JsonResponse(json_encode([
@@ -75,7 +75,7 @@ class ApiTaskController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'DD',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 $task->setProject($project);
 
@@ -91,7 +91,7 @@ class ApiTaskController extends AbstractController
                          return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'category',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     if ($cat->getProject()->getOwner() != $this->getUser() && !$cat->getProject()->hasUserInUserAuthorised($this->getUser())) {
@@ -104,7 +104,7 @@ class ApiTaskController extends AbstractController
                         return new JsonResponse(json_encode([
                             'state' => 'DD',
                             'value' => 'project',
-                        ]), Response::HTTP_NOT_FOUND);
+                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                 }
 
@@ -170,7 +170,7 @@ class ApiTaskController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -183,7 +183,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $data = json_decode($request->getContent(), true);
             if ($data) {
@@ -208,7 +208,7 @@ class ApiTaskController extends AbstractController
                          return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'category',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     if ($cat->getProject()->getOwner() != $this->getUser() && !$cat->getProject()->hasUserInUserAuthorised($this->getUser())) {
@@ -221,7 +221,7 @@ class ApiTaskController extends AbstractController
                         return new JsonResponse(json_encode([
                             'state' => 'DD',
                             'value' => 'project',
-                        ]), Response::HTTP_NOT_FOUND);
+                        ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         $task->setCategory($cat);
                     }
                 }
@@ -282,7 +282,7 @@ class ApiTaskController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -294,7 +294,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -352,7 +352,7 @@ class ApiTaskController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -364,7 +364,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -478,7 +478,7 @@ class ApiTaskController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -490,7 +490,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $message = ' Delete task (' . $task->getId() . ':' . $task->getName() . ') of project : (' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail();
             $manager->remove($task);
@@ -524,7 +524,7 @@ class ApiTaskController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'task',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($task->getProject()->getOwner() != $this->getUser() && !$task->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -536,7 +536,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             return new JsonResponse(json_encode([
@@ -566,7 +566,7 @@ class ApiTaskController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -578,7 +578,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_NOT_FOUND);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $tasks = $taskRepository->findBy(['project' => $project], ['taskOrder' => 'ASC']);
 

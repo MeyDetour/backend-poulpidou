@@ -60,7 +60,7 @@ class ApiInvoiceController extends AbstractController
                      return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                     return new JsonResponse(json_encode([
@@ -80,7 +80,7 @@ class ApiInvoiceController extends AbstractController
                     return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]),Response::HTTP_NOT_FOUND);
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 $invoice->setProject($project);
@@ -147,7 +147,7 @@ class ApiInvoiceController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'invoice',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -167,7 +167,7 @@ class ApiInvoiceController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]),Response::HTTP_NOT_FOUND);
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -231,7 +231,7 @@ class ApiInvoiceController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'invoice',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -243,7 +243,7 @@ class ApiInvoiceController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]),Response::HTTP_NOT_FOUND);
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $invoice->setPayed(true);
             $manager->persist($invoice);
@@ -273,7 +273,7 @@ class ApiInvoiceController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -285,7 +285,7 @@ class ApiInvoiceController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]),Response::HTTP_NOT_FOUND);
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $data = [];
             foreach ($project->getInvoices() as $invoice) {
@@ -318,7 +318,7 @@ class ApiInvoiceController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'client',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($client->getOwner() != $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -330,7 +330,7 @@ class ApiInvoiceController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'client',
-                ]),Response::HTTP_NOT_FOUND);
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $data = [];
             foreach ($invoiceRepository->findInvoicesOfClient() as $invoice) {
@@ -366,7 +366,7 @@ class ApiInvoiceController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'invoice',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -378,7 +378,7 @@ class ApiInvoiceController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]),Response::HTTP_NOT_FOUND);
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $message = ' Delete Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail();
             $manager->remove($invoice);

@@ -1695,7 +1695,7 @@ class HomeController extends AbstractController
                   return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'invoice',
-                    ]), Response::HTTP_NOT_FOUND);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
              }
 
              $data = json_decode($request->getContent(), true);
