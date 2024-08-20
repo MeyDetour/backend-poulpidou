@@ -1570,7 +1570,7 @@ class HomeController extends AbstractController
                     'need token ? ' => true],
 
                 [
-                    "delete task " => '/api/task/{id de la task}/deletee',
+                    "delete task " => '/api/task/{id de la task}/delete',
                     'methode' => 'delete',
                     "renvoie :" => "ok",
                     'parametres a mettre dans le body' => "nothing",
