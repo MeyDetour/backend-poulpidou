@@ -1147,7 +1147,7 @@ class ApiProjectController extends AbstractController
                 'others' => [],
             ];
             foreach ($projects as $project) {
-                dd($project->getName());
+                dd(gettype( $project));
 
                 if ($project->getState() != 'deleted') {
                     if ($project->isCurrent() == true) {
