@@ -82,7 +82,7 @@ class ApiProjectController extends AbstractController
 
                 $client = $clientRepository->find($data['identity']['client_id']);
                 if (!$client) {
-                     return new JsonResponse(json_encode([
+                    return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'client',
                     ]), Response::HTTP_NOT_FOUND);
@@ -93,7 +93,7 @@ class ApiProjectController extends AbstractController
                             'state' => 'FO',
                             'value' => 'client'
                         ]
-                    ),Response::HTTP_FORBIDDEN);
+                    ), Response::HTTP_FORBIDDEN);
                 }
                 if ($client->getState() == 'deleted') {
                     return new JsonResponse(json_encode([
@@ -318,10 +318,10 @@ class ApiProjectController extends AbstractController
                 $manager->flush();
                 $this->logService->createLog('ACTION', ' Create Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
 
-               return new JsonResponse(json_encode([
-                        'state' => 'OK',  'value' => $this->getDataProject($project)
+                return new JsonResponse(json_encode([
+                        'state' => 'OK', 'value' => $this->getDataProject($project)
                     ]
-                ),Response::HTTP_OK);
+                ), Response::HTTP_OK);
 
             }
             return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
@@ -342,10 +342,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -460,37 +460,37 @@ class ApiProjectController extends AbstractController
                                     'state' => 'IDT',
                                     'value' => 'maintenancePercentage'
                                 ]
-                            ),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            ), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setMaintenancePercentage($data['maintenancePercentage']);
                     }
                     if (isset($data['composition']['maquette'])) {
                         if (gettype($data['composition']['maquette']) != 'string') {
-                             return new JsonResponse(json_encode([
-                            'state' => 'IDT',
-                            'value' => 'maquette',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            return new JsonResponse(json_encode([
+                                'state' => 'IDT',
+                                'value' => 'maquette',
+                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['composition']['maquette'] != 'false' && $data['composition']['maquette'] != 'true') {
-                             return new JsonResponse(json_encode([
-                            'state' => 'IDT',
-                            'value' => 'maquette',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            return new JsonResponse(json_encode([
+                                'state' => 'IDT',
+                                'value' => 'maquette',
+                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setMaquette($data['composition']['maquette']);
                     }
                     if (isset($data['composition']['maintenance'])) {
                         if (gettype($data['composition']['maintenance']) != 'string') {
-                              return new JsonResponse(json_encode([
-                            'state' => 'IDT',
-                            'value' => 'maintenance',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            return new JsonResponse(json_encode([
+                                'state' => 'IDT',
+                                'value' => 'maintenance',
+                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['composition']['maintenance'] != 'false' && $data['composition']['maintenance'] != 'true') {
-                              return new JsonResponse(json_encode([
-                            'state' => 'IDT',
-                            'value' => 'maintenance',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            return new JsonResponse(json_encode([
+                                'state' => 'IDT',
+                                'value' => 'maintenance',
+                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setMaintenance($data['composition']['maintenance']);
                     }
@@ -537,16 +537,16 @@ class ApiProjectController extends AbstractController
                     }
                     if (isset($data['rules']['canEditInvoices'])) {
                         if (gettype($data['rules']['canEditInvoices']) != 'string') {
-                              return new JsonResponse(json_encode([
-                            'state' => 'IDT',
-                            'value' => 'canEditInvoices',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            return new JsonResponse(json_encode([
+                                'state' => 'IDT',
+                                'value' => 'canEditInvoices',
+                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['rules']['canEditInvoices'] != 'false' && $data['rules']['canEditInvoices'] != 'true') {
-                              return new JsonResponse(json_encode([
-                            'state' => 'IDT',
-                            'value' => 'canEditInvoices',
-                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            return new JsonResponse(json_encode([
+                                'state' => 'IDT',
+                                'value' => 'canEditInvoices',
+                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setOtherUserCanEditInvoices($data['rules']['canEditInvoices']);
                     }
@@ -555,13 +555,13 @@ class ApiProjectController extends AbstractController
                             return new JsonResponse(json_encode([
                                 'state' => 'IDT',
                                 'value' => 'canSeeClientProfile',
-                            ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         if ($data['rules']['canSeeClientProfile'] != 'false' && $data['rules']['canSeeClientProfile'] != 'true') {
                             return new JsonResponse(json_encode([
                                 'state' => 'IDT',
                                 'value' => 'canSeeClientProfile',
-                            ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         $project->setCanOtherUserSeeClientProfile($data['rules']['canEditInvoices']);
                     }
@@ -579,9 +579,9 @@ class ApiProjectController extends AbstractController
 
 
                     return new JsonResponse(json_encode([
-                            'state' => 'OK',  'value' => $this->getDataProject($project)
+                            'state' => 'OK', 'value' => $this->getDataProject($project)
                         ]
-                    ),Response::HTTP_OK);
+                    ), Response::HTTP_OK);
 
                 }
 
@@ -604,10 +604,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -635,7 +635,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'IDT',
                     'value' => 'isCurrent',
-                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
 
@@ -645,7 +645,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -667,10 +667,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -698,7 +698,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'IDT',
                     'value' => 'isCurrent',
-                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
 
@@ -708,7 +708,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -730,10 +730,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
 
@@ -764,7 +764,7 @@ class ApiProjectController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'IDT',
                         'value' => 'name',
-                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (count($data['names']) !== 5) {
                     return new JsonResponse(json_encode([
@@ -783,7 +783,7 @@ class ApiProjectController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'IDT',
                         'value' => 'contents',
-                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (count($data['contents']) !== 5) {
                     return new JsonResponse(json_encode([
@@ -804,7 +804,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                         'state' => 'OK', 'value' => $this->getDataProject($project)
                     ]
-                ),Response::HTTP_OK);
+                ), Response::HTTP_OK);
             }
 
             return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
@@ -829,10 +829,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -848,10 +848,10 @@ class ApiProjectController extends AbstractController
             }
             $user = $userRepository->find($userId);
             if (!$user) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'user',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'user',
+                ]), Response::HTTP_NOT_FOUND);
             }
             $route = $request->attributes->get('_route');
             if ($route == 'add_user_to_project') {
@@ -880,7 +880,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
@@ -902,10 +902,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -931,7 +931,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
@@ -955,10 +955,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -979,7 +979,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1000,10 +1000,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -1035,7 +1035,7 @@ class ApiProjectController extends AbstractController
 
 
                 if (!file_exists($filePath)) {
-                     return new JsonResponse(json_encode([
+                    return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'pdf',
                     ]), Response::HTTP_NOT_FOUND);
@@ -1048,10 +1048,10 @@ class ApiProjectController extends AbstractController
                 } else {
 
                     return new JsonResponse(json_encode([
-                             'state' => 'ISE',
+                            'state' => 'ISE',
                             'value' => 'Failed to remove pdf'
                         ]
-                    ),Response::HTTP_INTERNAL_SERVER_ERROR);
+                    ), Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
             }
@@ -1067,7 +1067,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1088,10 +1088,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -1106,9 +1106,9 @@ class ApiProjectController extends AbstractController
                 ]), Response::HTTP_NOT_FOUND);
             }
             return new JsonResponse(json_encode([
-                    'state' => 'OK',    'value' => $this->getDataProject($project)
+                    'state' => 'OK', 'value' => $this->getDataProject($project)
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1149,9 +1149,9 @@ class ApiProjectController extends AbstractController
 
 
             return new JsonResponse(json_encode([
-                    'state' => 'OK',     'value' => $data
+                    'state' => 'OK', 'value' => $data
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1190,13 +1190,13 @@ class ApiProjectController extends AbstractController
 
 
             }
-
+            dd($data);
 
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                     'value' => $data
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1217,10 +1217,10 @@ class ApiProjectController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                 return new JsonResponse(json_encode([
-                        'state' => 'NDF',
-                        'value' => 'project',
-                    ]), Response::HTTP_NOT_FOUND);
+                return new JsonResponse(json_encode([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -1231,10 +1231,10 @@ class ApiProjectController extends AbstractController
             if (!$project->isCanOtherUserSeeClientProfile() && $project->getOwner() != $this->getUser()) {
 
                 return new JsonResponse(json_encode([
-                          'state' => 'ASFO',
+                        'state' => 'ASFO',
                         'value' => 'project'
                     ]
-                ),Response::HTTP_OK);
+                ), Response::HTTP_OK);
             }
 
             if ($project->getState() == 'deleted') {
@@ -1252,7 +1252,7 @@ class ApiProjectController extends AbstractController
                         'date' => $this->dateService->formateDate($project->getClient()->getCreatedAt()),
                     ]
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1282,9 +1282,9 @@ class ApiProjectController extends AbstractController
                     }
 
                     return new JsonResponse(json_encode([
-                            'state' => 'OK',   'value' => $dataToReturn
+                            'state' => 'OK', 'value' => $dataToReturn
                         ]
-                    ),Response::HTTP_OK);
+                    ), Response::HTTP_OK);
                 }
             }
 
