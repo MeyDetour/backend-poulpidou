@@ -134,7 +134,7 @@ class ApiTaskController extends AbstractController
 
                 $this->entityManager->persist($task);
                 $this->entityManager->flush();
-                dd($task);
+
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
                 return $this->json(['state' => 'OK',
