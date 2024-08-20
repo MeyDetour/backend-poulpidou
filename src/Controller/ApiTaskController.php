@@ -361,7 +361,7 @@ class ApiTaskController extends AbstractController
 
                 $tasks = $this->taskRepository->findBy(['project' => $task->getProject(), 'col' => $task->getCol()]);
 
-                if ($data['order'] > count($tasks)) {
+                if ($data['order'] > count($tasks)-1) {
                     return $this->json([
                         'state' => 'IDV',
                         'value' => 'order',
