@@ -1142,12 +1142,12 @@ class ApiProjectController extends AbstractController
         try {
             $projects = $this->getUser()->getProjects();
             $projects[] = $this->getUser()->getAutorisedInProjects();
-            dd($this->getUser()->getAutorisedInProjects());
             $data = [
                 'currents' => [],
                 'others' => [],
             ];
             foreach ($projects as $project) {
+                dd($project);
 
                 if ($project->getState() != 'deleted') {
                     if ($project->isCurrent() == true) {
@@ -1159,6 +1159,7 @@ class ApiProjectController extends AbstractController
 
 
             }
+            dd($projects);
 
             return $this->json([
                 'state' => 'OK',
