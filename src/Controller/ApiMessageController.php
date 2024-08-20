@@ -149,10 +149,7 @@ class ApiMessageController extends AbstractController
                     ];
                 }
             }
-            return new JsonResponse(json_encode([
-                    'state' => 'OK',
-                ]
-            ), Response::HTTP_OK);
+
             return new JsonResponse(json_encode([
                     'state' => 'OK', "value" => $data
                 ]
@@ -387,12 +384,12 @@ class ApiMessageController extends AbstractController
                             'state' => 'OK',
                         ]
                     ), Response::HTTP_OK);
-                }return new JsonResponse(json_encode([
+                }
+                return new JsonResponse(json_encode([
                         'state' => 'ISE',
                         'value' => 'failed to send message'
                     ]
-                ),Response::HTTP_OK);
-
+                ), Response::HTTP_OK);
 
 
             }
@@ -411,7 +408,7 @@ class ApiMessageController extends AbstractController
 
     }
 
-    #[Route('/api/delete/{id}/message', name: 'api_delete_message', methods: 'get')]
+    #[Route('/api/delete/{id}/message', name: 'api_delete_message', methods: 'delete')]
     public function removeMessage(Request $request, EntityManagerInterface $manager, $id, MessageRepository $messageRepository): Response
     {
         try {
@@ -444,18 +441,20 @@ class ApiMessageController extends AbstractController
             }
             $array = $message->getChat()->getMessages();
             $messagesArray = $array->toArray();
+            if ($messagesArray[0] == $message) {
+                return new JsonResponse(json_encode([
+                        'state' => 'ASFO',
+                        'value' => 'message'
+                    ]
+                ), Response::HTTP_FORBIDDEN);
+            }
 
-            return new JsonResponse(json_encode([
-                    'state' => 'ASFO',
-                    'value' => 'message'
-                ]
-            ),Response::HTTP_FORBIDDEN;
             $manager->remove($message);
             $manager->flush();
             return new JsonResponse(json_encode([
                     'state' => 'OK',
                 ]
-            ),Response::HTTP_OK);
+            ), Response::HTTP_OK);
 
 
         } catch (\Exception $exception) {
@@ -493,7 +492,7 @@ class ApiMessageController extends AbstractController
                     return new JsonResponse(json_encode([
                             'state' => 'OK', 'value' => $dataToReturn
                         ]
-                    ),Response::HTTP_OK);
+                    ), Response::HTTP_OK);
                 }
             }
 

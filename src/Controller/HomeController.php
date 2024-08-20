@@ -1447,6 +1447,15 @@ class HomeController extends AbstractController
                         ],
                     'utilisation' => "envoyer un message",
                     'need token ? ' => true],
+                [
+                    'delete message' => '/api/delete/{id}/message',
+                    'methode' => 'delete',
+                    "renvoie :" => "ok",
+                    'parametres a mettre dans le body' =>
+                        [
+                        ],
+                    'utilisation' => "supprimer un message",
+                    'need token ? ' => true],
             ],
             "setting" => [
                 [
