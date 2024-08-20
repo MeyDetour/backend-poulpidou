@@ -128,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->invoices = new ArrayCollection();
         $this->logs = new ArrayCollection();
         $this->pdfs = new ArrayCollection();
-         $this->chats = new ArrayCollection();
+        $this->chats = new ArrayCollection();
         $this->autorisedInProjects = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->tasks = new ArrayCollection();

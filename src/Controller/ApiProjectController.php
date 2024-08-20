@@ -880,7 +880,7 @@ class ApiProjectController extends AbstractController
     }
 
     #[Route('/api/project/{id}/left', name: 'left_user_to_project', methods: 'delete')]
-    public function leftProject($id, ProjectRepository $repository,  EntityManagerInterface $manager): Response
+    public function leftProject($id, ProjectRepository $repository, EntityManagerInterface $manager): Response
     {
         try {
             $project = $repository->find($id);
@@ -1142,12 +1142,13 @@ class ApiProjectController extends AbstractController
         try {
             $projects = $this->getUser()->getProjects();
             $projects[] = $this->getUser()->getAutorisedInProjects();
+            dd($this->getUser()->getAutorisedInProjects());
             $data = [
                 'currents' => [],
                 'others' => [],
             ];
             foreach ($projects as $project) {
-                dd($project);
+
                 if ($project->getState() != 'deleted') {
                     if ($project->isCurrent() == true) {
                         $data['currents'][] = $this->getDataProjectForMiniature($project);
