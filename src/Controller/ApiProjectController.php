@@ -336,7 +336,7 @@ class ApiProjectController extends AbstractController
         }
     }
 
-    #[Route('/api/project/edit/{id}', name: 'edit_api_project')]
+    #[Route('/api/project/edit/{id}', name: 'edit_api_project',methods: 'put')]
     public function edit($id, ProjectRepository $repository, ClientRepository $clientRepository, Request $request, EntityManagerInterface $manager): Response
     {
         try {

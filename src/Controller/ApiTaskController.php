@@ -47,7 +47,7 @@ class ApiTaskController extends AbstractController
                 }
                 if (!isset($data['project_id'])) {
                     return new JsonResponse( [
-                        'state' => 'NEF',
+                        'state' => 'NED',
                         'value' => 'project_id',
                      ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
