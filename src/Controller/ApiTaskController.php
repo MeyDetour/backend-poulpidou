@@ -417,6 +417,7 @@ class ApiTaskController extends AbstractController
             }
             $taskElement->setTaskOrder($order);
             $this->entityManager->persist($taskElement);
+            dd($taskElement);
             $this->entityManager->flush();
             return Null;
         } catch (\Exception $exception) {
