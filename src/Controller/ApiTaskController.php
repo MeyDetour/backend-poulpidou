@@ -130,7 +130,7 @@ class ApiTaskController extends AbstractController
                 $task->setCol('waiting');
                 $task->setTaskOrder(0);
 
-                $this->reorderTask($task, 'waiting', $this->getUser(), 0);
+                $this->reorderTask($task, 'waiting',$task, 0);
 
                 $this->entityManager->persist($task);
                 $this->entityManager->flush();
