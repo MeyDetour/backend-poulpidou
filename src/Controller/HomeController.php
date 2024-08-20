@@ -89,18 +89,18 @@ class HomeController extends AbstractController
                     ],
                     'renvoie' => 'ok si utilisateur bien crée',
                     'need token ? ' => false
-                ],[
+                ], [
                     '(non testé) export data' => '/api/export/data',
                     'methode' => 'get',
                     'parametres a mettre dans le body' => [
                     ],
                     'renvoie' => 'telecharge un fichier contenant les donnée du compte',
                     'need token ? ' => true
-                ],[
+                ], [
                     '(non testé) import data' => '/api/import/data',
                     'methode' => 'get',
                     'parametres a mettre dans le body' => [
-                        'save'=> "fichier d'importation .poulpidou "
+                        'save' => "fichier d'importation .poulpidou "
                     ],
                     'renvoie' => "ok si c'est bon sinon ASFO",
                     'need token ? ' => true
@@ -246,14 +246,14 @@ class HomeController extends AbstractController
                     "renvoie :" => [[
                         "id" => null,
                         "name" => null,
-                        "uuid"=>null,
+                        "uuid" => null,
                         "cratedAt" => null,
                         'totalTasks' => null,
                         'doneTasks' => null,
-                    ],[
+                    ], [
                         "id" => null,
                         "name" => null,
-                        "uuid"=>null,
+                        "uuid" => null,
                         "cratedAt" => null,
                         'totalTasks' => null,
                         'doneTasks' => null,
@@ -672,7 +672,7 @@ class HomeController extends AbstractController
                             [
                                 "id" => null,
                                 "name" => null,
-                                "uuid"=>null,
+                                "uuid" => null,
                                 "cratedAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
@@ -680,7 +680,7 @@ class HomeController extends AbstractController
                             [
                                 "id" => null,
                                 "name" => null,
-                                "uuid"=>null,
+                                "uuid" => null,
                                 "cratedAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
@@ -690,21 +690,21 @@ class HomeController extends AbstractController
                             [
                                 "id" => null,
                                 "name" => null,
-                                "uuid"=>null,
+                                "uuid" => null,
                                 "cratedAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
                             ], [
                                 "id" => null,
                                 "name" => null,
-                                "uuid"=>null,
+                                "uuid" => null,
                                 "cratedAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
                             ], [
                                 "id" => null,
                                 "name" => null,
-                                "uuid"=>null,
+                                "uuid" => null,
                                 "cratedAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
@@ -1537,7 +1537,7 @@ class HomeController extends AbstractController
                         'content' => 'Labore fugiat amet voluptate sit quis reprehenderit dolor eiusmod ad fugiat mollit officia est minim ut sint officia voluptate ut laboris aute consectetur labore minim eiusmod sint aute in sed incididunt.',
                         'category' => 'dev',
                         'status' => 'waiting',
-                        'order'=>1,
+                        'order' => 1,
                         'dueDate' => '07/08/2024',
                         'author' => [
                             'firstName' => 'Maxence',
@@ -1548,21 +1548,13 @@ class HomeController extends AbstractController
                         'status' => "waiting','progress','done"
                     ],
                     'utilisation' => "modifier le status d' une tache  (waiting , done , progress)",
-                    'need token ? ' => true],
+                    'need token ? ' => true]
+                ,
                 ["modifier l'ordre de la tache " => '/api/task/{id de la task}/edit/order',
                     'methode' => 'put',
-                    "renvoie :" => [
-                        'name' => 'New task',
-                        'content' => 'Labore fugiat amet voluptate sit quis reprehenderit dolor eiusmod ad fugiat mollit officia est minim ut sint officia voluptate ut laboris aute consectetur labore minim eiusmod sint aute in sed incididunt.',
-                        'category' => 'dev',
-                        'status' => 'waiting',
-                        'order'=>1,
-                        'dueDate' => '07/08/2024',
-                        'author' => [
-                            'firstName' => 'Maxence',
-                            'lastName' => 'ABRILE'
-                        ]
-                    ],
+                    "renvoie :" =>
+                        ' ok'
+                    ,
                     'parametres a mettre dans le body' => [
                         'order' => "int"
                     ],
@@ -1585,7 +1577,7 @@ class HomeController extends AbstractController
                                 'name' => 'New task',
                                 'content' => 'Labore fugiat amet voluptate sit quis reprehenderit dolor eiusmod ad fugiat mollit officia est minim ut sint officia voluptate ut laboris aute consectetur labore minim eiusmod sint aute in sed incididunt.',
                                 'category' => 'dev',
-                                'order'=>1,
+                                'order' => 1,
                                 'status' => 'waiting',
                                 'dueDate' => '07/08/2024',
                                 'author' => [
@@ -1607,7 +1599,7 @@ class HomeController extends AbstractController
                         'name' => 'New task',
                         'content' => 'Labore fugiat amet voluptate sit quis reprehenderit dolor eiusmod ad fugiat mollit officia est minim ut sint officia voluptate ut laboris aute consectetur labore minim eiusmod sint aute in sed incididunt.',
                         'category' => 'dev',
-                        'order'=>1,
+                        'order' => 1,
                         'status' => 'waiting',
                         'dueDate' => '07/08/2024',
                         'author' => [
