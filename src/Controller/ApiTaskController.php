@@ -31,7 +31,7 @@ class ApiTaskController extends AbstractController
     }
 
     #[Route('/api/task/new', name: 'new_api_task', methods: ['post'])]
-    public function newTask(EntityManagerInterface $entityManager, ProjectRepository $projectRepository, Request $request, CategoryRepository $categoryRepository): Response
+    public function newTask( ProjectRepository $projectRepository, Request $request, CategoryRepository $categoryRepository): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -132,8 +132,8 @@ class ApiTaskController extends AbstractController
 
                 $this->reorderTask($task, 'waiting', $this->getUser(), 0);
 
-                $entityManager->persist($task);
-                $entityManager->flush();
+                $this->entityManager->persist($task);
+                $this->entityManager->flush();
                 dd($task);
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
