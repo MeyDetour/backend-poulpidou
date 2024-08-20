@@ -490,6 +490,7 @@ class ApiTaskController extends AbstractController
             'content' => $task->getDescription(),
             'category' => $categorName,
             'status' => $task->getCol(),
+            'order' => $task->getTaskOrder(),
             'dueDate' => $this->dateService->formateDate($task->getDueDate()),
             'author' => [
                 'firstName' => $task->getOwner()->getFirstName(),

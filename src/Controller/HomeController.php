@@ -1537,6 +1537,7 @@ class HomeController extends AbstractController
                         'content' => 'Labore fugiat amet voluptate sit quis reprehenderit dolor eiusmod ad fugiat mollit officia est minim ut sint officia voluptate ut laboris aute consectetur labore minim eiusmod sint aute in sed incididunt.',
                         'category' => 'dev',
                         'status' => 'waiting',
+                        'order'=>1,
                         'dueDate' => '07/08/2024',
                         'author' => [
                             'firstName' => 'Maxence',
@@ -1584,6 +1585,7 @@ class HomeController extends AbstractController
                                 'name' => 'New task',
                                 'content' => 'Labore fugiat amet voluptate sit quis reprehenderit dolor eiusmod ad fugiat mollit officia est minim ut sint officia voluptate ut laboris aute consectetur labore minim eiusmod sint aute in sed incididunt.',
                                 'category' => 'dev',
+                                'order'=>1,
                                 'status' => 'waiting',
                                 'dueDate' => '07/08/2024',
                                 'author' => [
@@ -1605,6 +1607,7 @@ class HomeController extends AbstractController
                         'name' => 'New task',
                         'content' => 'Labore fugiat amet voluptate sit quis reprehenderit dolor eiusmod ad fugiat mollit officia est minim ut sint officia voluptate ut laboris aute consectetur labore minim eiusmod sint aute in sed incididunt.',
                         'category' => 'dev',
+                        'order'=>1,
                         'status' => 'waiting',
                         'dueDate' => '07/08/2024',
                         'author' => [
