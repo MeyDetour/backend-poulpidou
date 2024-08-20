@@ -11,14 +11,16 @@ use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ApiCategoryController extends AbstractController
-{ private LogService $logService;
+{
+    private LogService $logService;
 
-    public function __construct(LogService $logService ,DateService $dateService)
+    public function __construct(LogService $logService, DateService $dateService)
     {
         $this->logService = $logService;
     }
@@ -30,44 +32,44 @@ class ApiCategoryController extends AbstractController
         try {
             $data = json_decode($request->getContent(), true);
             if ($data) {
-               $cat = new Category();
+                $cat = new Category();
 
                 if (!isset($data['name']) || empty(trim($data['name']))) {
-                    return $this->json([
-                        'state' => 'NEF',
+                    return new JsonResponse(json_encode([
+                        'state' => 'NED',
                         'value' => 'name',
-                    ]);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!isset($data['project_id'])) {
-                    return $this->json([
+                    return new JsonResponse(json_encode([
                         'state' => 'NEF',
                         'value' => 'project_id',
-                    ]);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!is_numeric($data['project_id'])) {
-                    return $this->json([
+                    return new JsonResponse(json_encode([
                         'state' => 'IDT',
-                        'value' => 'project_id'
-                    ]);
+                        'value' => 'project_id',
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 $project = $projectRepository->find($data['project_id']);
                 if (!$project) {
-                    return $this->json([
+                    return new JsonResponse(json_encode([
                         'state' => 'NDF',
-                        'value' => 'project'
-                    ]);
+                        'value' => 'project',
+                    ]), Response::HTTP_NOT_FOUND);
                 }
                 if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                    return $this->json([
+                    return new JsonResponse(json_encode([
                         'state' => 'FO',
-                        'value' => 'project'
-                    ]);
+                        'value' => 'project',
+                    ]), Response::HTTP_FORBIDDEN);
                 }
-                if($project->getState() == 'deleted'){
-                    return $this->json([
+                if ($project->getState() == 'deleted') {
+                    return new JsonResponse(json_encode([
                         'state' => 'DD',
-                        'value' => 'project'
-                    ]);
+                        'value' => 'project',
+                    ]), Response::HTTP_NOT_FOUND);
                 }
                 $cat->setName($data['name']);
                 $cat->setProject($project);
@@ -75,52 +77,63 @@ class ApiCategoryController extends AbstractController
                 $entityManager->persist($cat);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Create Category (' . $cat->getId() . ':' . $cat->getName() . ') for project : ' . $cat->getProject()->getName() . ' ) by '.($this->getUser()->getEmail()));
+                $this->logService->createLog('ACTION', ' Create Category (' . $cat->getId() . ':' . $cat->getName() . ') for project : ' . $cat->getProject()->getName() . ' ) by ' . ($this->getUser()->getEmail()));
 
-                return $this->json(['state' => 'OK',
 
-                    'value' => $this->getData($cat)]);
+                return new JsonResponse(json_encode([
+                    'state' => 'ok',
+                    'value' => $this->getData($cat)
+                ]), Response::HTTP_INTERNAL_SERVER_ERROR);
 
             }
-            return $this->json(['state' => 'ND']);
+            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return $this->json(['state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
+            return new JsonResponse(json_encode([
+
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
     #[Route('/api/category/{id}/edit', name: 'edit_category', methods: ['put'])]
-    public function editCategory(EntityManagerInterface $entityManager,$id , CategoryRepository $repository, Request $request): Response
+    public function editCategory(EntityManagerInterface $entityManager, $id, CategoryRepository $repository, Request $request): Response
     {
         try {
             $category = $repository->find($id);
             if (!$category) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'NDF',
-                    'value' => 'category'
-                ]);
+                    'value' => 'category',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($category->getProject()->getOwner() != $this->getUser() && !$category->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]), Response::HTTP_FORBIDDEN);
+
             }
-            if($category->getProject()->getState() == 'deleted'){
-                return $this->json([
+            if ($category->getProject()->getState() == 'deleted') {
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
+
             }
             $data = json_decode($request->getContent(), true);
             if ($data) {
 
                 if (!isset($data['name']) || empty(trim($data['name']))) {
-                    return $this->json([
-                        'state' => 'NEF',
+                    return new JsonResponse(json_encode([
+                        'state' => 'NED',
                         'value' => 'name',
-                    ]);
+                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+
                 }
 
                 $category->setName($data['name']);
@@ -128,112 +141,122 @@ class ApiCategoryController extends AbstractController
                 $entityManager->persist($category);
                 $entityManager->flush();
 
-                $this->logService->createLog('ACTION', ' Edit Category (' . $category->getId() . ':' . $category->getName() . ') for project : ' . $category->getProject()->getName() . ' ) by '.($this->getUser()->getEmail()));
+                $this->logService->createLog('ACTION', ' Edit Category (' . $category->getId() . ':' . $category->getName() . ') for project : ' . $category->getProject()->getName() . ' ) by ' . ($this->getUser()->getEmail()));
 
-                return $this->json(['state' => 'OK',
-
-                    'value' => $this->getData($category)]);
+                return new JsonResponse(json_encode([
+                    'state' => 'OK',  'value' => $this->getData($category)
+            ]), Response::HTTP_OK);
 
             }
-            return $this->json(['state' => 'ND']);
+            return new JsonResponse(json_encode(['state' => 'ND']), Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-            return $this->json(['state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse(json_encode([
+
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
 
     #[Route('/api/category/{id}/delete', name: 'delete_category', methods: 'delete')]
-    public function delete($id, CategoryRepository $repository, EntityManagerInterface $manager, CategoryRepository $categoryRepository ): Response
+    public function delete($id, CategoryRepository $repository, EntityManagerInterface $manager, CategoryRepository $categoryRepository): Response
     {
         try {
             $category = $repository->find($id);
             if (!$category) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'NDF',
-                    'value' => 'category'
-                ]);
+                    'value' => 'category',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($category->getProject()->getOwner() != $this->getUser() && !$category->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]), Response::HTTP_FORBIDDEN);
             }
-            if($category->getProject()->getState() == 'deleted'){
-                return $this->json([
+            if ($category->getProject()->getState() == 'deleted') {
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
-            if(count($category->getTasks())!=0){
-                return $this->json([
-                    'state' => 'ASFO',
-                    'value' => 'category'
-                ]);
+            if (count($category->getTasks()) != 0) {
+
+                return new JsonResponse(json_encode([
+                        'state' => 'ASFO',
+                        'value' => 'category'
+                    ]
+                ),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $message = ' Delete Category (' . $category->getId() . ':' . $category->getName() . ') for project : ' . $category->getProject()->getName() . ' ) by '.($this->getUser()->getEmail());
+            $message = ' Delete Category (' . $category->getId() . ':' . $category->getName() . ') for project : ' . $category->getProject()->getName() . ' ) by ' . ($this->getUser()->getEmail());
             $manager->remove($category);
             $manager->flush();
             $this->logService->createLog('DELETE', $message);
 
-            return $this->json([
-                'state' => 'OK'
-            ]);
+            return new JsonResponse(json_encode([
+                    'state' => 'OK',
+                 ]
+            ),Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse(json_encode([
 
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-            ]);
+                ]
+            ), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
     #[Route('/api/{id}/categories', name: 'get_categories', methods: 'get')]
     public function getCategories(ProjectRepository $projectRepository, $id, Request $request, EntityManagerInterface $manager): Response
     {
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'NDF',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]), Response::HTTP_FORBIDDEN);
             }
-            if($project->getState() == 'deleted'){
-                return $this->json([
+            if ($project->getState() == 'deleted') {
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]), Response::HTTP_NOT_FOUND);
             }
             $cats = $project->getCategories();
             $data = [];
             foreach ($cats as $cat) {
                 $data[] = $this->getData($cat);
             }
-            return $this->json([
-                'state' => 'OK',
-                'value' => $data
-            ]);
+            return new JsonResponse(json_encode([
+                    'state' => 'OK',
+                    'value'=>$data
+                ]
+            ),Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse(json_encode([
 
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-            ]);
+                ]
+            ), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -243,7 +266,7 @@ class ApiCategoryController extends AbstractController
         return [
             'id' => $cat->getId(),
             'name' => $cat->getName(),
-            'tasksNumber'=>count( $cat->getTasks()),
+            'tasksNumber' => count($cat->getTasks()),
 
         ];
     }

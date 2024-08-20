@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -27,42 +28,43 @@ class ApiRegisterController extends AbstractController
     }
 
     #[Route('/register', name: 'api_app_register', methods: 'post')]
-    public function register(Request $request, UserRepository $repository, UserPasswordHasherInterface $passwordHasher): Response
+    public function register(Request $request, UserRepository $repository, UserPasswordHasherInterface $passwordHasher)
     {
         $create = true;
         if (!$create) {
-            return $this->json([
+            return new JsonResponse(json_encode([
                 'state' => 'ISE',
-                'value' => 'cannot create account'
-            ]);
+                'value' => 'cannot create account',
+            ]), Response::HTTP_INTERNAL_SERVER_ERROR);
+
         }
 
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['username']) || empty(trim($data['username']))) {
-            return $this->json([
+            return new JsonResponse(json_encode([
                 'state' => 'NED',
-                'value' => 'username'
-            ]);
+                'value' => 'username',
+            ]),Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         if (!isset($data['password']) || empty(trim($data['password']))) {
 
-            return $this->json([
+            return new JsonResponse(json_encode([
                 'state' => 'NED',
-                'value' => 'password'
-            ]);
+                'value' => 'password',
+            ]),Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         if (strlen($data['password'] <= 5)) {
-            return $this->json([
+            return new JsonResponse(json_encode([
                 'state' => 'LTS',
-                'value' => 'password'
-            ]);
+                'value' => 'password',
+            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         if ($repository->findOneBy(['email' => $data['username']])) {
-            return $this->json([
+            return new JsonResponse(json_encode([
                 'state' => 'NU',
-                'value' => 'email'
-            ]);
+                'value' => 'email',
+            ]), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $user = new User();
         $user->setEmail($data['username']);
@@ -75,10 +77,11 @@ class ApiRegisterController extends AbstractController
 
         $errors = $this->validator->validate($user);
         if (count($errors) > 0) {
-            return $this->json([
+
+            return new JsonResponse(json_encode([
                 'state' => 'ISE',
                 'value' => $this->json($errors[0])
-            ]);
+            ]), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
 
@@ -103,8 +106,9 @@ class ApiRegisterController extends AbstractController
         $this->entityManager->persist($note);
         $this->entityManager->persist($setting);
         $this->entityManager->flush();
-        return $this->json([
-            'state' => 'OK'
-        ]);
+
+        return new JsonResponse(json_encode([
+            'state' => 'ok'
+        ]), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

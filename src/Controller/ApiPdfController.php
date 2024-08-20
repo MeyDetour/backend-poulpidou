@@ -12,6 +12,7 @@ use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -28,16 +29,16 @@ class ApiPdfController extends AbstractController
     }
 
     #[Route('/upload/pdf', name: 'upload_pdf_without_token', methods: ['post'])]
-    public function uploadPdf(Request $request): Response
+    public function uploadPdf(Request $request)
     {
         try {
 
             $file = $request->files->get("pdf");
             if (!$file) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'NED',
-                    'value' => 'file'
-                ]);
+                    'value' => 'file',
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = $originalFilename . '-' . uniqid() . '.' . $file->guessExtension();
@@ -45,58 +46,62 @@ class ApiPdfController extends AbstractController
             try {
                 $file->move('pdf', $newFilename);
                 $this->logService->createLog('ACTION','Uploaded File by '.$this->getUser()->getEmail().' name : '.$newFilename,null);
-                return $this->json([
-                    'state' => 'OK',
-
-                ]);
+                return new JsonResponse(json_encode([
+                        'state' => 'OK',
+                    ]
+                ),Response::HTTP_OK);
             } catch (\Exception $exception) {
-                return $this->json([
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                return new JsonResponse(json_encode([
 
-                ]);
+                  'state' => 'ISE',
+                'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
 
         } catch (\Exception $exception) {
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/api/project/{id}/specifications/upload/pdf', name: 'upload_pdf', methods: ['post'])]
-    public function uploadPdfSpecification($id, PdfRepository $pdfRepository, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
+    public function uploadPdfSpecification($id, PdfRepository $pdfRepository, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager)
     {
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'project'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'project',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_FORBIDDEN);
             }
             if($project->getState() == 'deleted'){
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_NOT_FOUND);
             }
 
             $file = $request->files->get("pdf");
             if (!$file) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'NED',
-                    'value' => 'file'
-                ]);
+                    'value' => 'file',
+                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
@@ -104,10 +109,12 @@ class ApiPdfController extends AbstractController
             $newFilename = $originalFilename . '-' . uniqid() . '.' . $file->guessExtension();
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
             if ($pdf) {
-                return $this->json([
-                    'state' => 'NU',
-                    'value' => 'pdf'
-                ]);
+
+                return new JsonResponse(json_encode([
+                         'state' => 'NU',
+                        'value' => 'pdf'
+                    ]
+                ),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $pdf = new \App\Entity\Pdf();
             $pdf->setOwner($this->getUser());
@@ -121,134 +128,143 @@ class ApiPdfController extends AbstractController
 
             try {
                 $file->move('pdf', $newFilename);
-                return $this->json([
-                    'state' => 'OK',
-                    'value' => [
-                        'filePath'=>$filePath
+
+                return new JsonResponse(json_encode([
+                        'state' => 'OK',  'value' => [
+                            'filePath'=>$filePath
+                        ]
                     ]
-
-                ]);
+                ),Response::HTTP_OK);
             } catch (\Exception $exception) {
-                return $this->json([
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                return new JsonResponse(json_encode([
 
-                ]);
+                  'state' => 'ISE',
+                'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
         } catch (\Exception $exception) {
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/api/get/{id}/specifications', name: 'get_specification_pdf', methods: ['get'])]
-    public function getPdfSpecification(ProjectRepository $projectRepository, PdfRepository $pdfRepository, $id, Request $request, EntityManagerInterface $manager): Response
+    public function getPdfSpecification(ProjectRepository $projectRepository, PdfRepository $pdfRepository, $id, Request $request, EntityManagerInterface $manager)
     {
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'project'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'project',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_FORBIDDEN);
             }
             if($project->getState() == 'deleted'){
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_NOT_FOUND);
             }
 
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
             if (!$pdf) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'pdf'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'pdf',
+                    ]), Response::HTTP_NOT_FOUND);
             }
            $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
 
 
             if (!file_exists($filePath)) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'pdf'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'pdf',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             try {
-                return $this->json([
-                    'state' => 'OK',
-                    'value' => [
-                        'filePath'=>$filePath
-                    ]
-                ]);
-            } catch (\Exception $exception) {
-                return $this->json([
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-                ]);
+                return new JsonResponse(json_encode([
+                        'state' => 'OK', 'value' => [
+                            'filePath'=>$filePath
+                        ]
+                    ]
+                ),Response::HTTP_OK);
+            } catch (\Exception $exception) {
+                return new JsonResponse(json_encode([
+
+                  'state' => 'ISE',
+                'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
         } catch (\Exception $exception) {
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/api/remove/{id}/specifications', name: 'remove_specification_pdf', methods: ['delete'])]
-    public function removePdfSpecification(ProjectRepository $projectRepository, PdfRepository $pdfRepository, $id, Request $request, EntityManagerInterface $manager): Response
+    public function removePdfSpecification(ProjectRepository $projectRepository, PdfRepository $pdfRepository, $id, Request $request, EntityManagerInterface $manager)
     {
         try {
             $project = $projectRepository->find($id);
             if (!$project) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'project'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'project',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_FORBIDDEN);
             }
             if($project->getState() == 'deleted'){
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_NOT_FOUND);
             }
 
 
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
             if (!$pdf) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'pdf'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'pdf',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
 
 
             if (!file_exists($filePath)) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'pdf'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'pdf',
+                    ]), Response::HTTP_NOT_FOUND);
             }
 
             $filePath = 'pdf/' . $pdf->getFileName();
@@ -257,23 +273,27 @@ class ApiPdfController extends AbstractController
 
                 $manager->remove($pdf);
                 $manager->flush();
-                return $this->json([
-                    'state' => 'OK'
-                ]);
+                return new JsonResponse(json_encode([
+                        'state' => 'OK',
+                    ]
+                ),Response::HTTP_OK);
             } else {
-                return $this->json([
-                    'state' => 'ISE',
-                    'value' => 'Failed to remove pdf'
-                ]);
+
+                return new JsonResponse(json_encode([
+                        'state' => 'ISE', 'value' => 'Failed to remove pdf'
+                    ]
+                ),Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
 
         } catch (\Exception $exception) {
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -7,6 +7,7 @@ use App\Service\LogService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -41,14 +42,21 @@ class ApiSettingController extends AbstractController
                 $settings = $this->createDefaultSettings();
 
             }
-            return $this->json(['state' => 'OK',
-                'value' => $this->getData($settings)]);
+            return new JsonResponse(json_encode([
+                    'state' => 'OK', 'value' => $this->getData($settings)
+                ]
+            ),Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-            return $this->json(['state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
-        }
+            return new JsonResponse(json_encode([
+
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+              }
     }
 
     #[Route('/api/edit/settings', name: 'edit_api_setting', methods: ['put'])]
@@ -65,39 +73,39 @@ class ApiSettingController extends AbstractController
                 }
                 if (isset($data['formatDate']) && !empty(trim($data['formatDate']))) {
                     if (!in_array($data['formatDate'], $this->associationKey)) {
-                        return $this->json([
-                            'state' => 'IDT',
-                            'value' => 'formatDate',
-                        ]);
+                        return new JsonResponse(json_encode([
+                        'state' => 'IDT',
+                        'value' => 'formatDate',
+                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $settings->setDateFormat($data['formatDate']);
                 }
                 if (isset($data['interfaceLangage']) && !empty(trim($data['interfaceLangage']))) {
                     if (!in_array($data['interfaceLangage'], $this->associationLangageKey)) {
-                        return $this->json([
+                        return new JsonResponse(json_encode([
                             'state' => 'IDT',
                             'value' => 'interfaceLangage',
-                        ]);
+                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $settings->setInterfaceLangage($data['interfaceLangage']);
                 }
                 if (isset($data['payments']) && gettype($data['payments']) == 'array') {
                     foreach ($data['payments'] as $pay) {
                             if(!in_array($pay, $this->associationPayementKey)) {
-                                return $this->json([
-                                    'state' => 'IDT',
-                                    'value' => 'payments',
-                                ]);
+                                return new JsonResponse(json_encode([
+                        'state' => 'IDT',
+                        'value' => 'payments',
+                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                             }
                     }
                     $settings->setPayment(implode(',', $data['payments']));
                 }
                 if (isset($data['delayDays'])) {
                     if (!is_numeric($data['delayDays']) || !in_array($data['delayDays'], $this->delayDaysKey)) {
-                        return $this->json([
-                            'state' => 'IDT',
-                            'value' => 'formatDate',
-                        ]);
+                        return new JsonResponse(json_encode([
+                        'state' => 'IDT',
+                        'value' => 'formatDate',
+                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
 
@@ -106,10 +114,10 @@ class ApiSettingController extends AbstractController
                 if (isset($data['installmentPayments'])) {
 
                     if (!is_bool($data['installmentPayments'])) {
-                        return $this->json([
+                        return new JsonResponse(json_encode([
                             'state' => 'IDT',
-                            'value' => 'installmentPayments'
-                        ]);
+                            'value' => 'installmentPayments',
+                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
 
                     }
 
@@ -118,10 +126,10 @@ class ApiSettingController extends AbstractController
                 if (isset($data['freeMaintenance'])) {
 
                     if (!is_bool($data['freeMaintenance'])) {
-                        return $this->json([
+                        return new JsonResponse(json_encode([
                             'state' => 'IDT',
-                            'value' => 'freeMaintenance'
-                        ]);
+                            'value' => 'freeMaintenance',
+                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
 
                     }
 
@@ -130,18 +138,23 @@ class ApiSettingController extends AbstractController
 
                 $entityManager->persist($settings);
                 $entityManager->flush();
-                return $this->json(['state' => 'OK',
-
-                    'value' => $this->getData($settings)]);
+                return new JsonResponse(json_encode([
+                        'state' => 'OK','value' => $this->getData($settings)
+                    ]
+                ),Response::HTTP_OK);
 
             }
-            return $this->json(['state' => 'ND']);
+             return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-            return $this->json(['state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
-        }
+            return new JsonResponse(json_encode([
+
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);  }
     }
 
     public function createDefaultSettings()
@@ -160,9 +173,13 @@ class ApiSettingController extends AbstractController
             return $setting;
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-            return $this->json(['state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
-        }
+            return new JsonResponse(json_encode([
+
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR); }
     }
 
     public function getData($setting)

@@ -11,6 +11,7 @@ use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -35,49 +36,51 @@ class ApiInvoiceController extends AbstractController
             if ($data) {
                 $invoice = new Invoice();
                 if (!isset($data['description']) || empty(trim($data['description']))) {
-                    return $this->json([
+                    return new JsonResponse(json_encode([
                         'state' => 'NED',
-                        'value' => 'description'
-                    ]);
+                        'value' => 'description',
+                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 $invoice->setDescription($data['description']);
 
                 if (!isset($data['project_id'])) {
-                    return $this->json([
+                    return new JsonResponse(json_encode([
                         'state' => 'NED',
-                        'value' => 'project_id'
-                    ]);
+                        'value' => 'project_i',
+                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!is_numeric($data['project_id'])) {
-                    return $this->json([
+                    return new JsonResponse(json_encode([
                         'state' => 'IDT',
-                        'value' => 'project_id'
-                    ]);
+                        'value' => 'project_id',
+                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 $project = $projectRepository->find($data['project_id']);
                 if (!$project) {
-                    return $this->json([
+                     return new JsonResponse(json_encode([
                         'state' => 'NDF',
-                        'value' => 'project'
-                    ]);
+                        'value' => 'project',
+                    ]), Response::HTTP_NOT_FOUND);
                 }
                 if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                    return $this->json([
-                        'state' => 'FO',
-                        'value' => 'project'
-                    ]);
+                    return new JsonResponse(json_encode([
+                    'state' => 'FO',
+                    'value' => 'project',
+                ]),Response::HTTP_FORBIDDEN);
                 }
                 if (!$project->isOtherUserCanEditInvoices() && $project->getOwner() != $this->getUser()) {
-                    return $this->json([
-                        'state' => 'ASFO',
-                        'value' => 'project'
-                    ]);
+
+                    return new JsonResponse(json_encode([
+                            'state' => 'FO',
+                            'value' => 'project'
+                        ]
+                    ),Response::HTTP_FORBIDDEN);
                 }
                 if ($project->getState() == 'deleted') {
-                    return $this->json([
-                        'state' => 'DD',
-                        'value' => 'project'
-                    ]);
+                    return new JsonResponse(json_encode([
+                    'state' => 'DD',
+                    'value' => 'project',
+                ]),Response::HTTP_NOT_FOUND);
                 }
 
                 $invoice->setProject($project);
@@ -86,10 +89,10 @@ class ApiInvoiceController extends AbstractController
                 if (isset($data['price']) && !empty(trim($data['price']))) {
                     $isValid = $data['price'] > 0 && is_numeric($data['price']);
                     if (!$isValid) {
-                        return $this->json([
+                        return new JsonResponse(json_encode([
                             'state' => 'IDT',
-                            'value' => 'price'
-                        ]);
+                            'value' => 'price',
+                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $invoice->setPrice($data['price']);
                 }
@@ -97,10 +100,10 @@ class ApiInvoiceController extends AbstractController
                 if (isset($data['date']) && !empty(trim($data['date']))) {
                     $searchDate = \DateTime::createFromFormat('d/m/Y', $data['date']);
                     if (!$searchDate) {
-                        return $this->json([
+                        return new JsonResponse(json_encode([
                             'state' => 'IDT',
-                            'value' => 'date'
-                        ]);
+                            'value' => 'date',
+                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $invoice->setDate($searchDate);
                 }
@@ -117,19 +120,22 @@ class ApiInvoiceController extends AbstractController
                 $this->logService->createLog('ACTION', ' Create Invoice (' . $invoice->getId() . ') for project  Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail());
 
 
-                return $this->json([
-                    'state' => 'OK',
-                    'value' => $this->getDataInvoice($invoice)
-                ]);
+
+                return new JsonResponse(json_encode([
+                        'state' => 'OK',   'value' => $this->getDataInvoice($invoice)
+                    ]
+                ),Response::HTTP_OK);
             }
-            return $this->json(['state' => 'ND']);
+            return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse(json_encode([
 
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-            return $this->json(['state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
-        }
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);  }
     }
 
     #[Route('/api/invoice/edit/{id}', name: 'edit_invoice', methods: 'put')]
@@ -138,28 +144,30 @@ class ApiInvoiceController extends AbstractController
         try {
             $invoice = $invoiceRepository->findOneBy(['number'=>$id]);
             if (!$invoice) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'invoice'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'invoice',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_FORBIDDEN);
             }
             if (!$invoice->getProject()->isOtherUserCanEditInvoices() && $invoice->getProject()->getOwner() != $this->getUser()) {
-                return $this->json([
-                    'state' => 'ASFO',
-                    'value' => 'project'
-                ]);
+
+                return new JsonResponse(json_encode([
+                       'state' => 'ASFO',
+                        'value' => 'project'
+                    ]
+                ),Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($invoice->getProject()->getState() == 'deleted') {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -172,20 +180,20 @@ class ApiInvoiceController extends AbstractController
                 if (isset($data['price']) && !empty(trim($data['price']))) {
                     $isValid = $data['price'] > 0 && is_numeric($data['price']);
                     if (!$isValid) {
-                        return $this->json([
+                        return new JsonResponse(json_encode([
                             'state' => 'IDT',
-                            'value' => 'price'
-                        ]);
+                            'value' => 'price',
+                        ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $invoice->setPrice($data['price']);
                 }
                 if (isset($data['date']) && !empty(trim($data['date']))) {
                     $searchDate = \DateTime::createFromFormat('d/m/Y', $data['date']);
                     if (!$searchDate) {
-                        return $this->json([
-                            'state' => 'IDT',
-                            'value' => 'date'
-                        ]);
+                        return new JsonResponse(json_encode([
+                        'state' => 'IDT',
+                        'value' => 'date',
+                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $invoice->setDate($searchDate);
                 }
@@ -194,23 +202,23 @@ class ApiInvoiceController extends AbstractController
 
                 $this->logService->createLog('ACTION', ' Edit Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail());
 
-                return $this->json([
-                    'state' => 'OK',
-                    'value' => $this->getDataInvoice($invoice)
-                ]);
+
+                return new JsonResponse(json_encode([
+                        'state' => 'OK','value' => $this->getDataInvoice($invoice)
+                    ]
+                ),Response::HTTP_OK);
             }
-            return $this->json([
-                'state' => 'ND'
-            ]);
+            return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
+            return new JsonResponse(json_encode([
 
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-            ]);
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -220,38 +228,39 @@ class ApiInvoiceController extends AbstractController
         try {
             $invoice = $invoiceRepository->findOneBy(['number'=>$id]);
             if (!$invoice) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'invoice'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'invoice',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_FORBIDDEN);
             }
             if ($invoice->getProject()->getState() == 'deleted') {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_NOT_FOUND);
             }
             $invoice->setPayed(true);
             $manager->persist($invoice);
             $manager->flush();
-            return $this->json([
-                'state' => 'OK'
-            ]);
+            return new JsonResponse(json_encode([
+                    'state' => 'OK',
+                ]
+            ),Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse(json_encode([
 
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-            ]);
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -261,39 +270,41 @@ class ApiInvoiceController extends AbstractController
         try {
             $project = $repository->find($id);
             if (!$project) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'project'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'project',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_FORBIDDEN);
             }
             if ($project->getState() == 'deleted') {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_NOT_FOUND);
             }
             $data = [];
             foreach ($project->getInvoices() as $invoice) {
                 $data[] = $this->getDataInvoice($invoice);
             }
-            return $this->json([
-                'state' => 'OK',
-                'value' => $data]);
+
+            return new JsonResponse(json_encode([
+                    'state' => 'OK','value' => $data
+                ]
+            ),Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse(json_encode([
 
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-            ]);
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -304,40 +315,44 @@ class ApiInvoiceController extends AbstractController
         try {
             $client = $repository->find($id);
             if (!$client) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'client'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'client',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($client->getOwner() != $this->getUser()) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'client'
-                ]);
+                    'value' => 'client',
+                ]),Response::HTTP_FORBIDDEN);
             }
             if ($client->getState() == 'deleted') {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'client'
-                ]);
+                    'value' => 'client',
+                ]),Response::HTTP_NOT_FOUND);
             }
             $data = [];
             foreach ($invoiceRepository->findInvoicesOfClient() as $invoice) {
                 $data[] = $this->getDataInvoiceForClient($invoice);
 
             }
-            return $this->json([
-                'state' => 'OK',
-                'value' => $data]);
+
+            return new JsonResponse(json_encode([
+                    'state' => 'OK',   'value' => $data
+                ]
+            ),Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -348,37 +363,42 @@ class ApiInvoiceController extends AbstractController
         try {
             $invoice = $repository->findOneBy(['number'=>$id]);
             if (!$invoice) {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'invoice'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'invoice',
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($invoice->getProject()->getOwner() != $this->getUser() && !$invoice->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'FO',
-                    'value' => 'invoice'
-                ]);
+                    'value' => 'invoice',
+                ]),Response::HTTP_FORBIDDEN);
             }
             if ($invoice->getProject()->getState() == 'deleted') {
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'DD',
-                    'value' => 'project'
-                ]);
+                    'value' => 'project',
+                ]),Response::HTTP_NOT_FOUND);
             }
             $message = ' Delete Invoice (' . $invoice->getId() . ') for project  Project (' . $invoice->getProject()->getId() . ':' . $invoice->getProject()->getName() . ') for client (' . $invoice->getProject()->getClient()->getId() . ' | ' . $invoice->getProject()->getClient()->getFirstName() . ' ' . $invoice->getProject()->getClient()->getLastName() . '), action by ' . $this->getUser()->getEmail();
             $manager->remove($invoice);
             $manager->flush();
             $this->logService->createLog('DELETE', $message);
-            return $this->json(['state' => 'OK']);
+                return new JsonResponse(json_encode([
+                    'state' => 'OK',
+                 ]
+            ),Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }

@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
@@ -204,18 +205,24 @@ class ApiExportImportDataController extends AbstractController
 
             } catch (IOException $e) {
                 $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $e->getFile() . ' | line |' . $e->getLine());
-                return $this->json(['state' => 'ISE',
-                    'value' => ' Internal Servor Error : ' . $e->getMessage() . ' at |' . $e->getFile() . ' | line |' . $e->getLine()]);
+               return new JsonResponse(json_encode([
 
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$e->getMessage().' at |' . $e->getFile() . ' | line |' . $e->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse(json_encode([
 
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-            return $this->json(['state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
-        }
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);     }
     }
 
     #[Route('/api/import/data', name: 'app_api_import_data')]
@@ -580,25 +587,30 @@ class ApiExportImportDataController extends AbstractController
 
                 }
 
-                return $this->json([
-                    'state' => 'OK'
-                ]);
+                return new JsonResponse(json_encode([
+                        'state' => 'OK',
+                    ]
+                ),Response::HTTP_OK);
             }
 
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
+            return new JsonResponse(json_encode([
+                    'state' => 'ISE',  'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
 
-            return $this->json(['state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()]);
         }
     }
 
     public function error()
     {
-        return $this->json(['state' => 'ASFO',
-            'value' => "fichier corrompu"]);
+        return new JsonResponse(json_encode([
+                'state' => 'OK',  'value' => "fichier corrompu"
+            ]
+        ),Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     private function verifyType($data, $field, $type)

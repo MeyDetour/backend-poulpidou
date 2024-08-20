@@ -46,22 +46,22 @@ class ApiNoteController extends AbstractController
                 $manager->persist($user);
                 $manager->flush();
                 $this->logService->createLog('ACTION', $this->getUser()->getEmail() .')');
-                return $this->json([
+                return new JsonResponse(json_encode([
                     'state' => 'OK',
                     'value' =>
-                        $this->getDataNote()
-                ]);
+                        $this->getDataNote()]
+                ),Response::HTTP_OK);
 
             }
-            return $this->json([
-                'state' => 'ND',
-            ]);
+            return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -70,17 +70,19 @@ class ApiNoteController extends AbstractController
     {
         try {
 
-            return $this->json([
-                'state' => 'OK',
-                'value' =>
-                    $this->getDataNote()
-            ]);
+            return new JsonResponse(json_encode([
+                    'state' => 'OK', 'value' =>
+                        $this->getDataNote()
+                ]
+            ),Response::HTTP_OK);
         } catch (\Exception $exception) {
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -1682,10 +1683,10 @@ class HomeController extends AbstractController
          try {
              $invoice = $invoiceRepository->find($id);
              if (!$invoice) {
-                 return $this->json([
-                     'state' => 'NDF',
-                     'value' => 'invoice'
-                 ]);
+                  return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'invoice',
+                    ]), Response::HTTP_NOT_FOUND);
              }
 
              $data = json_decode($request->getContent(), true);
@@ -1693,10 +1694,10 @@ class HomeController extends AbstractController
              if ($data) {
 
                  if (!isset($data['description']) || empty(trim($data['description']))) {
-                     return $this->json([
-                         'state' => 'NED',
-                         'value' => 'description'
-                     ]);
+                    return new JsonResponse(json_encode([
+                        'state' => 'NED',
+                        'value' => 'description',
+                    ]),Response::HTTP_UNPROCESSABLE_ENTITY);
                  }
 
 
@@ -1711,9 +1712,7 @@ class HomeController extends AbstractController
                      'value' => $this->getDataInvoice($invoice)
                  ]);
              }
-             return $this->json([
-                 'state' => 'ND'
-             ]);
+              return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
 
      }
 

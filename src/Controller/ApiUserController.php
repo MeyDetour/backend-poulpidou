@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -27,10 +28,11 @@ class ApiUserController extends AbstractController
     #[Route('/api/me', name: 'user_me', methods: 'get')]
     public function index(): Response
     {
-        return $this->json([
-            'state' => 'OK',
-            'value' => $this->getData($this->getUser())
-        ]);
+
+        return new JsonResponse(json_encode([
+                'state' => 'OK','value' => $this->getData($this->getUser())
+            ]
+        ),Response::HTTP_OK);
     }
     #[Route('/api/users', name: 'users', methods: 'get')]
     public function getUsers(UserRepository $userRepository): Response
@@ -45,13 +47,14 @@ class ApiUserController extends AbstractController
                 'lastName' => $user->getLastName(),
             ];
         }
-        return $this->json([
-            'state' => 'OK',
-            'value' => $data
-        ]);
+
+        return new JsonResponse(json_encode([
+                'state' => 'OK',   'value' => $data
+            ]
+        ),Response::HTTP_OK);
     }
     #[Route('/api/edit/me', name: 'edit_me', methods: 'put')]
-    public function edit(Request $request, EntityManagerInterface $manager): Response
+    public function edit(Request $request, EntityManagerInterface $manager)
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -77,20 +80,22 @@ class ApiUserController extends AbstractController
                 $manager->persist($user);
                 $manager->flush();
                 $this->logService->createLog('ACTION', 'Edit profile (' . $user->getEmail() . ')');
-                return $this->json([
-                    'state' => 'OK',
-                    'value' => $this->getData($user)
 
-                ]);
+                return new JsonResponse(json_encode([
+                        'state' => 'OK','value' => $this->getData($user)
+                    ]
+                ),Response::HTTP_OK);
 
             }
-            return $this->json(['state' => 'ND']);
+             return new JsonResponse(json_encode(['state' => 'ND']),Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            return $this->json([
-                'state' => 'ISE',
-                'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+            return new JsonResponse(json_encode([
 
-            ]);
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -100,22 +105,25 @@ class ApiUserController extends AbstractController
         $user = $repository->find($id);
         if (!$user) {
             try {
-                return $this->json([
-                    'state' => 'NDF',
-                    'value' => 'user'
-                ]);
+                 return new JsonResponse(json_encode([
+                        'state' => 'NDF',
+                        'value' => 'user',
+                    ]), Response::HTTP_NOT_FOUND);
             } catch (\Exception $exception) {
-                return $this->json([
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                return new JsonResponse(json_encode([
 
-                ]);
+                  'state' => 'ISE',
+                'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-        return $this->json([
-            "state" => 'OK',
-            "value" =>$this->getData($user)
-            ]);
+
+        return new JsonResponse(json_encode([
+                'state' => 'OK',"value" =>$this->getData($user)
+            ]
+        ),Response::HTTP_OK);
 
     }
 

@@ -8,6 +8,7 @@ use App\Service\DateService;
 use App\Service\LogService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -38,17 +39,19 @@ class ApiLogController extends AbstractController
                     'type'=>$log->getType(),
                 ];
             }
-            return $this->json([
-                'state' => 'OK',
-                'value' => $data,
-            ]);
+            return new JsonResponse(json_encode([
+                    'state' => 'OK',
+                    'value' =>$data]
+            ),Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR',' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-            return $this->json([
-                'state' => 'ISE',
+            return new JsonResponse(json_encode([
+
+                  'state' => 'ISE',
                 'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
-            ]);
+                ]
+            ),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
