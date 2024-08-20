@@ -1146,7 +1146,9 @@ class ApiProjectController extends AbstractController
                 'currents' => [],
                 'others' => [],
             ];
+            dd('a');
             foreach ($projects as $project) {
+                dd($projects);
                 if ($project->getState() != 'deleted') {
                     if ($project->isCurrent() == true) {
                         $data['currents'][] = $this->getDataProjectForMiniature($project);
