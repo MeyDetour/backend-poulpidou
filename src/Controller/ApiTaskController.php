@@ -326,10 +326,11 @@ class ApiTaskController extends AbstractController
             foreach ($tasks as $task) {
                 if ($task != $taskElement) {
                     if (  $order >= $taskElement->getTaskOrder() && $taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
+                        dd($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
                         $task->setTaskOrder($task->getTaskOrder() - 1);
                     }
                     if ($taskElement->getTaskOrder() >= $order && $taskElement->getTaskOrder() >= $task->getTaskOrder() && $task->getTaskOrder() >= $order) {
-
+                        dd($taskElement->getTaskOrder(). ' to roder : '.$order . '. STUDIYNG : '. $task->getTaskOrder());
                         $task->setTaskOrder($task->getTaskOrder() + 1);
 
                     }
