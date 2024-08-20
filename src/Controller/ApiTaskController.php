@@ -557,7 +557,7 @@ class ApiTaskController extends AbstractController
         }
     }
 
-    #[Route('/api/{id}/tasks', name: 'get_tasks', methods: 'get')]
+    #[Route('/api/project/{id}/tasks', name: 'get_tasks', methods: 'get')]
     public function getTasks(ProjectRepository $projectRepository, $id, Request $request, EntityManagerInterface $manager, TaskRepository $taskRepository): Response
     {
         try {

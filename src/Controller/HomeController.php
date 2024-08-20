@@ -1579,7 +1579,7 @@ class HomeController extends AbstractController
                     'utilisation' => "supprimer une tache",
                     'need token ? ' => true],
                 [
-                    "avoir le tableau des tasks " => '/api/{id du projet}/tasks',
+                    "avoir le tableau des tasks " => '/api/project/{id du projet}/tasks',
                     'methode' => 'get',
                     "renvoie :" => [
                         'waiting' => [
