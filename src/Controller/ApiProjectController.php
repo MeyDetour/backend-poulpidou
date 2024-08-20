@@ -85,7 +85,7 @@ class ApiProjectController extends AbstractController
                      return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'client',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
                 }
                 if ($client->getOwner() != $this->getUser()) {
 
@@ -99,7 +99,7 @@ class ApiProjectController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'DD',
                         'value' => 'client',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
                 }
 
                 $project->setClient($client);
@@ -345,7 +345,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -357,7 +357,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             $data = json_decode($request->getContent(), true);
 
@@ -607,7 +607,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -619,7 +619,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -670,7 +670,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -682,7 +682,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -733,7 +733,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
 
@@ -746,7 +746,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
 
             $data = json_decode($request->getContent(), true);
@@ -832,7 +832,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -844,14 +844,14 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             $user = $userRepository->find($userId);
             if (!$user) {
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'user',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             $route = $request->attributes->get('_route');
             if ($route == 'add_user_to_project') {
@@ -905,7 +905,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -917,7 +917,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->hasUserInUserAuthorised($this->getUser())) {
                 $project->removeUserAuthorised($this->getUser());
@@ -958,7 +958,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -970,7 +970,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             $project->setState('deleted');
             $manager->persist($project);
@@ -1003,7 +1003,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -1015,7 +1015,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             $message = ' Delete force Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')';
 
@@ -1038,7 +1038,7 @@ class ApiProjectController extends AbstractController
                      return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'pdf',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
                 }
 
                 $filePath = 'pdf/' . $pdf->getFileName();
@@ -1091,7 +1091,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -1103,7 +1103,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             return new JsonResponse(json_encode([
                     'state' => 'OK',    'value' => $this->getDataProject($project)
@@ -1220,7 +1220,7 @@ class ApiProjectController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -1241,7 +1241,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
 
             return new JsonResponse(json_encode([

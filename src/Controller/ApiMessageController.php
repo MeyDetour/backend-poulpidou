@@ -73,7 +73,7 @@ class ApiMessageController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'NDF',
                     'value' => 'chat',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -85,13 +85,13 @@ class ApiMessageController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($chat->getProject()->getState() == 'deleted') {
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
 
             return new JsonResponse(json_encode([
@@ -122,7 +122,7 @@ class ApiMessageController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'NDF',
                     'value' => 'client',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             if (!$client->getOwner() == $this->getUser()) {
                 return new JsonResponse(json_encode([
@@ -134,7 +134,7 @@ class ApiMessageController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'client',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             $data = [];
             foreach ($client->getChats() as $chat) {
@@ -285,13 +285,13 @@ class ApiMessageController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
                 }
                 if ($project->getState() == 'deleted') {
                     return new JsonResponse(json_encode([
                         'state' => 'DD',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
                 }
                 $message = new Message();
 
@@ -363,7 +363,7 @@ class ApiMessageController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
                 }
                 if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                     return new JsonResponse(json_encode([
@@ -375,7 +375,7 @@ class ApiMessageController extends AbstractController
                     return new JsonResponse(json_encode([
                         'state' => 'DD',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
                 }
                 $message = new Message();
                 $message->setAuthorUser($this->getUser());
@@ -419,7 +419,7 @@ class ApiMessageController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'NDF',
                     'value' => 'message',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($message->getChat()->getProject()->getOwner() != $this->getUser() && !$message->getChat()->getProject()->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -431,7 +431,7 @@ class ApiMessageController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]), Response::HTTP_NOT_FOUND);
             }
             if ($message->getAuthorUser() != $this->getUser()) {
                 return new JsonResponse(json_encode([

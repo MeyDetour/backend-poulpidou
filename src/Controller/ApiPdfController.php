@@ -81,7 +81,7 @@ class ApiPdfController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -93,7 +93,7 @@ class ApiPdfController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]),Response::HTTP_NOT_FOUND);
             }
 
             $file = $request->files->get("pdf");
@@ -165,7 +165,7 @@ class ApiPdfController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -177,7 +177,7 @@ class ApiPdfController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]),Response::HTTP_NOT_FOUND);
             }
 
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
@@ -185,7 +185,7 @@ class ApiPdfController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'pdf',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
            $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
 
@@ -194,7 +194,7 @@ class ApiPdfController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'pdf',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             try {
 
@@ -234,7 +234,7 @@ class ApiPdfController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'project',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
                 return new JsonResponse(json_encode([
@@ -246,7 +246,7 @@ class ApiPdfController extends AbstractController
                 return new JsonResponse(json_encode([
                     'state' => 'DD',
                     'value' => 'project',
-                ]),Response::HTTP_UNPROCESSABLE_ENTITY);
+                ]),Response::HTTP_NOT_FOUND);
             }
 
 
@@ -255,7 +255,7 @@ class ApiPdfController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'pdf',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
             $filePath =$this->getParameter('upload_directory') . '/' . $pdf->getFileName();
 
@@ -264,7 +264,7 @@ class ApiPdfController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'pdf',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             }
 
             $filePath = 'pdf/' . $pdf->getFileName();

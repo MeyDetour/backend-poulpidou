@@ -108,7 +108,7 @@ class ApiUserController extends AbstractController
                  return new JsonResponse(json_encode([
                         'state' => 'NDF',
                         'value' => 'user',
-                    ]), Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ]), Response::HTTP_NOT_FOUND);
             } catch (\Exception $exception) {
                 return new JsonResponse(json_encode([
 
