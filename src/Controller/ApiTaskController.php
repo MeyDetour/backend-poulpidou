@@ -134,7 +134,7 @@ class ApiTaskController extends AbstractController
                 $this->entityManager->persist($task);
                 $this->entityManager->flush();
 
-                $this->reorderTask($task, 'waiting',$task, 0);
+                $this->reorderTask($project, 'waiting',$task, 0);
 
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
@@ -345,7 +345,6 @@ class ApiTaskController extends AbstractController
             $taskElement->setTaskOrder($order);
             $this->entityManager->persist($taskElement);
             $this->entityManager->flush();
-            dd($taskElement->getTaskOrder());
             return Null;
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
