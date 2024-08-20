@@ -352,7 +352,7 @@ class ApiTaskController extends AbstractController
                         'value' => 'order',
                     ]);
                 }
-                if (filter_var($data['order'], FILTER_VALIDATE_INT) === false || $data['order'] <= 0) {
+                if (filter_var($data['order'], FILTER_VALIDATE_INT) === false || $data['order'] < 0) {
                     return $this->json([
                         'state' => 'IDT',
                         'value' => 'order',
