@@ -1140,8 +1140,8 @@ class ApiProjectController extends AbstractController
     public function getProjectsToRender(ProjectRepository $repository, Request $request, EntityManagerInterface $manager): Response
     {
         try {
-            $projects = $this->getUser()->getProjects();
-            $authorizedProjects = $this->getUser()->getAutorisedInProjects();
+            $projects = $this->getUser()->getProjects()->toArray();
+            $authorizedProjects = $this->getUser()->getAutorisedInProjects()->toArray();
             $projects = array_merge($projects, $authorizedProjects);  // Fusionner les projets
             $data = [
                 'currents' => [],
