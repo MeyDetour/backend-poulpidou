@@ -1141,7 +1141,8 @@ class ApiProjectController extends AbstractController
     {
         try {
             $projects = $this->getUser()->getProjects();
-            $projects[] = [$this->getUser()->getAutorisedInProjects()];
+            $authorizedProjects = $this->getUser()->getAutorisedInProjects();
+            $projects = array_merge($projects, $authorizedProjects);  // Fusionner les projets
             $data = [
                 'currents' => [],
                 'others' => [],
