@@ -515,7 +515,7 @@ class ApiTaskController extends AbstractController
     }
 
     #[Route('/api/{id}/tasks', name: 'get_tasks', methods: 'get')]
-    public function getTasks(ProjectRepository $projectRepository, $id, Request $request, EntityManagerInterface $manager): Response
+    public function getTasks(ProjectRepository $projectRepository, $id, Request $request, EntityManagerInterface $manager, TaskRepository $taskRepository): Response
     {
         try {
             $project = $projectRepository->find($id);
@@ -537,7 +537,8 @@ class ApiTaskController extends AbstractController
                     'value' => 'project'
                 ]);
             }
-            $tasks = $project->getTasks();
+            $tasks = $taskRepository->findBy(['project'=>$project],['taskOrder'=>'ASC']);
+
             $data = [
                 'waiting' => [],
                 'progress' => [],
