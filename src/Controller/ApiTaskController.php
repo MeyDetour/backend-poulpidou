@@ -385,37 +385,41 @@ class ApiTaskController extends AbstractController
         }
     }
 
-    public function reorderTask($project, $col, $taskElement, $order)
+    public function reorderTask($project, $col, $taskElement, $newOrder)
     {
         try {
             $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col]);
+            $currentOrder = $taskElement->getTaskOrder();
+
             dump($tasks);
             foreach ($tasks as $task) {
                 if ($task != $taskElement) {
 
-                    if ($order != 0) {
-
-                        dump($task->getId(), $task != $taskElement);
-                        dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
-
-                        if ($order >= $taskElement->getTaskOrder() && $taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
-                            dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
-                            $task->setTaskOrder($task->getTaskOrder() - 1);
+                    if ($newOrder != 0) {
+                        if ($newOrder > $currentOrder) {
+                            foreach ($tasks as $task) {
+                                if ($task != $taskElement && $task->getTaskOrder() > $currentOrder && $task->getTaskOrder() <= $newOrder) {
+                                    $task->setTaskOrder($task->getTaskOrder() - 1);
+                                    $this->entityManager->persist($task);
+                                }
+                            }
                         }
-                        if ($taskElement->getTaskOrder() >= $order && $taskElement->getTaskOrder() >= $task->getTaskOrder() && $task->getTaskOrder() >= $order) {
-                            dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
-
-
+                        // Si le nouvel ordre est plus petit que l'ordre actuel
+                        elseif ($newOrder < $currentOrder) {
+                            foreach ($tasks as $task) {
+                                if ($task != $taskElement && $task->getTaskOrder() >= $newOrder && $task->getTaskOrder() < $currentOrder) {
+                                    $task->setTaskOrder($task->getTaskOrder() + 1);
+                                    $this->entityManager->persist($task);
+                                }
+                            }
                         }
-                        $this->entityManager->persist($task);
-
 
                     } else {
                         $task->setTaskOrder($task->getTaskOrder() + 1);
                     }
                 }
             }
-            $taskElement->setTaskOrder($order);
+            $taskElement->setTaskOrder($newOrder);
             $this->entityManager->persist($taskElement);
             dd($taskElement);
             $this->entityManager->flush();
