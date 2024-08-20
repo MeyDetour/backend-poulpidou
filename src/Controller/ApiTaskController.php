@@ -331,7 +331,6 @@ class ApiTaskController extends AbstractController
                     if ($task != $taskElement) {
                         dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
 
-                    else
                         if ($order >= $taskElement->getTaskOrder() && $taskElement->getTaskOrder() <= $task->getTaskOrder() && $task->getTaskOrder() <= $order) {
                             dump($taskElement->getTaskOrder() . ' to roder : ' . $order . '. STUDIYNG : ' . $task->getTaskOrder());
                             $task->setTaskOrder($task->getTaskOrder() - 1);
