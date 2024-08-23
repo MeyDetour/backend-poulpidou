@@ -354,6 +354,7 @@ class HomeController extends AbstractController
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
+                              "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
                             "client" => [
@@ -414,6 +415,7 @@ class HomeController extends AbstractController
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
+                            "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
                             "client_id" => null,
@@ -458,6 +460,7 @@ class HomeController extends AbstractController
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
+                              "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
                             "client" => [
@@ -540,6 +543,7 @@ class HomeController extends AbstractController
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
+                              "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
                             "client" => [
@@ -615,6 +619,7 @@ class HomeController extends AbstractController
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
+                              "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
                             "client" => [
@@ -747,6 +752,7 @@ class HomeController extends AbstractController
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
+                              "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
                             "client" => [
@@ -807,6 +813,7 @@ class HomeController extends AbstractController
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
+                              "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
                         ],
@@ -908,6 +915,7 @@ class HomeController extends AbstractController
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
+                              "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
                             "client" => [

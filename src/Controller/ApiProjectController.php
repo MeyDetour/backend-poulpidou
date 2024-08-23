@@ -1347,6 +1347,7 @@ class ApiProjectController extends AbstractController
                     "figmaLink" => $project->getFigmaLink(),
                     "githubLink" => $project->getGithubLink(),
                     "websiteLink" => $project->getWebsiteLink(),
+                    "startDateBaseFormat" => $this->dateService->baseFormateDate($project->getStartDate()),
                     "startDate" => $this->dateService->formateDate($project->getStartDate()),
                     "endDate" => $this->dateService->formateDate($project->getEndDate()),
                     "client" => $client,

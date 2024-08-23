@@ -24,7 +24,7 @@ class DateService
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
-        if($this->tokenStorage->getToken()){
+        if ($this->tokenStorage->getToken()) {
             $this->user = $this->tokenStorage->getToken()->getUser();
         }
     }
@@ -42,6 +42,16 @@ class DateService
 
     }
 
+    public function baseFormateDate($date)
+    {
+        if (!$date) {
+            return null;
+        }
+        return $date->format('d/m/Y');
+
+
+    }
+
     public function formateDateWithHour($date)
     {
         if ($date) {
@@ -54,7 +64,8 @@ class DateService
         return $date->format($this->association[$dataFormat] . ' H:i');
 
     }
-    public function formateDateWithUser($date,$user)
+
+    public function formateDateWithUser($date, $user)
     {
         if (!$date) {
             return null;
