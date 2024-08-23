@@ -382,7 +382,7 @@ class ApiTaskController extends AbstractController
             }
             array_splice($finalArray, $newOrder, 0, $taskElement);
 
-            foreach ($tasks as $key => $task) {
+            foreach ($finalArray as $key => $task) {
                 $task->setTaskOrder($key);
                 $this->entityManager->persist($task);
             }
@@ -406,12 +406,12 @@ class ApiTaskController extends AbstractController
             $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col], ['taskOrder' => 'ASC']);
             $tasks =  (array) $tasks;
             foreach ($tasks as $key => $task) {
-                dump($key);
+
                 $task->setTaskOrder($key);
                 $this->entityManager->persist($task);
             }
             $this->entityManager->flush();
-            dd("ok");
+
             return Null;
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
