@@ -391,6 +391,7 @@ class ApiTaskController extends AbstractController
                     throw new \Exception("Un élément du tableau final n'est pas un objet.");
                 }
             }
+            $this->entityManager->persist($taskElement);
             $this->entityManager->flush();
             return Null;
         } catch (\Exception $exception) {
