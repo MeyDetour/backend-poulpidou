@@ -1350,6 +1350,7 @@ class ApiProjectController extends AbstractController
                     "startDateBaseFormat" => $this->dateService->baseFormateDate($project->getStartDate()),
                     "startDate" => $this->dateService->formateDate($project->getStartDate()),
                     "endDate" => $this->dateService->formateDate($project->getEndDate()),
+                    "endDateBaseFormat" => $this->dateService->baseFormateDate($project->getEndDate()),
                     "client" => $client,
                     "chatName" => $chat,
                     "state" => $project->getState(),

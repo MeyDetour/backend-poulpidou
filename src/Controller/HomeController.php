@@ -357,6 +357,7 @@ class HomeController extends AbstractController
                               "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
+                            "endDateBaseFormat"=>null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -418,6 +419,7 @@ class HomeController extends AbstractController
                             "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
+                            "endDateBaseFormat"=>null,
                             "client_id" => null,
                         ],
 
@@ -463,6 +465,7 @@ class HomeController extends AbstractController
                               "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
+                            "endDateBaseFormat"=>null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -546,6 +549,7 @@ class HomeController extends AbstractController
                               "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
+                            "endDateBaseFormat"=>null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -622,6 +626,7 @@ class HomeController extends AbstractController
                               "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
+                            "endDateBaseFormat"=>null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -755,6 +760,7 @@ class HomeController extends AbstractController
                               "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
+                            "endDateBaseFormat"=>null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -816,6 +822,7 @@ class HomeController extends AbstractController
                               "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
+                            "endDateBaseFormat"=>null,
                         ],
 
                         "composition" => [
@@ -918,6 +925,7 @@ class HomeController extends AbstractController
                               "startDateBaseFormat" => "d/m/Y",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
+                            "endDateBaseFormat"=>null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
