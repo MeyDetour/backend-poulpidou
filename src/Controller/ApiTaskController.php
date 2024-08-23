@@ -265,6 +265,8 @@ class ApiTaskController extends AbstractController
 
 
                 $task->setCol($data['status']);
+                $task->setTaskOrder(0);
+
 
                 $entityManager->persist($task);
                 $entityManager->flush();
