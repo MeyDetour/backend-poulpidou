@@ -403,7 +403,7 @@ class ApiTaskController extends AbstractController
     public function reorderTaskInColumn($project, $col)
     {
         try {
-            $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col], ['taskOrder' => 'ASC']);
+            $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col], ['taskOrder' => 'ASC'])->toArray();
 
             foreach ($tasks as $key => $task) {
                 $task->setTaskOrder($key);
@@ -534,9 +534,9 @@ class ApiTaskController extends AbstractController
                     'value' => 'project',
                 ], Response::HTTP_NOT_FOUND);
             }
-            $tasksWaiting = $taskRepository->findBy(['project' => $project,"col"=>"waiting"], ['taskOrder' => 'ASC']);
-            $tasksProgress = $taskRepository->findBy(['project' => $project,"col"=>"progress"], ['taskOrder' => 'ASC']);
-            $tasksDone = $taskRepository->findBy(['project' => $project,"col"=>"done"], ['taskOrder' => 'ASC']);
+            $tasksWaiting = $taskRepository->findBy(['project' => $project, "col" => "waiting"], ['taskOrder' => 'ASC']);
+            $tasksProgress = $taskRepository->findBy(['project' => $project, "col" => "progress"], ['taskOrder' => 'ASC']);
+            $tasksDone = $taskRepository->findBy(['project' => $project, "col" => "done"], ['taskOrder' => 'ASC']);
             $this->reorderTaskInColumn($project, "waiting");
             $this->reorderTaskInColumn($project, "progress");
             $this->reorderTaskInColumn($project, "done");
