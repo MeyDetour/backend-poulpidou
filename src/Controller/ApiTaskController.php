@@ -404,7 +404,7 @@ class ApiTaskController extends AbstractController
     {
         try {
             $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col], ['taskOrder' => 'ASC']);
-            $tasks = $tasks->toArray();
+            $tasks =  (array) $tasks;
             foreach ($tasks as $key => $task) {
                 $task->setTaskOrder($key);
                 $this->entityManager->persist($task);
