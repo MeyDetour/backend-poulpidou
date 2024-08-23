@@ -403,8 +403,8 @@ class ApiTaskController extends AbstractController
     public function reorderTaskInColumn($project, $col)
     {
         try {
-            $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col], ['taskOrder' => 'ASC'])->toArray();
-
+            $tasks = $this->taskRepository->findBy(['project' => $project, 'col' => $col], ['taskOrder' => 'ASC']);
+         $tasks =    $tasks->toArray();
             foreach ($tasks as $key => $task) {
                 $task->setTaskOrder($key);
                 $this->entityManager->persist($task);
