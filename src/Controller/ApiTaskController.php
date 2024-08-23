@@ -376,15 +376,20 @@ class ApiTaskController extends AbstractController
 
             $finalArray = [];
             foreach ($tasks as $task) {
-                if ($task != $taskElement) {
+                if (is_object($task) && $task != $taskElement) {
                     $finalArray[] = $task;
                 }
             }
             array_splice($finalArray, $newOrder, 0, $taskElement);
 
             foreach ($finalArray as $key => $task) {
-                $task->setTaskOrder($key);
-                $this->entityManager->persist($task);
+                if (is_object($task)) {
+                    $task->setTaskOrder($key);
+                    $this->entityManager->persist($task);
+                } else {
+                    // Gestion d'erreur si $task n'est pas un objet
+                    throw new \Exception("Un élément du tableau final n'est pas un objet.");
+                }
             }
             $this->entityManager->flush();
             return Null;
