@@ -534,16 +534,19 @@ class ApiTaskController extends AbstractController
                     'value' => 'project',
                 ], Response::HTTP_NOT_FOUND);
             }
-            $tasks = $taskRepository->findBy(['project' => $project], ['taskOrder' => 'ASC']);
+            $tasksWaiting = $taskRepository->findBy(['project' => $project,"col"=>"waiting"], ['taskOrder' => 'ASC']);
+            $tasksProgress = $taskRepository->findBy(['project' => $project,"col"=>"progress"], ['taskOrder' => 'ASC']);
+            $tasksDone = $taskRepository->findBy(['project' => $project,"col"=>"done"], ['taskOrder' => 'ASC']);
+            $this->reorderTaskInColumn($project, "waiting");
+            $this->reorderTaskInColumn($project, "progress");
+            $this->reorderTaskInColumn($project, "done");
 
             $data = [
-                'waiting' => [],
-                'progress' => [],
-                'done' => []
+                'waiting' => $tasksWaiting,
+                'progress' => $tasksProgress,
+                'done' => $tasksDone
             ];
-            foreach ($tasks as $task) {
-                $data[$task->getCol()][] = $this->getData($task);
-            }
+
 
             return new JsonResponse(
                 [
