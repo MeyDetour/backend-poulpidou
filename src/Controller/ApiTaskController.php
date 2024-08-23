@@ -245,7 +245,7 @@ class ApiTaskController extends AbstractController
                     'value' => 'project',
                 ], Response::HTTP_NOT_FOUND);
             }
-            $lastColumnStatus = $task->getStatus();
+            $lastColumnStatus = $task->getCol();
             $data = json_decode($request->getContent(), true);
             if ($data) {
 
