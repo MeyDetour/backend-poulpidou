@@ -20,8 +20,8 @@ class Task
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tasks')]
-    private ?Category $category = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -70,12 +70,12 @@ class Task
         return $this;
     }
 
-    public function getCategory(): ?Category
+    public function getCategory(): ?string
     {
         return $this->category;
     }
 
-    public function setCategory(?Category $category): static
+    public function setCategory(?string $category): static
     {
         $this->category = $category;
 

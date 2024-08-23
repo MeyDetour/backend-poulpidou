@@ -1020,10 +1020,6 @@ class ApiProjectController extends AbstractController
             $message = ' Delete force Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')';
 
 
-            foreach ($project->getCategories() as $category) {
-
-                $manager->remove($category);
-            }
             foreach ($project->getTasks() as $task) {
                 $manager->remove($task);
             }

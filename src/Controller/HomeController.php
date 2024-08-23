@@ -1512,7 +1512,7 @@ class HomeController extends AbstractController
                     'parametres a mettre dans le body' => [
                         'name' => null,
                         'content' => null,
-                        'category_id' => null,
+                        'category' => "string",
                         'project_id' => null,
                         'dueDate' => 'to formate d/m/y',
                     ],
@@ -1534,7 +1534,7 @@ class HomeController extends AbstractController
                     'parametres a mettre dans le body' => [
                         'name' => null,
                         'content' => null,
-                        'category_id' => null,
+                        'category' => "string",
                         'dueDate' => 'to formate d/m/y',
                     ],
                     'utilisation' => "modifier  une tache ",
@@ -1622,68 +1622,7 @@ class HomeController extends AbstractController
                     'utilisation' => "obtenir une tache  ",
                     'need token ? ' => true],
             ]
-            ,
-            'category' => [
-                [
-                    "Creer une category " => '/api/category/new',
-                    'methode' => 'post',
-                    "renvoie :" => [
 
-                        'id' => null,
-                        'name' => null,
-                        'tasksNumber' => null,
-
-                    ],
-                    'parametres a mettre dans le body' => [
-                        'name' => null,
-                    ],
-                    'utilisation' => " creer une category",
-                    'need token ? ' => true],
-                [
-                    "editer une category " => '/api/category/{id}/edit',
-                    'methode' => 'put',
-                    "renvoie :" => [
-
-                        'id' => null,
-                        'name' => null,
-                        'tasksNumber' => null,
-
-                    ],
-                    'parametres a mettre dans le body' => [
-                        'name' => null,
-                    ],
-                    'utilisation' => " editer une category",
-                    'need token ? ' => true],
-                [
-                    "supprimer une category " => '/api/category/{id}/delete',
-                    'methode' => 'delete',
-                    "renvoie :" => "ok",
-                    'parametres a mettre dans le body' => "nothing",
-                    'utilisation' => " supprimer une category",
-                    'need token ? ' => true],
-                [
-                    "get categories " => '/api/{id du projet}/categories',
-                    'methode' => 'delete',
-                    "renvoie :" => [
-                        [
-
-                            'id' => null,
-                            'name' => null,
-                            'tasksNumber' => null,
-
-                        ],
-                        [
-
-                            'id' => null,
-                            'name' => null,
-                            'tasksNumber' => null,
-
-                        ]
-                    ],
-                    'parametres a mettre dans le body' => "nothing",
-                    'utilisation' => " obtenir toutes les categories d'un projet ",
-                    'need token ? ' => true]
-            ]
         ]);
     }
     /* #[Route('/api/template', name: 'template', methods: 'post')]

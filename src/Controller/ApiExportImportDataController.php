@@ -116,21 +116,18 @@ class ApiExportImportDataController extends AbstractController
 
                     }
 
-                    $categories = [];
-                    foreach ($project->getCategories() as $category) {
-                        $tasks = [];
-                        foreach ($category->getTasks() as $task) {
-                            $tasks[] = ['name' => $task->getName(),
-                                'content' => $task->getDescription(),
-                                'status' => $task->getCol(),
-                                'dueDate' => $task->getDueDate()->format('d/m/Y H:i'),
-                                'author' => $task->getOwner()->getEmail()
-                            ];
-                        }
-                        $categories[] = [
-                            "name" => $categories->getName(),
-                            "tasks" => $tasks];
+
+                    $tasks = [];
+                    foreach ($project->getTasks() as $task) {
+                        $tasks[] = ['name' => $task->getName(),
+                            'content' => $task->getDescription(),
+                            'status' => $task->getCol(),
+                            'dueDate' => $task->getDueDate()->format('d/m/Y H:i'),
+                            'author' => $task->getOwner()->getEmail(),
+                            'category' => $task->getCategory()
+                        ];
                     }
+
                     $projects[] = [
                         "totalPrice" => $project->getTotalPrice(),
                         "estimatedPrice" => $project->getEstimatedPrice(),
@@ -174,7 +171,7 @@ class ApiExportImportDataController extends AbstractController
                             'devices' => !empty($project->getDevice()) ? explode(',', $project->getDevice()) : [],
 
                         ],
-                        "categories" => $categories,
+                        "tasks" => $tasks,
                     ];
                 }
 
@@ -200,7 +197,6 @@ class ApiExportImportDataController extends AbstractController
                 $fileSystem->dumpFile($fileName, $json);
                 return $this->json($json);
                 return $this->file($fileName, $todayDate->format('YmdHis') . '.poulpidou', ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-
 
 
             } catch (IOException $e) {
@@ -335,31 +331,29 @@ class ApiExportImportDataController extends AbstractController
                         !isset($projectData['identity']) ||
                         !isset($projectData['rules']) ||
                         !isset($projectData['composition']) ||
-                        !isset($projectData['categories'])
+                        !isset($projectData['tasks']) ||
+                        !is_array($projectData['tasks'])
 
                     ) {
                         return $this->error();
                     }
 
                     //==== verifying Tasks ====
-                    foreach ($projectData['categories'] as $categoryData) {
-                        if (!$this->verifyType($categoryData, "name", 'string') || !is_array($categoryData['tasks'])) {
+                    foreach ($projectData['tasks'] as $taskData) {
+
+                        if (
+                            !$this->verifyType($taskData, "name", 'string') ||
+                            !$this->verifyType($taskData, "content", 'string') ||
+                            !$this->verifyType($taskData, "status", 'string') ||
+                            !$this->verifyType($taskData, "author", 'string') ||
+                            !$this->verifyType($taskData, "dueDate", 'datetime')
+                        ) {
                             return $this->error();
                         }
-                        foreach ($categoryData['tasks'] as $taskData) {
-                            if (
-                                !$this->verifyType($taskData, "name", 'string') ||
-                                !$this->verifyType($taskData, "content", 'string') ||
-                                !$this->verifyType($taskData, "status", 'string') ||
-                                !$this->verifyType($taskData, "author", 'string') ||
-                                !$this->verifyType($taskData, "dueDate", 'datetime')
-                            ) {
-                                return $this->error();
-                            }
-                            if (!in_array($taskData['status'], ['waiting', 'progress', 'done'])) {
-                                return $this->error();
-                            }
+                        if (!in_array($taskData['status'], ['waiting', 'progress', 'done'])) {
+                            return $this->error();
                         }
+
                     }
 
 
@@ -556,44 +550,38 @@ class ApiExportImportDataController extends AbstractController
                     }
 
                     //  IMPORT TASKS
-                    foreach ($projectData['categories'] as $categoryData) {
-                        $cat = new Category();
-                        $cat->setName($categoryData['name']);
-                        $cat->setProject($project);
-                        $entityManager->persist($cat);
-                        $entityManager->flush();
-                        foreach ($categoryData['tasks'] as $taskData) {
-                            $task = new Task();
-                            $task->setName($taskData['name']);
-                            $task->setCol($taskData['status']);
-                            $task->setProject($project);
-                            $task->setDescription($taskData['content']);
-                            $task->setCategory($cat);
-                            $task->setDueDate($this->verifyType($taskData, "dueDate", 'datetime'));
-                            $userToAdd = $userRepository->findOneBy(['mail' => $taskData['author']]);
-                            if (!$userToAdd) {
-                                $task->setOwner($unknowUser);
-                            } else {
-                                $task->setOwner($userToAdd);
-                            }
-                            $entityManager->persist($task);
 
+                    foreach ($projectData['tasks'] as $taskData) {
+                        $task = new Task();
+                        $task->setName($taskData['name']);
+                        $task->setCol($taskData['status']);
+                        $task->setProject($project);
+                        $task->setDescription($taskData['content']);
+                        $task->setCategory($taskData['category']);
+                        $task->setDueDate($this->verifyType($taskData, "dueDate", 'datetime'));
+                        $userToAdd = $userRepository->findOneBy(['mail' => $taskData['author']]);
+                        if (!$userToAdd) {
+                            $task->setOwner($unknowUser);
+                        } else {
+                            $task->setOwner($userToAdd);
                         }
-                        $entityManager->flush();
+                        $entityManager->persist($task);
+
                     }
                     $entityManager->flush();
+
 
                 } catch
                 (\Exception $exception) {
 
                 }
 
-                return new JsonResponse([
-                        'state' => 'OK',
-                    ]
-                    , Response::HTTP_OK);
-            }
 
+            }
+            return new JsonResponse([
+                    'state' => 'OK',
+                ]
+                , Response::HTTP_OK);
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());

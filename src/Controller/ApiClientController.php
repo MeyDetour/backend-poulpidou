@@ -261,10 +261,7 @@ class ApiClientController extends AbstractController
 
             foreach ($client->getProjects() as $project) {
 
-                foreach ($project->getCategories() as $category) {
 
-                    $manager->remove($category);
-                }
                 foreach ($project->getTasks() as $task) {
                     $manager->remove($task);
                 }

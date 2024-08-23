@@ -32,7 +32,7 @@ class ApiTaskController extends AbstractController
     }
 
     #[Route('/api/task/new', name: 'new_api_task', methods: ['post'])]
-    public function newTask(ProjectRepository $projectRepository, Request $request, CategoryRepository $categoryRepository): Response
+    public function newTask(ProjectRepository $projectRepository, Request $request ): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -79,33 +79,8 @@ class ApiTaskController extends AbstractController
                 }
                 $task->setProject($project);
 
-                if (isset($data['category_id'])) {
-                    if (!is_numeric($data['category_id'])) {
-                        return new JsonResponse( [
-                            'state' => 'IDT',
-                            'value' => 'category_id',
-                        ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
-                    }
-                    $cat = $categoryRepository->find($data['category_id']);
-                    if (!$cat) {
-                         return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'category',
-                     ] , Response::HTTP_NOT_FOUND);
-                    }
-
-                    if ($cat->getProject()->getOwner() != $this->getUser() && !$cat->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                        return new JsonResponse( [
-                            'state' => 'FO',
-                            'value' => 'category',
-                         ] , Response::HTTP_FORBIDDEN);
-                    }
-                    if ($cat->getProject()->getState() == 'deleted') {
-                        return new JsonResponse( [
-                            'state' => 'DD',
-                            'value' => 'project',
-                         ] , Response::HTTP_NOT_FOUND);
-                    }
+                if (isset($data['category']) && !empty(trim($data['category']))) {
+                   $task->setCategory($data['category']);
                 }
 
                 if (isset($data['dueDate']) && !empty(trim($data['dueDate']))) {
@@ -162,7 +137,7 @@ class ApiTaskController extends AbstractController
     }
 
     #[Route('/api/task/{id}/edit', name: 'edit_api_task', methods: ['PUT'])]
-    public function editTask(EntityManagerInterface $entityManager, $id, Request $request, CategoryRepository $categoryRepository, TaskRepository $repository): Response
+    public function editTask(EntityManagerInterface $entityManager, $id, Request $request , TaskRepository $repository): Response
     {
         try {
             $task = $repository->find($id);
@@ -195,35 +170,8 @@ class ApiTaskController extends AbstractController
                      ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
-                if (isset($data['category_id'])) {
-
-                    if (!is_numeric($data['category_id'])) { return new JsonResponse( [
-                        'state' => 'IDT',
-                        'value' => 'category_id',
-                    ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
-                    }
-
-                    $cat = $categoryRepository->find($data['category_id']);
-                    if (!$cat) {
-                         return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'category',
-                     ] , Response::HTTP_NOT_FOUND);
-                    }
-
-                    if ($cat->getProject()->getOwner() != $this->getUser() && !$cat->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                        return new JsonResponse( [
-                            'state' => 'FO',
-                            'value' => 'category',
-                         ] , Response::HTTP_FORBIDDEN);
-                    }
-                    if ($cat->getProject()->getState() == 'deleted') {
-                        return new JsonResponse( [
-                            'state' => 'DD',
-                            'value' => 'project',
-                         ] , Response::HTTP_NOT_FOUND);
-                        $task->setCategory($cat);
-                    }
+                if (isset($data['category_id'])|| !empty(trim($data['category']))) {
+                    $task->setCategory($data['category']);
                 }
                 if (isset($data['dueDate']) && !empty(trim($data['dueDate']))) {
 
@@ -274,7 +222,7 @@ class ApiTaskController extends AbstractController
     }
 
     #[Route('/api/task/{id}/edit/status', name: 'edit_status_api_task', methods: ['PUT'])]
-    public function editTaskStatut(EntityManagerInterface $entityManager, $id, Request $request, CategoryRepository $categoryRepository, TaskRepository $repository): Response
+    public function editTaskStatut(EntityManagerInterface $entityManager, $id, Request $request,  TaskRepository $repository): Response
     {
         try {
             $task = $repository->find($id);
@@ -344,7 +292,7 @@ class ApiTaskController extends AbstractController
     }
 
     #[Route('/api/task/{id}/edit/order', name: 'edit_order_api_task', methods: ['PUT'])]
-    public function editTaskOrder(EntityManagerInterface $entityManager, $id, Request $request, CategoryRepository $categoryRepository, TaskRepository $repository): Response
+    public function editTaskOrder(EntityManagerInterface $entityManager, $id, Request $request,  TaskRepository $repository): Response
     {
         try {
             $task = $repository->find($id);
@@ -613,15 +561,12 @@ class ApiTaskController extends AbstractController
 
     public function getData($task)
     {
-        $categorName = null;
-        if ($task->getCategory() != null) {
-            $categorName = $task->getCategory()->getName();
-        }
+
         return [
             'id' => $task->getId(),
             'name' => $task->getName(),
             'content' => $task->getDescription(),
-            'category' => $categorName,
+            'category' => $task->getCategory(),
             'status' => $task->getCol(),
             'order' => $task->getTaskOrder(),
             'dueDate' => $this->dateService->formateDate($task->getDueDate()),
