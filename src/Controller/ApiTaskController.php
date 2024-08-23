@@ -380,8 +380,9 @@ class ApiTaskController extends AbstractController
                     $finalArray[] = $task;
                 }
             }
-            array_splice($finalArray, $newOrder, 0, $taskElement);
-
+            dump($finalArray);
+            array_splice($finalArray, $newOrder, 0, [$taskElement]);
+dd($finalArray);
             foreach ($finalArray as $key => $task) {
                 if (is_object($task)) {
                     $task->setTaskOrder($key);
