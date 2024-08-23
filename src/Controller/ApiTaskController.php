@@ -345,7 +345,7 @@ class ApiTaskController extends AbstractController
                         ]
                         , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
-dd($task,$data['order']);
+            $task->setTaskOrder($data['order']);
                 $this->reorderTask($task->getProject(), $task->getCol(), $task, $data['order']);
 
 
