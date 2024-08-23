@@ -47,7 +47,7 @@ class DateService
         if (!$date) {
             return null;
         }
-        return $date->format('d/m/Y');
+        return $date->format('Y-m-d');
 
 
     }
