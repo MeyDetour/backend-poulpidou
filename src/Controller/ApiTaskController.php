@@ -198,6 +198,7 @@ class ApiTaskController extends AbstractController
                 $entityManager->persist($task);
                 $entityManager->flush();
 
+
                 $this->logService->createLog('ACTION', ' Edit Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
                 return new JsonResponse( [
@@ -270,6 +271,7 @@ class ApiTaskController extends AbstractController
 
                 $entityManager->persist($task);
                 $entityManager->flush();
+                $this->reorderTask($task->getProject(), $data['status'], $task, 0);
 
                 $this->logService->createLog('ACTION', ' Edit Status of Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
