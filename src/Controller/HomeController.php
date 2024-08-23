@@ -360,7 +360,8 @@ class HomeController extends AbstractController
                                 "id" => 25,
                                 "firstName" => "Mey ",
                                 "lastName" => "DETOUR",
-                                "online" => false
+                                "online" => false,
+                                'email' => null,
                             ],
                             "owner" => [
                                 'email' => null,
@@ -463,7 +464,8 @@ class HomeController extends AbstractController
                                 "id" => 25,
                                 "firstName" => "Mey ",
                                 "lastName" => "DETOUR",
-                                "online" => false
+                                "online" => false,
+                                'email' => null,
                             ],
                             "owner" => [
                                 'email' => null,
@@ -544,7 +546,8 @@ class HomeController extends AbstractController
                                 "id" => 25,
                                 "firstName" => "Mey ",
                                 "lastName" => "DETOUR",
-                                "online" => false
+                                "online" => false,
+                                'email' => null,
                             ],
                             "owner" => [
                                 'email' => null,
@@ -618,7 +621,8 @@ class HomeController extends AbstractController
                                 "id" => 25,
                                 "firstName" => "Mey ",
                                 "lastName" => "DETOUR",
-                                "online" => false
+                                "online" => false,
+                                'email' => null,
                             ],
                             "owner" => [
                                 'email' => null,
@@ -749,7 +753,8 @@ class HomeController extends AbstractController
                                 "id" => 25,
                                 "firstName" => "Mey ",
                                 "lastName" => "DETOUR",
-                                "online" => false
+                                "online" => false,
+                                'email' => null,
                             ],
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
@@ -909,7 +914,8 @@ class HomeController extends AbstractController
                                 "id" => 25,
                                 "firstName" => "Mey ",
                                 "lastName" => "DETOUR",
-                                "online" => false
+                                "online" => false,
+                                'email' => null,
                             ],
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",

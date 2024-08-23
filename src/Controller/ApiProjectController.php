@@ -1440,6 +1440,7 @@ class ApiProjectController extends AbstractController
                     'id' => $project->getClient()->getId(),
                     'firstName' => $project->getClient()->getFirstName(),
                     'lastName' => $project->getClient()->getLastName(),
+                    'email' => $project->getClient()->getMail(),
                     'date' => $this->dateService->formateDate($project->getClient()->getCreatedAt()),
                 ];
 
