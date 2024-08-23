@@ -120,11 +120,6 @@ class Project
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'project')]
     private Collection $tasks;
 
-    /**
-     * @var Collection<int, Category>
-     */
-    #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'project')]
-    private Collection $categories;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $websiteLink = null;
@@ -144,7 +139,6 @@ class Project
         $this->pdfs = new ArrayCollection();
         $this->userAuthorised = new ArrayCollection();
         $this->tasks = new ArrayCollection();
-        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
