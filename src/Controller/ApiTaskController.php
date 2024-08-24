@@ -79,6 +79,26 @@ class ApiTaskController extends AbstractController
                 }
                 $task->setProject($project);
 
+                if (!isset($data['status']) || empty(trim($data['status']))) {
+                    return new JsonResponse([
+                        'state' => 'NED',
+                        'value' => 'status',
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+                if (!in_array($data['status'], $this->statusArray)) {
+
+                    return new JsonResponse([
+                            'state' => 'IDV',
+                            'value' => 'status',
+                        ]
+                        , Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+                $task->setCol($data['status']);
+                $task->setTaskOrder(0);
+
+
+
+
                 if (isset($data['category']) && !empty(trim($data['category']))) {
                     $task->setCategory($data['category']);
                 }
@@ -104,14 +124,12 @@ class ApiTaskController extends AbstractController
 
                 $task->setName($data['name']);
                 $task->setOwner($this->getUser());
-                $task->setCol('waiting');
-                $task->setTaskOrder(0);
 
 
                 $this->entityManager->persist($task);
                 $this->entityManager->flush();
 
-                $this->reorderTask($project, 'waiting', $task, 0);
+                $this->reorderTask($project, $data['status'], $task, 0);
 
                 $this->logService->createLog('ACTION', ' Create Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
