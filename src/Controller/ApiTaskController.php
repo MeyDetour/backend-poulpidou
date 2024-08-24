@@ -215,8 +215,11 @@ class ApiTaskController extends AbstractController
                             ]
                             , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-                    $task->setCol($data['status']);
-                    $task->setTaskOrder(0);
+                    if($task->getCategory() != $data['status']){
+                        $task->setCol($data['status']);
+                        $task->setTaskOrder(0);
+                    }
+
 
 
                 }

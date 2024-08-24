@@ -54,7 +54,10 @@ class ClientRepository extends ServiceEntityRepository
             ->select('c')
             ->from(Client::class, 'c')
             ->leftJoin('c.projects', 'p')
-            ->leftJoin('c.chats', 'ch');
+            ->leftJoin('c.chats', 'ch')
+            ->where($queryBuilder->expr()->neq('cl.state', ':deletedStates'))
+            ->andWhere($queryBuilder->expr()->neq('p.state', ':deletedStates'))
+            ->setParameter('deletedStates', 'deleted');
 
         $clientConditions = $queryBuilder->expr()->orX(
             $queryBuilder->expr()->like('c.firstName', ':searchTerm'),
@@ -67,6 +70,7 @@ class ClientRepository extends ServiceEntityRepository
         );
         $projectConditions = $queryBuilder->expr()->orX(
             $queryBuilder->expr()->like('p.name', ':searchTerm'),
+            $queryBuilder->expr()->like('p.note', ':searchTerm'),
             $queryBuilder->expr()->neq('p.state', ':deletedStates')
 
         );

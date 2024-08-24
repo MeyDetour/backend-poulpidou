@@ -107,6 +107,8 @@ class ApiProjectController extends AbstractController
 
                 if (isset($data['identity']['figmaLink']) && !empty(trim($data['identity']['figmaLink']))) {
                     $project->setFigmaLink($data['identity']['figmaLink']);
+                } if (isset($data['identity']['note']) && !empty(trim($data['identity']['note']))) {
+                    $project->setNote($data['identity']['note']);
                 }
                 if (isset($data['identity']['githubLink']) && !empty(trim($data['identity']['githubLink']))) {
                     $project->setGithubLink($data['identity']['githubLink']);
@@ -400,7 +402,9 @@ class ApiProjectController extends AbstractController
                     if (isset($data['identity']['githubLink']) && !empty(trim($data['identity']['githubLink']))) {
                         $project->setGithubLink($data['identity']['githubLink']);
                     }
-
+                    if (isset($data['identity']['note']) && !empty(trim($data['identity']['note']))) {
+                        $project->setNote($data['identity']['note']);
+                    }
                     if (isset($data['identity']['startDate']) && !empty(trim($data['identity']['startDate']))) {
 
                         $searchDate = \DateTime::createFromFormat('d/m/Y', $data['identity']['startDate']);
@@ -1344,6 +1348,7 @@ class ApiProjectController extends AbstractController
                     "id" => $project->getId(),
                     'uuid' => $project->getUuid(),
                     "name" => $project->getName(),
+                    "note" => $project->getNote(),
                     "figmaLink" => $project->getFigmaLink(),
                     "githubLink" => $project->getGithubLink(),
                     "websiteLink" => $project->getWebsiteLink(),

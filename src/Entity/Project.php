@@ -133,6 +133,9 @@ class Project
     #[ORM\Column]
     private ?bool $isCurrent = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $note = null;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
@@ -621,6 +624,18 @@ class Project
     public function setCurrent(bool $isCurrent): static
     {
         $this->isCurrent = $isCurrent;
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(?string $note): static
+    {
+        $this->note = $note;
 
         return $this;
     }

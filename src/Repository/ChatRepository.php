@@ -71,7 +71,8 @@ class ChatRepository extends ServiceEntityRepository
             $queryBuilder->expr()->like('cl.siret', ':searchTerm')
         );
         $projectConditions = $queryBuilder->expr()->orX(
-            $queryBuilder->expr()->like('p.name', ':searchTerm')
+            $queryBuilder->expr()->like('p.name', ':searchTerm'),
+            $queryBuilder->expr()->like('p.note', ':searchTerm')
         );
 
         $queryBuilder->andWhere(

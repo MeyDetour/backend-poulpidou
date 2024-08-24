@@ -59,14 +59,8 @@ class ProjectRepository extends ServiceEntityRepository
         );
         $projectConditions = $queryBuilder->expr()->orX(
             $queryBuilder->expr()->like('p.name', ':searchTerm'),
-            $queryBuilder->expr()->like('c.firstName', ':searchTerm'),
-            $queryBuilder->expr()->like('c.lastName', ':searchTerm'),
-            $queryBuilder->expr()->like('c.job', ':searchTerm'),
-            $queryBuilder->expr()->like('c.location', ':searchTerm'),
-            $queryBuilder->expr()->like('c.mail', ':searchTerm'),
-            $queryBuilder->expr()->like('c.phone', ':searchTerm'),
-            $queryBuilder->expr()->like('c.siret', ':searchTerm')
-        );
+            $queryBuilder->expr()->like('p.note', ':searchTerm'),
+          );
         $clientConditions = $queryBuilder->expr()->orX(
             $queryBuilder->expr()->like('c.firstName', ':searchTerm'),
             $queryBuilder->expr()->like('c.lastName', ':searchTerm'),

@@ -351,6 +351,7 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
@@ -413,6 +414,7 @@ class HomeController extends AbstractController
                         "maintenancePercentage" => 10,
                         "identity" => [
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
@@ -459,6 +461,7 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
@@ -543,6 +546,7 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
@@ -620,6 +624,7 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
@@ -754,6 +759,7 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
@@ -816,6 +822,7 @@ class HomeController extends AbstractController
                         "maintenancePercentage" => 10,
                         "identity" => [
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
@@ -919,6 +926,7 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
@@ -1274,6 +1282,7 @@ class HomeController extends AbstractController
                         [
                             "id" => 35,
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -1283,6 +1292,7 @@ class HomeController extends AbstractController
                         ], [
                             "id" => 35,
                             "name" => "nouveau 2",
+                            "note"=>null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
