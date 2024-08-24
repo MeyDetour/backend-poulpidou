@@ -184,20 +184,35 @@ class ApiTaskController extends AbstractController
                     }
                     $task->setDueDate($searchDate);
                 }
-
-
                 if (isset($data['content']) && !empty(trim($data['content']))) {
-
                     $task->setDescription($data['content']);
                 }
+                $lastColumnStatus = null;
+                if (isset($data['status']) && !empty(trim($data['status']))) {
+                    $lastColumnStatus = $task->getCol();
+                    if (!in_array($data['status'], $this->statusArray)) {
+                        return new JsonResponse([
+                                'state' => 'IDV',
+                                'value' => 'status',
+                            ]
+                            , Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    $task->setCol($data['status']);
+                    $task->setTaskOrder(0);
 
 
-                $task->setName($data['name']);
+                }
+                    $task->setName($data['name']);
                 $task->setOwner($this->getUser());
 
                 $entityManager->persist($task);
                 $entityManager->flush();
 
+                if(isset($data['status']) && !empty(trim($data['status']))){
+                    $this->reorderTask($task->getProject(), $data['status'], $task, 0);
+                    $this->reorderTaskInColumn($task->getProject(), $lastColumnStatus);
+
+                }
 
                 $this->logService->createLog('ACTION', ' Edit Task (' . $task->getId() . ':' . $task->getName() . ') for project : ' . $task->getProject()->getName() . ' ), action by ' . $this->getUser()->getEmail());
 
@@ -252,7 +267,7 @@ class ApiTaskController extends AbstractController
                 if (!isset($data['status']) || empty(trim($data['status']))) {
                     return new JsonResponse([
                         'state' => 'NED',
-                        'value' => 'name',
+                        'value' => 'status',
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!in_array($data['status'], $this->statusArray)) {
