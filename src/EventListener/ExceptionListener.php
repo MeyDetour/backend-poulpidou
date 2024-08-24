@@ -1,4 +1,5 @@
 <?php
+
 namespace App\EventListener;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,7 +13,8 @@ class ExceptionListener
         $exception = $event->getThrowable();
         $response = new JsonResponse([
             'state' => 'ISE',
-            'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine() 
+            'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine(),
+            "for my bitch" => "<3 <3 <3"
         ]);
 
         if ($exception instanceof HttpExceptionInterface) {
