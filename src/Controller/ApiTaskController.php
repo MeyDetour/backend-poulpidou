@@ -170,7 +170,7 @@ class ApiTaskController extends AbstractController
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
-                if (array_key_exists('category',$data) || !empty(trim($data['category']))) {
+                if (array_key_exists('category',$data) && !empty(trim($data['category']))) {
                     $task->setCategory($data['category']);
                 }
                 if (isset($data['dueDate']) && !empty(trim($data['dueDate']))) {
