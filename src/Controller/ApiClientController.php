@@ -481,6 +481,18 @@ class ApiClientController extends AbstractController
             }
 
             $client = $project->getClient();
+            if ($project->getState() == 'deleted') {
+                return new JsonResponse( [
+                    'state' => 'DD',
+                    'value' => 'project',
+                ] , Response::HTTP_NOT_FOUND);
+            }
+            if ($client->getState() == 'deleted') {
+                return new JsonResponse( [
+                    'state' => 'DD',
+                    'value' => 'client',
+                ] , Response::HTTP_NOT_FOUND);
+            }
             $settings = $project->getOwner()->getSetting();
 
 
