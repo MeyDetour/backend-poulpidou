@@ -264,7 +264,7 @@ class HomeController extends AbstractController
                     'need token ? ' => true],
 
                 [
-                    'get all chats of client' => '/api/client/{id du client}/chat/',
+                    'get all chats of client' => '/api/client/{id du client}/chats',
                     'methode' => 'get',
                     "renvoie :" => [
                         [

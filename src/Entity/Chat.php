@@ -43,6 +43,9 @@ class Chat
     #[ORM\orderBy(['createdAt' => 'DESC'])]
     private Collection $messages;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $read = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -152,6 +155,21 @@ class Chat
                 $message->setChat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isRead(): ?bool
+    {
+        if($this->read() == null){
+          return false;
+        }
+        return $this->read;
+    }
+
+    public function setRead(?bool $read): static
+    {
+        $this->read = $read;
 
         return $this;
     }

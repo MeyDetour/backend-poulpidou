@@ -35,11 +35,20 @@ class ApiMessageController extends AbstractController
     {
         try {
 
-            $data = [];
+            $data = [
+                'read'=>[],
+                'unread'=>[]
+            ];
             foreach ($this->getUser()->getChats() as $chat) {
 
                 if (($chat->getProject()->getOwner() == $this->getUser() || $chat->getProject()->hasUserInUserAuthorised($this->getUser())) && $chat->getProject()->getState() != 'deleted') {
-                    $data[] = $this->chatDataShortData($chat);
+
+                   if ($chat->isRead()){
+
+                       $data['read'] = $this->chatDataShortData($chat);
+                   }else{
+                       $data['unread'] = $this->chatDataShortData($chat);
+                   }
                 }
 
             }
@@ -93,7 +102,9 @@ class ApiMessageController extends AbstractController
                     'value' => 'project',
                  ] , Response::HTTP_NOT_FOUND);
             }
-
+            $chat->setRead(true);
+            $manager->persist($chat);
+            $manager->flush();
             return new JsonResponse( [
                     'state' => 'OK', "value" => $this->chatData($chat)
                 ]
@@ -113,7 +124,7 @@ class ApiMessageController extends AbstractController
         }
     }
 
-    #[Route('/api/client/{id}/chat', name: 'api_get_chats_of_client', methods: ['get'])]
+    #[Route('/api/client/{id}/chats', name: 'api_get_chats_of_client', methods: ['get'])]
     public function getChatClient($id, ClientRepository $clientRepository, MessageRepository $messageRepository): Response
     {
         try {
@@ -257,7 +268,7 @@ class ApiMessageController extends AbstractController
     }
 
     #[Route('/message', name: 'new_message', methods: ['post'])]
-    public function index(Request $request, ProjectRepository $projectRepository): Response
+    public function index(Request $request, ProjectRepository $projectRepository, EntityManagerInterface $entityManager ): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -295,7 +306,10 @@ class ApiMessageController extends AbstractController
                 }
                 $message = new Message();
 
-
+                $chat = $message->getChat();
+                $chat->setRead(false);
+                $entityManager->persist($chat);
+                $entityManager->flush();
                 $message->setClient($project->getClient());
                 if ($this->newMessage($message, $data['content'], $project)) {
                     return new JsonResponse( [
@@ -306,7 +320,7 @@ class ApiMessageController extends AbstractController
 
 
                 return new JsonResponse( [
-                        'state' => 'OK', 'value' => 'failed to send message'
+                        'state' => 'ASFO', 'value' => 'failed to send message'
                     ]
                  , Response::HTTP_INTERNAL_SERVER_ERROR);
 
