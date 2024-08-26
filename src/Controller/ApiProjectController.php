@@ -426,6 +426,7 @@ class ApiProjectController extends AbstractController
                         }
                         $project->setStartDate($searchDate);
                     }
+
                     if (isset($data['composition']['isPaying'])) {
                         if (gettype($data['composition']['isPaying']) != 'string') {
                             return new JsonResponse( [
@@ -439,6 +440,7 @@ class ApiProjectController extends AbstractController
                                 'value' => 'canSeeClientProfile',
                              ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
+                        dd($data['composition']['isPaying']);
                         $project->setPaying($data['composition']['isPaying']);
                     }
                     if (isset($data['composition']['database'])) {
