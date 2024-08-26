@@ -114,7 +114,7 @@ class ApiProjectController extends AbstractController
                     $project->setGithubLink($data['identity']['githubLink']);
                 }
                 if (isset($data['identity']['websiteLink']) && !empty(trim($data['identity']['websiteLink']))) {
-                    $project->setFigmaLink($data['identity']['websiteLink']);
+                    $project->setWebsiteLink($data['identity']['websiteLink']);
                 }
                 if (isset($data['estimatedPrice']) && !empty(trim($data['estimatedPrice']))) {
                     $isValid = $data['estimatedPrice'] > 0 && is_numeric($data['estimatedPrice']);
@@ -397,7 +397,7 @@ class ApiProjectController extends AbstractController
                         $project->setFigmaLink($data['identity']['figmaLink']);
                     }
                     if (isset($data['identity']['websiteLink']) && !empty(trim($data['identity']['websiteLink']))) {
-                        $project->setFigmaLink($data['identity']['websiteLink']);
+                        $project->setWebsiteLink($data['identity']['websiteLink']);
                     }
                     if (isset($data['identity']['githubLink']) && !empty(trim($data['identity']['githubLink']))) {
                         $project->setGithubLink($data['identity']['githubLink']);
