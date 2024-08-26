@@ -198,7 +198,8 @@ class ApiProjectController extends AbstractController
                             'value' => 'database',
                          ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-                    $project->setDatabase($data['composition']['database']);
+                       $project->setDatabase(filter_var($data['composition']['database'], FILTER_VALIDATE_BOOLEAN));
+
                 }
                 if (isset($data['composition']['maquette'])) {
                     if (gettype($data['composition']['maquette']) != 'string') {
@@ -213,7 +214,7 @@ class ApiProjectController extends AbstractController
                             'value' => 'maquette',
                          ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-                    $project->setMaquette($data['composition']['maquette']);
+                    $project->setMaquette(filter_var($data['composition']['maquette'], FILTER_VALIDATE_BOOLEAN));
                 }
                 if (isset($data['composition']['maintenance'])) {
                     if (gettype($data['composition']['maintenance']) != 'string') {
@@ -227,8 +228,7 @@ class ApiProjectController extends AbstractController
                             'state' => 'IDT',
                             'value' => 'maintenance',
                          ] , Response::HTTP_UNPROCESSABLE_ENTITY);
-                    }
-                    $project->setMaintenance($data['composition']['maintenance']);
+                    }  $project->setMaintenance(filter_var($data['composition']['maintenance'], FILTER_VALIDATE_BOOLEAN));
                 }
 
                 if (isset($data['composition']['type']) && !empty($data['composition']['type'])) {
@@ -284,7 +284,8 @@ class ApiProjectController extends AbstractController
                             'value' => 'canEditInvoices',
                          ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-                    $project->setOtherUserCanEditInvoices($data['rules']['canEditInvoices']);
+                    $project->setOtherUserCanEditInvoices(filter_var($data['rules']['canEditInvoices'], FILTER_VALIDATE_BOOLEAN));
+
                 }
                 if (isset($data['rules']['canSeeClientProfile'])) {
                     if (gettype($data['rules']['canSeeClientProfile']) != 'string') {
@@ -299,7 +300,8 @@ class ApiProjectController extends AbstractController
                             'value' => 'canSeeClientProfile',
                          ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-                    $project->setCanOtherUserSeeClientProfile($data['rules']['canEditInvoices']);
+                    $project->setCanOtherUserSeeClientProfile(filter_var($data['rules']['canSeeClientProfile'], FILTER_VALIDATE_BOOLEAN));
+
                 }
                 $project->setUuid(uniqid());
                 $project->setCreatedAt(new \DateTimeImmutable());
@@ -457,7 +459,9 @@ class ApiProjectController extends AbstractController
                                 'value' => 'database',
                              ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
-                        $project->setDatabase($data['composition']['database']);
+
+                           $project->setDatabase(filter_var($data['composition']['database'], FILTER_VALIDATE_BOOLEAN));
+
                     }
                     if (isset($data['maintenancePercentage']) && !empty(trim($data['maintenancePercentage']))) {
                         $isValid = $data['maintenancePercentage'] > 0 && is_numeric($data['maintenancePercentage']);
@@ -484,7 +488,7 @@ class ApiProjectController extends AbstractController
                                 'value' => 'maquette',
                              ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
-                        $project->setMaquette($data['composition']['maquette']);
+                        $project->setMaquette(filter_var($data['composition']['maquette'], FILTER_VALIDATE_BOOLEAN));
                     }
                     if (isset($data['composition']['maintenance'])) {
                         if (gettype($data['composition']['maintenance']) != 'string') {
@@ -499,7 +503,7 @@ class ApiProjectController extends AbstractController
                                 'value' => 'maintenance',
                              ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
-                        $project->setMaintenance($data['composition']['maintenance']);
+                        $project->setMaintenance(filter_var($data['composition']['maintenance'], FILTER_VALIDATE_BOOLEAN));
                     }
                     if (isset($data['composition']['type']) && !empty($data['composition']['type'])) {
                         $liste = [];
@@ -555,7 +559,8 @@ class ApiProjectController extends AbstractController
                                 'value' => 'canEditInvoices',
                              ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
-                        $project->setOtherUserCanEditInvoices($data['rules']['canEditInvoices']);
+                        $project->setOtherUserCanEditInvoices(filter_var($data['rules']['canEditInvoices'], FILTER_VALIDATE_BOOLEAN));
+
                     }
                     if (isset($data['rules']['canSeeClientProfile'])) {
                         if (gettype($data['rules']['canSeeClientProfile']) != 'string') {
@@ -570,7 +575,7 @@ class ApiProjectController extends AbstractController
                                 'value' => 'canSeeClientProfile',
                              ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
-                        $project->setCanOtherUserSeeClientProfile($data['rules']['canEditInvoices']);
+                        $project->setCanOtherUserSeeClientProfile(filter_var($data['rules']['canSeeClientProfile'], FILTER_VALIDATE_BOOLEAN));
                     }
 
                     $project->setCreatedAt(new \DateTimeImmutable());
