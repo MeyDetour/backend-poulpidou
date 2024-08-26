@@ -161,7 +161,7 @@ class Chat
 
     public function isRead(): ?bool
     {
-        if($this->read() == null){
+        if($this->read == null){
           return false;
         }
         return $this->read;
