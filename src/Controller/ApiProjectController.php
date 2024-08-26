@@ -182,7 +182,8 @@ class ApiProjectController extends AbstractController
                             'value' => 'isPAying',
                          ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-                    $project->setPaying($data['composition']['isPaying']);
+
+                    $project->setPaying(filter_var($data['composition']['isPaying'], FILTER_VALIDATE_BOOLEAN));
                 }
                 if (isset($data['composition']['database'])) {
                     if (gettype($data['composition']['database']) != 'string') {
