@@ -441,8 +441,8 @@ class ApiProjectController extends AbstractController
                                 'value' => 'canSeeClientProfile',
                              ] , Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
-                        dd($data['composition']['isPaying']);
-                        $project->setPaying($data['composition']['isPaying']);
+
+                        $project->setPaying(filter_var($data['composition']['isPaying'], FILTER_VALIDATE_BOOLEAN));
                     }
                     if (isset($data['composition']['database'])) {
                         if (gettype($data['composition']['database']) != 'string') {
