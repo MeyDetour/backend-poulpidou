@@ -45,9 +45,9 @@ class ApiMessageController extends AbstractController
 
                     if ($chat->isRead()) {
 
-                        $data['read'] = $this->chatDataShortData($chat);
+                        $data['read'][] = $this->chatDataShortData($chat);
                     } else {
-                        $data['unread'] = $this->chatDataShortData($chat);
+                        $data['unread'][] = $this->chatDataShortData($chat);
                     }
                 }
 
