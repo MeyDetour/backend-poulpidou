@@ -1359,11 +1359,14 @@ class HomeController extends AbstractController
                     'get one chat' => '/api/chat/{id du chat}',
                     'methode' => 'get',
                     "renvoie :" => [
-                        'id' => null,
-                        'name' => null,
-                        'date' => null,
-                        'project_id' => null,
-                        'project_uuid' => null,
+                        "chat"=>[
+                            'id' => null,
+                            'name' => null,
+                            'date' => null,
+                            'project_id' => null,
+                            'project_uuid' => null,
+                        ],
+
                         'client' => [
                             'id' => null,
                             'firstName' => null,

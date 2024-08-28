@@ -221,11 +221,13 @@ class ApiMessageController extends AbstractController
         return [
             'state' => 'OK',
             'value' => [
-                'id' => $chat->getId(),
-                'name' => $chat->getName(),
-                'date' => $this->dateService->formateDate($chat->getCreatedAt()),
-                'project_id' => $chat->getProject()->getId(),
-                'project_uuid' => $chat->getProject()->getUuid(),
+                "chat"=>[
+                    'id' => $chat->getId(),
+                    'name' => $chat->getName(),
+                    'date' => $this->dateService->formateDate($chat->getCreatedAt()),
+                    'project_id' => $chat->getProject()->getId(),
+                    'project_uuid' => $chat->getProject()->getUuid(),
+                ],
                 'client' => [
                     'id' => $client->getId(),
                     'firstName' => $client->getFirstName(),
