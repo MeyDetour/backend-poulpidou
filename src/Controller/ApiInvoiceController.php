@@ -333,7 +333,7 @@ class ApiInvoiceController extends AbstractController
                 ] ,Response::HTTP_NOT_FOUND);
             }
             $data = [];
-            foreach ($invoiceRepository->findInvoicesOfClient() as $invoice) {
+            foreach ( $invoiceRepository->findInvoicesOfClient($client) as $invoice) {
                 $data[] = $this->getDataInvoiceForClient($invoice);
 
             }

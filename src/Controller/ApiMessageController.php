@@ -150,12 +150,16 @@ class ApiMessageController extends AbstractController
             }
             $data = [];
             foreach ($client->getChats() as $chat) {
+                $lastMessage = null;
+                if ($chat->getMessages()[0] ) {
+                    $lastMessage = $chat->getMessages()[0] ;
+                }
                 if ($chat->getProject()->getState() != 'deleted') {
                     $data[] = [
                         'id' => $chat->getId(),
                         'name' => $chat->getName(),
                         'lastMessage' => [
-                            "content" => $chat->getMessages()[0]->getContent(),
+                            "content" => $lastMessage,
                             "date" => $this->dateService->formateDateWithHour($chat->getMessages()[0]->getCreatedAt()),
                         ]
                     ];
@@ -238,7 +242,10 @@ class ApiMessageController extends AbstractController
     }
 
     public function chatDataShortData($chat)
-    {
+    {   $lastMessage = null;
+        if ($chat->getMessages()[0] ) {
+            $lastMessage = $chat->getMessages()[0] ;
+        }
         $users = [];
         foreach ($chat->getUsers() as $user) {
             $users[] = [
@@ -254,7 +261,7 @@ class ApiMessageController extends AbstractController
                 'id' => $chat->getId(),
                 'name' => $chat->getName(),
                 'date' => $this->dateService->formateDate($chat->getCreatedAt()),
-            "lastMessage"=>$chat->getMessages()[0],
+            "lastMessage"=> $lastMessage,
                 'client' => [
                     'id' => $chat->getClient()->getId(),
                     'firstName' => $chat->getClient()->getFirstName(),
@@ -318,8 +325,6 @@ class ApiMessageController extends AbstractController
                         ]
                         , Response::HTTP_OK);
                 }
-
-
                 return new JsonResponse([
                         'state' => 'ASFO', 'value' => 'failed to send message'
                     ]

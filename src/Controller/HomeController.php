@@ -1350,7 +1350,7 @@ class HomeController extends AbstractController
                         "unread"=>[],
                         "read"=>[]
                     ],
-                    'parametres a mettre dans le body' => "nothin",
+                    'parametres a mettre dans le body' => "nothing",
                     'utilisation' => "renvoie les chats dans lequels vous vous trouver + les chats des projets que l'on vous a partager",
                     'need token ? ' => true],
                 [

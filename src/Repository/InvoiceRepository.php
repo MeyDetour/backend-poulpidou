@@ -6,6 +6,7 @@ use App\Entity\Chat;
 use App\Entity\Client;
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -43,7 +44,7 @@ class InvoiceRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findInvoicesOfClient(Client $client): ?Chat
+    public function findInvoicesOfClient(Client $client): ?ArrayCollection
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
