@@ -232,7 +232,7 @@ class ApiMessageController extends AbstractController
                     'lastName' => $client->getLastName(),
                     'online' => $client->isOnline(),
                     'date' => $this->dateService->formateDate($client->getCreatedAt()),
-                    'projectNumber' => count($client->getProjects()),
+                    'projectNumber' => count($client->getProjects())
                 ],
                 'messages' => $formattedMessages
 
