@@ -42,7 +42,7 @@ class ApiLogController extends AbstractController
             return new JsonResponse( [
                     'state' => 'OK',
                     'value' =>$data]
-             ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
+             ,Response::HTTP_OK, [], true);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR',' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse( [
