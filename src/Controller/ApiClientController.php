@@ -177,7 +177,6 @@ class ApiClientController extends AbstractController
                 if (isset($data['phone']) && !empty(trim($data['phone']))) {
                     $client->setPhone($data['phone']);
                 }
-                $client->setCreatedAt(new \DateTime());
                 $manager->persist($client);
                 $manager->flush();
                 if ($client->getFirstName() != $lastClient->getFirstName() || $client->getLastName() != $lastClient->getLastName()) {
