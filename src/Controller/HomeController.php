@@ -1346,57 +1346,9 @@ class HomeController extends AbstractController
                 [
                     'gets all chats' => '/api/chats',
                     'methode' => 'get',
-                    "renvoie :" => [[
-
-                        'id' => null,
-                        'name' => null,
-                        'date' => null,
-                        'client' => [
-                            'id' => null,
-                            'firstName' => null,
-                            'lastName' => null,
-
-                        ],
-                        'users' => [
-                            [
-                                'id' => null,
-                                'firstName' => null,
-                                'lastName' => null,
-                                'email' => null,
-                            ],
-                            [
-                                'id' => null,
-                                'firstName' => null,
-                                'lastName' => null,
-                                'email' => null,
-                            ]
-                        ]
-                    ], [
-
-                        'id' => null,
-                        'name' => null,
-                        'date' => null,
-                        'client' => [
-                            'id' => null,
-                            'firstName' => null,
-                            'lastName' => null,
-
-                        ],
-                        'users' => [
-                            [
-                                'id' => null,
-                                'firstName' => null,
-                                'lastName' => null,
-                                'email' => null,
-                            ],
-                            [
-                                'id' => null,
-                                'firstName' => null,
-                                'lastName' => null,
-                                'email' => null,
-                            ]
-                        ]
-                    ]
+                    "renvoie :" => [
+                        "unread"=>[],
+                        "read"=>[]
                     ],
                     'parametres a mettre dans le body' => "nothin",
                     'utilisation' => "renvoie les chats dans lequels vous vous trouver + les chats des projets que l'on vous a partager",

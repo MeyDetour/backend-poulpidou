@@ -254,6 +254,7 @@ class ApiMessageController extends AbstractController
                 'id' => $chat->getId(),
                 'name' => $chat->getName(),
                 'date' => $this->dateService->formateDate($chat->getCreatedAt()),
+            "lastMessage"=>$chat->getMessages()[0],
                 'client' => [
                     'id' => $chat->getClient()->getId(),
                     'firstName' => $chat->getClient()->getFirstName(),
