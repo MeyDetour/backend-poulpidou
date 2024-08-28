@@ -219,8 +219,6 @@ class ApiMessageController extends AbstractController
         }
 
         return [
-            'state' => 'OK',
-            'value' => [
                 "chat"=>[
                     'id' => $chat->getId(),
                     'name' => $chat->getName(),
@@ -238,7 +236,7 @@ class ApiMessageController extends AbstractController
                 ],
                 'messages' => $formattedMessages
 
-            ]
+
 
         ];
     }
