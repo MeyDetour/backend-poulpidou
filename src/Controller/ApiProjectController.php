@@ -1169,7 +1169,7 @@ class ApiProjectController extends AbstractController
 
             return new JsonResponse(json_encode([
                     'state' => 'OK', 'value' => $data
-                ])
+                ],JSON_UNESCAPED_UNICODE)
                 , Response::HTTP_OK, [], true);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
