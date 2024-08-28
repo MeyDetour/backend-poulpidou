@@ -259,7 +259,7 @@ class ApiMessageController extends AbstractController
                     'id' => $chat->getClient()->getId(),
                     'firstName' => $chat->getClient()->getFirstName(),
                     'lastName' => $chat->getClient()->getLastName(),
-
+                    'online'=>$chat->getClient()->isOnline(),
                 ],
                 'users' => $users
 
