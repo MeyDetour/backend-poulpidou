@@ -32,7 +32,7 @@ class ApiUserController extends AbstractController
         return new JsonResponse( [
                 'state' => 'OK','value' => $this->getData($this->getUser())
             ]
-         ,Response::HTTP_OK, [], true);
+         ,Response::HTTP_OK);
     }
     #[Route('/api/users', name: 'users', methods: 'get')]
     public function getUsers(UserRepository $userRepository): Response
@@ -51,7 +51,7 @@ class ApiUserController extends AbstractController
         return new JsonResponse( [
                 'state' => 'OK',   'value' => $data
             ]
-         ,Response::HTTP_OK, [], true);
+         ,Response::HTTP_OK);
     }
     #[Route('/api/edit/me', name: 'edit_me', methods: 'put')]
     public function edit(Request $request, EntityManagerInterface $manager)
@@ -84,7 +84,7 @@ class ApiUserController extends AbstractController
                 return new JsonResponse( [
                         'state' => 'OK','value' => $this->getData($user)
                     ]
-                 ,Response::HTTP_OK, [], true);
+                 ,Response::HTTP_OK);
 
             }
              return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
@@ -123,7 +123,7 @@ class ApiUserController extends AbstractController
         return new JsonResponse( [
                 'state' => 'OK',"value" =>$this->getData($user)
             ]
-         ,Response::HTTP_OK, [], true);
+         ,Response::HTTP_OK);
 
     }
 

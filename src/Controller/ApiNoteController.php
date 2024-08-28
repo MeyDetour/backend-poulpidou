@@ -50,7 +50,7 @@ class ApiNoteController extends AbstractController
                     'state' => 'OK',
                     'value' =>
                         $this->getDataNote()]
-                 ,Response::HTTP_OK, [], true);
+                 ,Response::HTTP_OK);
 
             }
             return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
@@ -74,7 +74,7 @@ class ApiNoteController extends AbstractController
                     'state' => 'OK', 'value' =>
                         $this->getDataNote()
                 ]
-             ,Response::HTTP_OK, [], true);
+             ,Response::HTTP_OK);
         } catch (\Exception $exception) {
             return new JsonResponse( [
 

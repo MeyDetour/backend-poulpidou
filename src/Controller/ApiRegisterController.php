@@ -99,16 +99,11 @@ class ApiRegisterController extends AbstractController
         $setting->setInterfaceLangage('FR');
 
 
-        $note = new Note();
-        $note->setOwner($user);
-        $note->setNotes("");
-        $note->setRemembers("");
-        $this->entityManager->persist($note);
         $this->entityManager->persist($setting);
         $this->entityManager->flush();
 
         return new JsonResponse( [
             'state' => 'ok'
-         ] , Response::HTTP_INTERNAL_SERVER_ERROR);
+         ] , Response::HTTP_OK);
     }
 }

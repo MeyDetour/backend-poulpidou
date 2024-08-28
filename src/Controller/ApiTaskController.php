@@ -137,7 +137,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse([
                         'state' => 'OK', 'value' => $this->getData($task)
                     ]
-                    , Response::HTTP_OK, [], true);
+                    , Response::HTTP_OK);
 
             }
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
@@ -240,7 +240,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse([
                         'state' => 'OK', 'value' => $this->getData($task)
                     ]
-                    , Response::HTTP_OK, [], true);
+                    , Response::HTTP_OK);
 
             }
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
@@ -314,7 +314,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse([
                         'state' => 'OK', 'value' => $this->getData($task)
                     ]
-                    , Response::HTTP_OK, [], true);
+                    , Response::HTTP_OK);
 
             }
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
@@ -388,7 +388,7 @@ class ApiTaskController extends AbstractController
                 return new JsonResponse([
                         'state' => 'OK', 'value' => $this->getData($task)
                     ]
-                    , Response::HTTP_OK, [], true);
+                    , Response::HTTP_OK);
 
             }
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
@@ -498,7 +498,7 @@ class ApiTaskController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -540,7 +540,7 @@ class ApiTaskController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK', 'value' => $this->getData($task)
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -607,7 +607,7 @@ class ApiTaskController extends AbstractController
                     'state' => 'OK',
                     'value' => $data
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 

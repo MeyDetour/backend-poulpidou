@@ -328,7 +328,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse([
                         'state' => 'OK', 'value' => $this->getDataProject($project)
                     ]
-                    , Response::HTTP_OK, [], true);
+                    , Response::HTTP_OK);
 
             }
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
@@ -604,7 +604,7 @@ class ApiProjectController extends AbstractController
                     return new JsonResponse([
                             'state' => 'OK', 'value' => $this->getDataProject($project)
                         ]
-                        , Response::HTTP_OK, [], true);
+                        , Response::HTTP_OK);
 
                 }
 
@@ -668,7 +668,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -731,7 +731,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -827,7 +827,7 @@ class ApiProjectController extends AbstractController
                 return new JsonResponse([
                         'state' => 'OK', 'value' => $this->getDataProject($project)
                     ]
-                    , Response::HTTP_OK, [], true);
+                    , Response::HTTP_OK);
             }
 
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
@@ -903,7 +903,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
@@ -954,7 +954,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
@@ -1002,7 +1002,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1086,7 +1086,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1127,7 +1127,7 @@ class ApiProjectController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK', 'value' => $this->getDataProject($project)
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1167,10 +1167,10 @@ class ApiProjectController extends AbstractController
             }
 
 
-            return new JsonResponse(json_encode([
+            return new JsonResponse([
                     'state' => 'OK', 'value' => $data
-                ],JSON_UNESCAPED_UNICODE)
-                , Response::HTTP_OK, [], true);
+                ]
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1214,7 +1214,7 @@ class ApiProjectController extends AbstractController
                     'state' => 'OK',
                     'value' => $data
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1252,7 +1252,7 @@ class ApiProjectController extends AbstractController
                         'state' => 'ASFO',
                         'value' => 'project'
                     ]
-                    , Response::HTTP_OK, [], true);
+                    , Response::HTTP_OK);
             }
 
             if ($project->getState() == 'deleted') {
@@ -1270,7 +1270,7 @@ class ApiProjectController extends AbstractController
                         'date' => $this->dateService->formateDate($project->getClient()->getCreatedAt()),
                     ]
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -1302,7 +1302,7 @@ class ApiProjectController extends AbstractController
                     return new JsonResponse([
                             'state' => 'OK', 'value' => $dataToReturn
                         ]
-                        , Response::HTTP_OK, [], true);
+                        , Response::HTTP_OK);
                 }
             }
 

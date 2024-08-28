@@ -57,7 +57,7 @@ class ApiMessageController extends AbstractController
                     "value" =>
                         $data
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
 
         } catch
         (\Exception $exception) {
@@ -109,7 +109,7 @@ class ApiMessageController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK', "value" => $this->chatData($chat)
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
@@ -169,7 +169,7 @@ class ApiMessageController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK', "value" => $data
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
 
         } catch
         (\Exception $exception) {
@@ -323,7 +323,7 @@ class ApiMessageController extends AbstractController
                     return new JsonResponse([
                             'state' => 'OK',
                         ]
-                        , Response::HTTP_OK, [], true);
+                        , Response::HTTP_OK);
                 }
                 return new JsonResponse([
                         'state' => 'ASFO', 'value' => 'failed to send message'
@@ -403,13 +403,13 @@ class ApiMessageController extends AbstractController
                     return new JsonResponse([
                             'state' => 'OK',
                         ]
-                        , Response::HTTP_OK, [], true);
+                        , Response::HTTP_OK);
                 }
                 return new JsonResponse([
                         'state' => 'ISE',
                         'value' => 'failed to send message'
                     ]
-                    , Response::HTTP_OK, [], true);
+                    , Response::HTTP_OK);
 
 
             }
@@ -474,7 +474,7 @@ class ApiMessageController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK, [], true);
+                , Response::HTTP_OK);
 
 
         } catch (\Exception $exception) {
@@ -512,7 +512,7 @@ class ApiMessageController extends AbstractController
                     return new JsonResponse([
                             'state' => 'OK', 'value' => $dataToReturn
                         ]
-                        , Response::HTTP_OK, [], true);
+                        , Response::HTTP_OK);
                 }
             }
 
