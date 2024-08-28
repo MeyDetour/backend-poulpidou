@@ -151,8 +151,10 @@ class ApiMessageController extends AbstractController
             $data = [];
             foreach ($client->getChats() as $chat) {
                 $lastMessage = null;
+                $createdAt = null;
                 if ($chat->getMessages()[0] ) {
-                    $lastMessage = $chat->getMessages()[0] ;
+                    $lastMessage = $chat->getMessages()[0]->getContent() ;
+                    $createdAt = $chat->getMessages()[0]->getCreatedAt() ;
                 }
                 if ($chat->getProject()->getState() != 'deleted') {
                     $data[] = [
@@ -160,7 +162,7 @@ class ApiMessageController extends AbstractController
                         'name' => $chat->getName(),
                         'lastMessage' => [
                             "content" => $lastMessage,
-                            "date" => $this->dateService->formateDateWithHour($chat->getMessages()[0]->getCreatedAt()),
+                            "date" => $createdAt,
                         ]
                     ];
                 }
@@ -244,7 +246,7 @@ class ApiMessageController extends AbstractController
     public function chatDataShortData($chat)
     {   $lastMessage = null;
         if ($chat->getMessages()[0] ) {
-            $lastMessage = $chat->getMessages()[0] ;
+            $lastMessage = $chat->getMessages()[0]->getContent() ;
         }
         $users = [];
         foreach ($chat->getUsers() as $user) {

@@ -57,6 +57,6 @@ class InvoiceRepository extends ServiceEntityRepository
             ->orderBy('i.createdAt', 'ASC');
 
         // Execute the query and return the result
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 }
