@@ -369,6 +369,8 @@ class ApiProjectController extends AbstractController
             if ($data) {
 
                 {
+
+                    $lastProject = clone $project;
                     if (isset($data['identity']['name']) && !empty(trim($data['identity']['name']))) {
                         $project->setName($data['identity']['name']);
                     }
@@ -587,7 +589,14 @@ class ApiProjectController extends AbstractController
                     $chat->setName($project->getName() . ' Chat');
                     $manager->persist($chat);
                     $manager->flush();
-                    $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
+
+                    if ($project->getName() != $lastProject->getName()) {
+                        $this->logService->createLog('ACTION', " Edit Project's name ". $project->getId() . ':' . $lastProject->getName() .") to (" . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
+
+                    }else{
+                        $this->logService->createLog('ACTION', ' Edit Project (' . $project->getId() . ':' . $project->getName() . ') for client (' . $project->getClient()->getId() . ' | ' . $project->getClient()->getFirstName() . ' ' . $project->getClient()->getLastName() . ')');
+
+                    }
 
 
                     return new JsonResponse( [
