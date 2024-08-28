@@ -162,35 +162,28 @@ class HomeController extends AbstractController
                 [
                     'get clients' => '/api/clients',
                     'methode' => 'get',
-                    "renvoie :" => [[
-                        "id" => null,
-                        "firstName" => null,
-                        "lastName" => null,
-                        "job" => null,
-                        "age" => null,
-                        "location" => null,
-                        "mail" => null,
-                        "siret" => null,
-                        "phone" => null,
-                        "createdAt" => null,
-                        "state" => null,
-                        "online" => null,
-                        'links' => null,
-                    ], [
-                        "id" => null,
-                        "firstName" => null,
-                        "lastName" => null,
-                        "job" => null,
-                        "age" => null,
-                        "location" => null,
-                        "mail" => null,
-                        "siret" => null,
-                        "phone" => null,
-                        "createdAt" => null,
-                        "state" => null,
-                        "online" => null,
-                        'links' => null,
-                    ]],
+                    "renvoie :" => [
+                        "read" => [],
+                        "unread" => [
+                            [
+                                "id" => 2,
+                                "name" => "ITOW Chat",
+                                "date" => "20/08/2024",
+                                "client" => [
+                                    "id" => 1,
+                                    "firstName" => "Coralie",
+                                    "lastName" => "DUPONT"
+                                ],
+                                "users" => [
+                                    [
+                                        "id" => 1,
+                                        "firstName" => null,
+                                        "lastName" => null,
+                                        "email" => "meydetour@gmail.com"
+                                    ]
+                                ]
+                            ]
+                        ]],
                     'parametres a mettre dans le body' => [
                         "displayDeleted" => null,
                         "order_by" => null,
@@ -351,14 +344,14 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
-                              "startDateBaseFormat" => "Y-m-d",
+                            "startDateBaseFormat" => "Y-m-d",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
-                            "endDateBaseFormat"=>null,
+                            "endDateBaseFormat" => null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -414,14 +407,14 @@ class HomeController extends AbstractController
                         "maintenancePercentage" => 10,
                         "identity" => [
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
                             "startDateBaseFormat" => "Y-m-d",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
-                            "endDateBaseFormat"=>null,
+                            "endDateBaseFormat" => null,
                             "client_id" => null,
                         ],
 
@@ -461,14 +454,14 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
-                              "startDateBaseFormat" => "Y-m-d",
+                            "startDateBaseFormat" => "Y-m-d",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
-                            "endDateBaseFormat"=>null,
+                            "endDateBaseFormat" => null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -546,14 +539,14 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
-                              "startDateBaseFormat" => "Y-m-d",
+                            "startDateBaseFormat" => "Y-m-d",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
-                            "endDateBaseFormat"=>null,
+                            "endDateBaseFormat" => null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -624,14 +617,14 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
-                              "startDateBaseFormat" => "Y-m-d",
+                            "startDateBaseFormat" => "Y-m-d",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
-                            "endDateBaseFormat"=>null,
+                            "endDateBaseFormat" => null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -759,14 +752,14 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
-                              "startDateBaseFormat" => "Y-m-d",
+                            "startDateBaseFormat" => "Y-m-d",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
-                            "endDateBaseFormat"=>null,
+                            "endDateBaseFormat" => null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -822,14 +815,14 @@ class HomeController extends AbstractController
                         "maintenancePercentage" => 10,
                         "identity" => [
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
-                              "startDateBaseFormat" => "Y-m-d",
+                            "startDateBaseFormat" => "Y-m-d",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
-                            "endDateBaseFormat"=>null,
+                            "endDateBaseFormat" => null,
                         ],
 
                         "composition" => [
@@ -926,14 +919,14 @@ class HomeController extends AbstractController
                         "identity" => [
                             "id" => 35,
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "figmaLink" => null,
                             "githubLink" => null,
                             "websiteLink" => null,
-                              "startDateBaseFormat" => "Y-m-d",
+                            "startDateBaseFormat" => "Y-m-d",
                             "startDate" => "15/08/2024",
                             "endDate" => null,
-                            "endDateBaseFormat"=>null,
+                            "endDateBaseFormat" => null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -1282,7 +1275,7 @@ class HomeController extends AbstractController
                         [
                             "id" => 35,
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -1292,7 +1285,7 @@ class HomeController extends AbstractController
                         ], [
                             "id" => 35,
                             "name" => "nouveau 2",
-                            "note"=>null,
+                            "note" => null,
                             "client" => [
                                 "id" => 25,
                                 "firstName" => "Mey ",
@@ -1536,6 +1529,7 @@ class HomeController extends AbstractController
                         'category' => 'dev',
                         'status' => 'waiting',
                         'dueDate' => '07/08/2024',
+                        'dueDateBaseFormat' => '2024-m-d',
                         'author' => [
                             'firstName' => 'Maxence',
                             'lastName' => 'ABRILE'
@@ -1559,6 +1553,7 @@ class HomeController extends AbstractController
                         'category' => 'dev',
                         'status' => 'waiting',
                         'dueDate' => '07/08/2024',
+                         'dueDateBaseFormat' => '2024-m-d',
                         'author' => [
                             'firstName' => 'Maxence',
                             'lastName' => 'ABRILE'
@@ -1581,6 +1576,7 @@ class HomeController extends AbstractController
                         'status' => 'waiting',
                         'order' => 1,
                         'dueDate' => '07/08/2024',
+                         'dueDateBaseFormat' => '2024-m-d',
                         'author' => [
                             'firstName' => 'Maxence',
                             'lastName' => 'ABRILE'
@@ -1622,6 +1618,7 @@ class HomeController extends AbstractController
                                 'order' => 1,
                                 'status' => 'waiting',
                                 'dueDate' => '07/08/2024',
+                                 'dueDateBaseFormat' => '2024-m-d',
                                 'author' => [
                                     'firstName' => 'Maxence',
                                     'lastName' => 'ABRILE'
@@ -1644,6 +1641,7 @@ class HomeController extends AbstractController
                         'order' => 1,
                         'status' => 'waiting',
                         'dueDate' => '07/08/2024',
+                        'dueDateBaseFormat' => '2024-m-d',
                         'author' => [
                             'firstName' => 'Maxence',
                             'lastName' => 'ABRILE'

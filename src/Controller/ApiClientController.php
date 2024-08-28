@@ -658,6 +658,7 @@ class ApiClientController extends AbstractController
             "state" => $client->getState(),
             "online" => $client->isOnline(),
 
+
         ];
     }
 
