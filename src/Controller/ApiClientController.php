@@ -140,6 +140,7 @@ class ApiClientController extends AbstractController
             $data = json_decode($request->getContent(), true);
 
             if ($data) {
+                $lastClient = clone  $client;
                 if (isset($data['firstName']) && !empty(trim($data['firstName']))) {
                     $client->setFirstName($data['firstName']);
                 }
@@ -174,7 +175,12 @@ class ApiClientController extends AbstractController
                 $client->setCreatedAt(new \DateTime());
                 $manager->persist($client);
                 $manager->flush();
-                $this->logService->createLog('ACTION', 'Edit client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
+                if ($client->getFirstName() != $lastClient->getFirstName() || $client->getLastName() != $lastClient->getLastName()) {
+                    $this->logService->createLog('ACTION', " Edit Client's name ". $client->getId() . ':'  . $lastClient->getFirstName() . ' ' . $lastClient->getLastName() .") to (" . $client->getId() . ':' . $client->getFirstName() . ' ' . $client->getLastName() . ') ');
+
+                }else{
+                    $this->logService->createLog('ACTION', 'Edit client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
+                }
 
                 return new JsonResponse( [
                         'state' => 'OK', 'value' =>
