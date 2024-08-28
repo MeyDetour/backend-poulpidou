@@ -581,7 +581,7 @@ class ApiExportImportDataController extends AbstractController
             return new JsonResponse([
                     'state' => 'OK',
                 ]
-                , Response::HTTP_OK);
+                , Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
         } catch
         (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());

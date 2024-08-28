@@ -45,7 +45,7 @@ class ApiSettingController extends AbstractController
             return new JsonResponse( [
                     'state' => 'OK', 'value' => $this->getData($settings)
                 ]
-             ,Response::HTTP_OK);
+             ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
 
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
@@ -141,7 +141,7 @@ class ApiSettingController extends AbstractController
                 return new JsonResponse( [
                         'state' => 'OK','value' => $this->getData($settings)
                     ]
-                 ,Response::HTTP_OK);
+                 ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
 
             }
              return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);

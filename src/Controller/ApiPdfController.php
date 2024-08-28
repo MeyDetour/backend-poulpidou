@@ -49,7 +49,7 @@ class ApiPdfController extends AbstractController
                 return new JsonResponse( [
                         'state' => 'OK',
                     ]
-                 ,Response::HTTP_OK);
+                 ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
             } catch (\Exception $exception) {
                 return new JsonResponse( [
 
@@ -134,7 +134,7 @@ class ApiPdfController extends AbstractController
                             'filePath'=>$filePath
                         ]
                     ]
-                 ,Response::HTTP_OK);
+                 ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
             } catch (\Exception $exception) {
                 return new JsonResponse( [
 
@@ -203,7 +203,7 @@ class ApiPdfController extends AbstractController
                             'filePath'=>$filePath
                         ]
                     ]
-                 ,Response::HTTP_OK);
+                 ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
             } catch (\Exception $exception) {
                 return new JsonResponse( [
 
@@ -276,7 +276,7 @@ class ApiPdfController extends AbstractController
                 return new JsonResponse( [
                         'state' => 'OK',
                     ]
-                 ,Response::HTTP_OK);
+                 ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
             } else {
 
                 return new JsonResponse( [

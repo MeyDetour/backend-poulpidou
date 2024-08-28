@@ -125,7 +125,7 @@ class HomeController extends AbstractController
                         "createdAt" => null,
                         "state" => null,
                         "online" => null,
-                        'links' => null,
+                        "note"=>null
                     ],
                     'parametres a mettre dans le body' => [
                         "firstName" => null,
@@ -154,7 +154,8 @@ class HomeController extends AbstractController
                         "createdAt" => null,
                         "state" => null,
                         "online" => null,
-                        'links' => null,
+                        "note"=>null
+
                     ],
                     'parametres a mettre dans le body' => null,
                     'utilisation' => "passer en parametre l'id du client pour obtenir les informations",
@@ -206,7 +207,8 @@ class HomeController extends AbstractController
                         "createdAt" => null,
                         "state" => null,
                         "online" => null,
-                        'links' => null,
+                        "note"=>null,
+
                     ],
                     'parametres a mettre dans le body' => [
                         "firstName" => null,

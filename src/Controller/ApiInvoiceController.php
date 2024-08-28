@@ -124,7 +124,7 @@ class ApiInvoiceController extends AbstractController
                 return new JsonResponse( [
                         'state' => 'OK',   'value' => $this->getDataInvoice($invoice)
                     ]
-                 ,Response::HTTP_OK);
+                 ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
             }
             return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
@@ -206,7 +206,7 @@ class ApiInvoiceController extends AbstractController
                 return new JsonResponse( [
                         'state' => 'OK','value' => $this->getDataInvoice($invoice)
                     ]
-                 ,Response::HTTP_OK);
+                 ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
             }
             return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
@@ -251,7 +251,7 @@ class ApiInvoiceController extends AbstractController
             return new JsonResponse( [
                     'state' => 'OK',
                 ]
-             ,Response::HTTP_OK);
+             ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse( [
@@ -295,7 +295,7 @@ class ApiInvoiceController extends AbstractController
             return new JsonResponse( [
                     'state' => 'OK','value' => $data
                 ]
-             ,Response::HTTP_OK);
+             ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse( [
@@ -341,7 +341,7 @@ class ApiInvoiceController extends AbstractController
             return new JsonResponse( [
                     'state' => 'OK',   'value' => $data
                 ]
-             ,Response::HTTP_OK);
+             ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
@@ -387,7 +387,7 @@ class ApiInvoiceController extends AbstractController
                 return new JsonResponse( [
                     'state' => 'OK',
                  ]
-             ,Response::HTTP_OK);
+             ,Response::HTTP_OK, [], JSON_UNESCAPED_UNICODE);
         } catch (\Exception $exception) {
             $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 

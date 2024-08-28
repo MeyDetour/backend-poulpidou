@@ -77,11 +77,13 @@ class Client
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'client')]
     private Collection $messages;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $Note = null;
+
 
     public function __construct()
     {
         $this->projects = new ArrayCollection();
-        $this->currentProject = new ArrayCollection();
         $this->chats = new ArrayCollection();
         $this->messages = new ArrayCollection();
     }
@@ -325,6 +327,18 @@ class Client
                 $message->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->Note;
+    }
+
+    public function setNote(?string $Note): static
+    {
+        $this->Note = $Note;
 
         return $this;
     }
