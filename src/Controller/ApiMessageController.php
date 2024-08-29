@@ -211,6 +211,7 @@ class ApiMessageController extends AbstractController
                 'email' => $author->getMail(),
             ];
 
+            dd($message);
             $formattedMessages[] = [
                 'id' => $message->getId(),
                 'content' => $message->getContent(),

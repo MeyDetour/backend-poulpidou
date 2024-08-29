@@ -62,7 +62,6 @@ class DateService
             return $date->format('d/m/Y H:i');
         }
         return $date->format($this->association[$dataFormat] . ' H:i');
-
     }
 
     public function formateDateWithUser($date, $user)
