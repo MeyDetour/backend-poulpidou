@@ -245,8 +245,8 @@ class ApiMessageController extends AbstractController
 
     public function chatDataShortData($chat)
     {   $lastMessage = null;
-        if (count($chat->getMessages()) == 0) {
-            $lastMessage =  end($chat->getMessages())->getContent() ;
+        if (count($chat->getMessages()) > 0) {
+            $lastMessage = end($chat->getMessages())->getContent();
         }
         $users = [];
         foreach ($chat->getUsers() as $user) {
