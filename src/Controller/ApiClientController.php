@@ -653,7 +653,10 @@ class ApiClientController extends AbstractController
 
     public function getDataClient($client)
     {
-
+        $lastUuidProject = null;
+        if (count($client->getProjects()) != 0){
+            $client->getProjects()[0]->getUuid();
+        }
         return [
             "id" => $client->getId(),
             "firstName" => $client->getFirstName(),
@@ -667,7 +670,9 @@ class ApiClientController extends AbstractController
             "createdAt" => $this->dateService->formateDate($client->getCreatedAt()),
             "state" => $client->getState(),
             "online" => $client->isOnline(),
-            "note"=>$client->getNote()
+            "note"=>$client->getNote(),
+            "lastUuidProject"=>$lastUuidProject
+
 
 
         ];

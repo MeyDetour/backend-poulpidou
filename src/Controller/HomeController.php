@@ -125,7 +125,8 @@ class HomeController extends AbstractController
                         "createdAt" => null,
                         "state" => null,
                         "online" => null,
-                        "note"=>null
+                        "note"=>null,
+                        "lastUuidProject"=>null,
                     ],
                     'parametres a mettre dans le body' => [
                         "firstName" => null,
@@ -154,7 +155,8 @@ class HomeController extends AbstractController
                         "createdAt" => null,
                         "state" => null,
                         "online" => null,
-                        "note"=>null
+                        "note"=>null,
+                        "lastUuidProject"=>null,
 
                     ],
                     'parametres a mettre dans le body' => null,
@@ -208,6 +210,7 @@ class HomeController extends AbstractController
                         "state" => null,
                         "online" => null,
                         "note"=>null,
+                        "lastUuidProject"=>null,
 
                     ],
                     'parametres a mettre dans le body' => [
