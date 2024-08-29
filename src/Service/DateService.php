@@ -54,6 +54,7 @@ class DateService
 
     public function formateDateWithHour($date)
     {
+        dump($date);
         if ($date) {
             return null;
         }
