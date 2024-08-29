@@ -156,8 +156,9 @@ class ApiMessageController extends AbstractController
                 $messages = $chat->getMessages();
                 if (count($messages) > 0) {
                     $lastMessage = $messages[sizeof($messages) - 1];
+
+                    $createdAt = $lastMessage->getCreatedAt();
                     $lastMessage = $lastMessage->getContent();
-                    $lastMessage = $lastMessage->getCreatedAt();
                 }
                 if ($chat->getProject()->getState() != 'deleted') {
                     $data[] = [
