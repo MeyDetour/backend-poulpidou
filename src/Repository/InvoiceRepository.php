@@ -44,7 +44,7 @@ class InvoiceRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findInvoicesOfClient(Client $client): ?ArrayCollection
+    public function findInvoicesOfClient(Client $client): ?array
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
