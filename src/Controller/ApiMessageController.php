@@ -321,6 +321,7 @@ class ApiMessageController extends AbstractController
                 $entityManager->persist($chat);
                 $entityManager->flush();
                 $message->setClient($project->getClient());
+                $message->setCreatedAt(new \DateTimeImmutable('now'));
                 if ($this->newMessage($message, $data['content'], $project)) {
                     return new JsonResponse([
                             'state' => 'OK',
@@ -401,6 +402,7 @@ class ApiMessageController extends AbstractController
                 }
                 $message = new Message();
                 $message->setAuthorUser($this->getUser());
+                $message->setCreatedAt(new \DateTimeImmutable('now'));
                 if ($this->newMessage($message, $data['content'], $project)) {
                     return new JsonResponse([
                             'state' => 'OK',
