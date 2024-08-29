@@ -211,7 +211,8 @@ class ApiMessageController extends AbstractController
                 'email' => $author->getMail(),
             ];
 
-            dd($message);
+            dump($this->dateService->formateDateWithHour($message->getCreatedAt()));
+            dd($message->getCreatedAt());
             $formattedMessages[] = [
                 'id' => $message->getId(),
                 'content' => $message->getContent(),

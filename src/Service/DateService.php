@@ -58,6 +58,8 @@ class DateService
             return null;
         }
         $dataFormat = $this->user->getSetting()->getDateFormat();
+        dump( $dataFormat);
+        dump(!in_array($dataFormat, $this->associationKey));
         if (!in_array($dataFormat, $this->associationKey)) {
             return $date->format('d/m/Y H:i');
         }
