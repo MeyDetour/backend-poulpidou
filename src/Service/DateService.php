@@ -54,13 +54,11 @@ class DateService
 
     public function formateDateWithHour($date)
     {
-        dump($date);
-        if ($date) {
+
+        if (!$date) {
             return null;
         }
         $dataFormat = $this->user->getSetting()->getDateFormat();
-        dump( $dataFormat);
-        dd(!in_array($dataFormat, $this->associationKey));
         if (!in_array($dataFormat, $this->associationKey)) {
             return $date->format('d/m/Y H:i');
         }
