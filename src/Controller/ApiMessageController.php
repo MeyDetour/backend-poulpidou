@@ -247,7 +247,7 @@ class ApiMessageController extends AbstractController
     {   $lastMessage = null;
         $messages = $chat->getMessages();
         if (count($messages) > 0) {
-            $lastMessage = end($messages);
+            $lastMessage = $messages[sizeof($messages) - 1];
             $lastMessage = $lastMessage->getContent();
         }
         $users = [];
