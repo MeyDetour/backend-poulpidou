@@ -200,7 +200,7 @@ class ApiExportImportDataController extends AbstractController
 
 
             } catch (IOException $e) {
-                $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $e->getFile() . ' | line |' . $e->getLine());
+                $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $e->getFile() . ' | line |' . $e->getLine());
                 return new JsonResponse([
 
                         'state' => 'ISE',
@@ -211,7 +211,7 @@ class ApiExportImportDataController extends AbstractController
             }
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -584,7 +584,7 @@ class ApiExportImportDataController extends AbstractController
                 , Response::HTTP_OK);
         } catch
         (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
             return new JsonResponse([
                     'state' => 'ISE', 'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
