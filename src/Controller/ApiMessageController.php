@@ -152,9 +152,9 @@ class ApiMessageController extends AbstractController
             foreach ($client->getChats() as $chat) {
                 $lastMessage = null;
                 $createdAt = null;
-                if ($chat->getMessages()[0] ) {
-                    $lastMessage = $chat->getMessages()[0]->getContent() ;
-                    $createdAt = $chat->getMessages()[0]->getCreatedAt() ;
+                if (count($chat->getMessages()) == 0 ) {
+                    $lastMessage = end($chat->getMessages())->getContent() ;
+                    $createdAt =  end($chat->getMessages())->getCreatedAt() ;
                 }
                 if ($chat->getProject()->getState() != 'deleted') {
                     $data[] = [
@@ -245,8 +245,8 @@ class ApiMessageController extends AbstractController
 
     public function chatDataShortData($chat)
     {   $lastMessage = null;
-        if ($chat->getMessages()[0] ) {
-            $lastMessage = $chat->getMessages()[0]->getContent() ;
+        if (count($chat->getMessages())) == 0 {
+            $lastMessage =  end($chat->getMessages())->getContent() ;
         }
         $users = [];
         foreach ($chat->getUsers() as $user) {
@@ -465,7 +465,7 @@ class ApiMessageController extends AbstractController
             }
             $array = $message->getChat()->getMessages();
             $messagesArray = $array->toArray();
-            if ($messagesArray[0] == $message) {
+            if (end($messagesArray)== $message) {
                 return new JsonResponse([
                         'state' => 'ASFO',
                         'value' => 'message'
