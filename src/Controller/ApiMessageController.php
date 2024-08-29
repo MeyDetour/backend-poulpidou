@@ -166,7 +166,7 @@ class ApiMessageController extends AbstractController
                         'name' => $chat->getName(),
                         'lastMessage' => [
                             "content" => $lastMessage,
-                            "date" => $createdAt,
+                            "date" => $this->dateService->formateDateWithHour($createdAt)  ,
                         ]
                     ];
                 }
