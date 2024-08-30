@@ -297,7 +297,7 @@ class ApiPdfController extends AbstractController
         }
     }
 
-    #[Route('/download/example/pdf', name: 'upload_example_pdf', methods: ['get'])]
+    #[Route('/download/example/pdf', name: 'upload_example_pdf', methods: 'get')]
     public function getExamplePdf(Pdf $knpSnappyPdf)
     {
         try {
