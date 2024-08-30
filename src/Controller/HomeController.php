@@ -20,7 +20,7 @@ class HomeController extends AbstractController
             'description' => 'jspppp',
             'date' => '2025/60/03',
             'project_id' => 1,
-            'nbTitles' => 3,
+            'nbActions' => 3,
             'number' => 'af8441df84',
             'client' => [
                 "firstName" => 'Gaelle',
@@ -31,7 +31,7 @@ class HomeController extends AbstractController
         ], [
             'id' => '1',
             'price' => 565465,
-            'nbTitles' => 3,
+            'nbActions' => 3,
             'date' => '2024/06/03',
             'project_id' => 1,
 
@@ -47,7 +47,7 @@ class HomeController extends AbstractController
             'price' => 1250,
             'description' => 'jspppp',
 
-            'nbTitles' => 3,
+            'nbActions' => 3,
             'date' => '2024/06/03',
             'number' => '8z4f4d15f',
             'project_id' => 1,
