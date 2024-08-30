@@ -14,7 +14,7 @@ class ExceptionListener
         $response = new JsonResponse([
             'state' => 'ISE',
             'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine(),
-            "for my bitch" => "❤️❤️❤️❤️"
+
         ]);
 
         if ($exception instanceof HttpExceptionInterface) {
