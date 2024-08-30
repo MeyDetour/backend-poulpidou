@@ -470,55 +470,7 @@ class ApiPdfController extends AbstractController
                     ],
                     "quantity" => 1,
                     "price" => 50.00
-                ], [
-                    "title" => 'Développement backend',
-                    "compositions" => [
-                        "Système d’envoi de mail ( intégration du serveur de mails, creation et personnalisation des templates d'emai, gestation des envois et suivi des erreurs.)",
-                        "Gestion d’images et de compte (Implementation du téléchargement et stockage sécurisé des images, Automatisation du redimensionnement et optimisation des images, caricaturisation et gestion des permissions des utilisateurs.)",
-                    ],
-                    "quantity" => 1,
-                    "price" => 500.00
-                ], [
-                    "title" => 'Développement  front end',
-                    "compositions" => [
-                        "Utilisation de frameworks modernes (React, Angular, Vue.js)",
-                        "Application des bonnes pratiques ( SEO )",
-                        "Conception de l'interface adaptée aux différents dispositifs (mobile, tablette, desktop).",
-                        "Tests de compatibilité cross-browser et cross-device.",
-                    ],
-                    "quantity" => 1,
-                    "price" => 100.00
-                ],
-                [
-                    "title" => 'Conception interface',
-                    "compositions" => [
-                        "Analyse des besoins utilisateurs",
-                        "Wireframing et Prototypage",
-                        "Design Visuel et conception de l'identité visuelle",
-                        "Réalisation de maquettes haute fidélité",
-                        "Tests Utilisateurs pour valider l'ergonomie."
-                    ],
-                    "quantity" => 1,
-                    "price" => 50.00
-                ], [
-                    "title" => 'Développement backend',
-                    "compositions" => [
-                        "Système d’envoi de mail ( intégration du serveur de mails, creation et personnalisation des templates d'emai, gestation des envois et suivi des erreurs.)",
-                        "Gestion d’images et de compte (Implementation du téléchargement et stockage sécurisé des images, Automatisation du redimensionnement et optimisation des images, caricaturisation et gestion des permissions des utilisateurs.)",
-                    ],
-                    "quantity" => 1,
-                    "price" => 500.00
-                ], [
-                    "title" => 'Développement  front end',
-                    "compositions" => [
-                        "Utilisation de frameworks modernes (React, Angular, Vue.js)",
-                        "Application des bonnes pratiques ( SEO )",
-                        "Conception de l'interface adaptée aux différents dispositifs (mobile, tablette, desktop).",
-                        "Tests de compatibilité cross-browser et cross-device.",
-                    ],
-                    "quantity" => 1,
-                    "price" => 100.00
-                ],
+                ]
 
             ]]);
     }
