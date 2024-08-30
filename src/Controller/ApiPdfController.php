@@ -314,7 +314,7 @@ class ApiPdfController extends AbstractController
 
         $html = $this->getPdf();
 
-        $pdfFilePath = $this->getParameter('kernel.project_dir') . '/public/pdf/' . uniqid() . '.poulpidou';
+        $pdfFilePath = $this->getParameter('kernel.project_dir') . '/public/pdf/' . uniqid() . '.pdf';
 
         // Générer le PDF
         $knpSnappyPdf->generateFromHtml($html, $pdfFilePath);
