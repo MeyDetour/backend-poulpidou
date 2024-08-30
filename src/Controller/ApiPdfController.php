@@ -296,9 +296,8 @@ class ApiPdfController extends AbstractController
              ,Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
-    #[Route('/pdf', name: 'app_api_pdf', methods: ['GET'])]
-    public function downloadPdf(Pdf $knpSnappyPdf): PdfResponse
+    #[Route('/api/download/example/pdf', name: 'upload_example_pdf', methods: ['get'])]
+    public function getExamplePdf(Pdf $knpSnappyPdf)
     {
         $html = $this->getPdf();
 
@@ -308,13 +307,14 @@ class ApiPdfController extends AbstractController
         );
     }
 
+
     #[Route('/pdftest', name: 'app_pdf')]
     public function renderPdf(Pdf $knpSnappyPdf)
     {
 
         $html = $this->getPdf();
 
-        $pdfFilePath = $this->getParameter('kernel.project_dir') . '/public/uploads/pdf/' . uniqid() . '.pdf';
+        $pdfFilePath = $this->getParameter('kernel.project_dir') . '/public/pdf/' . uniqid() . '.poulpidou';
 
         // Générer le PDF
         $knpSnappyPdf->generateFromHtml($html, $pdfFilePath);
