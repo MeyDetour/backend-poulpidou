@@ -80,15 +80,7 @@ class ApiSettingController extends AbstractController
                     }
                     $settings->setDateFormat($data['formatDate']);
                 }
-                if (isset($data['interfaceLangage']) && !empty(trim($data['interfaceLangage']))) {
-                    if (!in_array($data['interfaceLangage'], $this->associationLangageKey)) {
-                        return new JsonResponse( [
-                            'state' => 'IDT',
-                            'value' => 'interfaceLangage',
-                        ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
-                    }
-                    $settings->setInterfaceLangage($data['interfaceLangage']);
-                }
+
                 if (isset($data['payments']) && gettype($data['payments']) == 'array') {
                     foreach ($data['payments'] as $pay) {
                             if(!in_array($pay, $this->associationPayementKey)) {
@@ -191,7 +183,7 @@ class ApiSettingController extends AbstractController
             'delayDays' => $setting->getDelayDays(),
             'installmentPayments' => $setting->isInstallmentPayments(),
             'freeMaintenance' => $setting->isFreeMaintenance(),
-            'interfaceLangage' => $setting->getInterfaceLangage()
+
         ];
     }
 }
