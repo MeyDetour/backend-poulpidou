@@ -205,7 +205,8 @@ class ApiPdfController extends AbstractController
 
                 return new JsonResponse([
                         'state' => 'OK', 'value' => [
-                            'filePath' => $filePath
+                            'filePath' => $filePath,
+                            'fileName'=>$pdf->getFileName()
                         ]
                     ]
                     , Response::HTTP_OK);
