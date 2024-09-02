@@ -189,7 +189,7 @@ class ApiPdfController extends AbstractController
                     ]
                     , Response::HTTP_OK);
             }
-            $filePath = $this->getParameter('upload_directory') . '/' . $pdf->getFileName();
+            $filePath =  'pdf/' . $pdf->getFileName();
 
 
             if (!file_exists($filePath)) {
