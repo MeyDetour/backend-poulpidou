@@ -193,10 +193,14 @@ class ApiPdfController extends AbstractController
 
 
             if (!file_exists($filePath)) {
-                return new JsonResponse([
-                    'state' => 'NDF',
-                    'value' => 'pdf',
-                ], Response::HTTP_NOT_FOUND);
+                $manager->remove($pdf);
+                $manager->flush();
+                 return new JsonResponse([
+                         'state' => 'OK', 'value' => [
+                             'filePath' => null,
+                         ]
+                     ]
+                     , Response::HTTP_OK);
             }
 
                 return new JsonResponse([
