@@ -106,7 +106,7 @@ class ApiPdfController extends AbstractController
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
 
-            $newFilename = $originalFilename . '-' . uniqid() . '.' . $file->guessExtension();
+            $newFilename =  uniqid() . '.' . $file->guessExtension();
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
             if ($pdf) {
 
