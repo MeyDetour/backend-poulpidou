@@ -183,9 +183,11 @@ class ApiPdfController extends AbstractController
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
             if (!$pdf) {
                 return new JsonResponse([
-                    'state' => 'NDF',
-                    'value' => 'pdf',
-                ], Response::HTTP_NOT_FOUND);
+                        'state' => 'OK', 'value' => [
+                            'filePath' => null,
+                        ]
+                    ]
+                    , Response::HTTP_OK);
             }
             $filePath = $this->getParameter('upload_directory') . '/' . $pdf->getFileName();
 
@@ -196,7 +198,6 @@ class ApiPdfController extends AbstractController
                     'value' => 'pdf',
                 ], Response::HTTP_NOT_FOUND);
             }
-            try {
 
                 return new JsonResponse([
                         'state' => 'OK', 'value' => [
@@ -204,15 +205,7 @@ class ApiPdfController extends AbstractController
                         ]
                     ]
                     , Response::HTTP_OK);
-            } catch (\Exception $exception) {
-                return new JsonResponse([
 
-                        'state' => 'ISE',
-                        'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-                    ]
-                    , Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
 
         } catch (\Exception $exception) {
             return new JsonResponse([
