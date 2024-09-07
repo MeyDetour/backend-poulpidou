@@ -520,6 +520,7 @@ class ApiClientController extends AbstractController
                         ]
                         ,
                         'project' => [
+                            'name'=>$project->getName(),
                             'startDate' => $this->dateService->formateDateWithUser($project->getStartDate(), $project->getOwner()),
                             'endDate' => $this->dateService->formateDateWithUser($project->getEndDate(), $project->getOwner()),
                             'price' => $project->getTotalPrice(),
