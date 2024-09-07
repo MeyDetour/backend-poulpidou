@@ -509,7 +509,7 @@ class ApiClientController extends AbstractController
             return new JsonResponse( [
                     'state' => 'OK','value' => [
                         "lang" => $settings->getInterfaceLangage(),
-                        "modalités" => [
+                        "modalites" => [
                             'payments' => explode(',', $settings->getPayment())
                             ,
                             'delayDays' => $settings->getDelayDays(),

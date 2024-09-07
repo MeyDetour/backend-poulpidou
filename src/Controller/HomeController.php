@@ -286,7 +286,7 @@ class HomeController extends AbstractController
                     'methode' => 'get',
                     "renvoie :" => [
                         "lang" => null,
-                        "modalités" => [
+                        "modalites" => [
                             'payments' => []
                             ,
                             'delayDays' => null,
