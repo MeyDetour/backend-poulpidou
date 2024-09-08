@@ -505,6 +505,10 @@ class ApiClientController extends AbstractController
             }
             $settings = $project->getOwner()->getSetting();
 
+            $maintenancePercentage = $project->getMaintenancePercentage();
+            if ($project->getMaintenanceProject()==true){
+                $maintenancePercentage = null;
+            }
 
             return new JsonResponse([
                     'state' => 'OK', 'value' => [
@@ -533,7 +537,7 @@ class ApiClientController extends AbstractController
                             'startDate' => $this->dateService->formateDateWithUser($project->getStartDate(), $project->getOwner()),
                             'endDate' => $this->dateService->formateDateWithUser($project->getEndDate(), $project->getOwner()),
                             'price' => $project->getTotalPrice(),
-                            'maintenancePercentage' => $project->getMaintenancePercentage()
+                            'maintenancePercentage' => $maintenancePercentage,
 
                         ],
                         'client' => [
