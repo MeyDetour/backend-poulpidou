@@ -129,6 +129,7 @@ class ApiUserController extends AbstractController
 
     public function getData($user)
     {
+        $this->formatNames($user);
         return [
             'id' => $user->getId(),
             'mail' => $user->getEmail(),
