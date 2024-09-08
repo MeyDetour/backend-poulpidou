@@ -29,7 +29,7 @@ class ApiClientController extends AbstractController
     }
 
     #[Route('/api/client/new', name: 'new_client', methods: 'post')]
-    public function index(Request $request, EntityManagerInterface $manager,): Response
+    public function index(Request $request, EntityManagerInterface $manager): Response
     {
         try {
 
@@ -38,21 +38,22 @@ class ApiClientController extends AbstractController
             if ($data) {
                 $client = new Client();
                 if (!isset($data['firstName']) || empty(trim($data['firstName']))) {
-                    return new JsonResponse( [
+                    return new JsonResponse([
                         'state' => 'NED',
                         'value' => 'firstName',
-                    ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
-                }    if (!isset($data['mail']) || empty(trim($data['mail']))) {
-                    return new JsonResponse( [
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+                if (!isset($data['mail']) || empty(trim($data['mail']))) {
+                    return new JsonResponse([
                         'state' => 'NED',
                         'value' => 'mail',
-                    ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (!isset($data['lastName']) || empty(trim($data['lastName']))) {
-                    return new JsonResponse( [
+                    return new JsonResponse([
                         'state' => 'NED',
                         'value' => 'lastName',
-                    ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
                 if (isset($data['note']) && !empty(trim($data['note']))) {
                     $client->setNote($data['note']);
@@ -67,10 +68,10 @@ class ApiClientController extends AbstractController
                 if (isset($data['age']) && !empty(trim($data['age']))) {
                     $isValid = filter_var($data['age'], FILTER_VALIDATE_INT) !== false && $data['age'] > 0;
                     if (!$isValid) {
-                        return new JsonResponse( [
+                        return new JsonResponse([
                             'state' => 'IDT',
                             'value' => 'age',
-                        ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $client->setAge($data['age']);
                 }
@@ -94,22 +95,22 @@ class ApiClientController extends AbstractController
                 $manager->flush();
                 $this->logService->createLog('ACTION', 'create new client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
 
-                return new JsonResponse( [
-                        'state' => 'OK',   'value' => $this->getDataClient($client)
+                return new JsonResponse([
+                        'state' => 'OK', 'value' => $this->getDataClient($client)
                     ]
-                 ,Response::HTTP_OK);
+                    , Response::HTTP_OK);
             }
 
-            return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-            return new JsonResponse( [
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -120,21 +121,22 @@ class ApiClientController extends AbstractController
         try {
             $client = $repository->find($id);
             if (!$client) {
-                 return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'client',
-                     ] , Response::HTTP_NOT_FOUND);
+                return new JsonResponse([
+                    'state' => 'NDF',
+                    'value' => 'client',
+                ], Response::HTTP_NOT_FOUND);
             }
             if (!$client->getOwner() == $this->getUser()) {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'FO',
                     'value' => 'client',
-                ] ,Response::HTTP_FORBIDDEN);
-            }  if ($client->getState() == 'deleted') {
-                return new JsonResponse( [
+                ], Response::HTTP_FORBIDDEN);
+            }
+            if ($client->getState() == 'deleted') {
+                return new JsonResponse([
                     'state' => 'DD',
                     'value' => 'client',
-                ] ,Response::HTTP_NOT_FOUND);
+                ], Response::HTTP_NOT_FOUND);
             }
             $this->formatNames($client);
 
@@ -142,7 +144,7 @@ class ApiClientController extends AbstractController
             $data = json_decode($request->getContent(), true);
 
             if ($data) {
-                $lastClient = clone  $client;
+                $lastClient = clone $client;
                 if (isset($data['firstName']) && !empty(trim($data['firstName']))) {
                     $client->setFirstName($data['firstName']);
                 }
@@ -161,10 +163,10 @@ class ApiClientController extends AbstractController
                 if (isset($data['age']) && !empty(trim($data['age']))) {
                     $isValid = filter_var($data['age'], FILTER_VALIDATE_INT) !== false && $data['age'] > 0;
                     if (!$isValid) {
-                        return new JsonResponse( [
+                        return new JsonResponse([
                             'state' => 'IDT',
                             'value' => 'age',
-                        ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     $client->setAge($data['age']);
                 }
@@ -180,29 +182,29 @@ class ApiClientController extends AbstractController
                 $manager->persist($client);
                 $manager->flush();
                 if ($client->getFirstName() != $lastClient->getFirstName() || $client->getLastName() != $lastClient->getLastName()) {
-                    $this->logService->createLog('ACTION', " Edit Client's name ". $client->getId() . ':'  . $lastClient->getFirstName() . ' ' . $lastClient->getLastName() .") to (" . $client->getId() . ':' . $client->getFirstName() . ' ' . $client->getLastName() . ') ');
+                    $this->logService->createLog('ACTION', " Edit Client's name " . $client->getId() . ':' . $lastClient->getFirstName() . ' ' . $lastClient->getLastName() . ") to (" . $client->getId() . ':' . $client->getFirstName() . ' ' . $client->getLastName() . ') ');
 
-                }else{
+                } else {
                     $this->logService->createLog('ACTION', 'Edit client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
                 }
 
-                return new JsonResponse( [
+                return new JsonResponse([
                         'state' => 'OK', 'value' =>
                             $this->getDataClient($client)
                     ]
-                 ,Response::HTTP_OK);
+                    , Response::HTTP_OK);
             }
-            return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-            return new JsonResponse( [
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -212,16 +214,16 @@ class ApiClientController extends AbstractController
         try {
             $client = $repository->find($id);
             if (!$client) {
-                 return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'client',
-                     ] , Response::HTTP_NOT_FOUND);
+                return new JsonResponse([
+                    'state' => 'NDF',
+                    'value' => 'client',
+                ], Response::HTTP_NOT_FOUND);
             }
             if ($client->getOwner() != $this->getUser()) {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'FO',
                     'value' => 'client',
-                ] ,Response::HTTP_FORBIDDEN);
+                ], Response::HTTP_FORBIDDEN);
             }
             $client->setState('deleted');
             foreach ($client->getProjects() as $project) {
@@ -232,20 +234,20 @@ class ApiClientController extends AbstractController
             $manager->persist($client);
             $manager->flush();
             $this->logService->createLog('DELETE', 'delete client (' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')');
-                return new JsonResponse( [
+            return new JsonResponse([
                     'state' => 'OK',
-                 ]
-             ,Response::HTTP_OK);
+                ]
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-            return new JsonResponse( [
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -256,16 +258,16 @@ class ApiClientController extends AbstractController
         try {
             $client = $repository->find($id);
             if (!$client) {
-                 return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'client',
-                     ] , Response::HTTP_NOT_FOUND);
+                return new JsonResponse([
+                    'state' => 'NDF',
+                    'value' => 'client',
+                ], Response::HTTP_NOT_FOUND);
             }
             if (!$client->getOwner() == $this->getUser()) {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'FO',
                     'value' => 'client',
-                ] ,Response::HTTP_FORBIDDEN);
+                ], Response::HTTP_FORBIDDEN);
             }
             $cpForLog = '(' . $client->getId() . ' | ' . $client->getFirstName() . ' ' . $client->getLastName() . ')';
 
@@ -283,10 +285,10 @@ class ApiClientController extends AbstractController
 
 
                     if (!file_exists($filePath)) {
-                         return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'pdf',
-                     ] , Response::HTTP_NOT_FOUND);
+                        return new JsonResponse([
+                            'state' => 'NDF',
+                            'value' => 'pdf',
+                        ], Response::HTTP_NOT_FOUND);
                     }
 
                     $filePath = 'pdf/' . $pdf->getFileName();
@@ -295,10 +297,10 @@ class ApiClientController extends AbstractController
 
                     } else {
 
-                        return new JsonResponse( [
+                        return new JsonResponse([
                                 'state' => 'OK', 'value' => 'Failed to remove pdf'
                             ]
-                         ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                            , Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
 
                 }
@@ -314,21 +316,21 @@ class ApiClientController extends AbstractController
             $manager->flush();
 
             $this->logService->createLog('DELETE', 'delete force client ' . $cpForLog);
-                return new JsonResponse( [
+            return new JsonResponse([
                     'state' => 'OK',
-                 ]
-             ,Response::HTTP_OK);
+                ]
+                , Response::HTTP_OK);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-            return new JsonResponse( [
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -340,32 +342,32 @@ class ApiClientController extends AbstractController
 
             $client = $repository->find($id);
             if (!$client) {
-                 return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'client',
-                     ] , Response::HTTP_NOT_FOUND);
+                return new JsonResponse([
+                    'state' => 'NDF',
+                    'value' => 'client',
+                ], Response::HTTP_NOT_FOUND);
             }
             if (!$client->getOwner() == $this->getUser()) {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'FO',
                     'value' => 'client',
-                ] ,Response::HTTP_FORBIDDEN);
+                ], Response::HTTP_FORBIDDEN);
             }
             $this->formatNames($client);
 
-            return new JsonResponse( [
-                    'state' => 'OK',  'value' => $this->getDataClient($client)
+            return new JsonResponse([
+                    'state' => 'OK', 'value' => $this->getDataClient($client)
                 ]
-             ,Response::HTTP_OK);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-            return new JsonResponse( [
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -410,20 +412,19 @@ class ApiClientController extends AbstractController
             $manager->flush();
 
 
-
-            return new JsonResponse( [
-                    'state' => 'OK','value' => $data
+            return new JsonResponse([
+                    'state' => 'OK', 'value' => $data
                 ]
-             ,Response::HTTP_OK);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
-            return new JsonResponse( [
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -434,22 +435,22 @@ class ApiClientController extends AbstractController
         try {
             $client = $repository->find($id);
             if (!$client) {
-                 return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'client',
-                     ] , Response::HTTP_NOT_FOUND);
+                return new JsonResponse([
+                    'state' => 'NDF',
+                    'value' => 'client',
+                ], Response::HTTP_NOT_FOUND);
             }
             if (!$client->getOwner() == $this->getUser()) {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'FO',
                     'value' => 'client',
-                ] ,Response::HTTP_FORBIDDEN);
+                ], Response::HTTP_FORBIDDEN);
             }
             if ($client->getState() == 'deleted') {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'DD',
                     'value' => 'client',
-                ] ,Response::HTTP_NOT_FOUND);
+                ], Response::HTTP_NOT_FOUND);
             }
             $this->formatNames($client);
             $data = [];
@@ -457,24 +458,23 @@ class ApiClientController extends AbstractController
                 $data[] = $apiProjectController->getDataProjectForMiniature($project);
             }
 
-            return new JsonResponse( [
-                    'state' => 'OK','value' => $data
+            return new JsonResponse([
+                    'state' => 'OK', 'value' => $data
                 ]
-             ,Response::HTTP_OK);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-            return new JsonResponse( [
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
-
 
 
     #[Route('/interface/{uuid}', name: 'interface_client', methods: 'get')]
@@ -484,30 +484,30 @@ class ApiClientController extends AbstractController
 
             $project = $projectRepository->findOneBy(['uuid' => $uuid]);
             if (!$project) {
-                 return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'project',
-                     ] , Response::HTTP_NOT_FOUND);
+                return new JsonResponse([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ], Response::HTTP_NOT_FOUND);
             }
 
             $client = $project->getClient();
             if ($project->getState() == 'deleted') {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'DD',
                     'value' => 'project',
-                ] , Response::HTTP_NOT_FOUND);
+                ], Response::HTTP_NOT_FOUND);
             }
             if ($client->getState() == 'deleted') {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'DD',
                     'value' => 'client',
-                ] , Response::HTTP_NOT_FOUND);
+                ], Response::HTTP_NOT_FOUND);
             }
             $settings = $project->getOwner()->getSetting();
 
 
-            return new JsonResponse( [
-                    'state' => 'OK','value' => [
+            return new JsonResponse([
+                    'state' => 'OK', 'value' => [
                         "lang" => $settings->getInterfaceLangage(),
                         "modalites" => [
                             'payments' => explode(',', $settings->getPayment())
@@ -517,10 +517,19 @@ class ApiClientController extends AbstractController
                             'freeMaintenance' => $settings->isFreeMaintenance(),
                             'interfaceLangage' => $settings->getInterfaceLangage()
 
+                        ],
+                        [
+                            'id' => $project->getOwner()->getId(),
+                            'mail' => $project->getOwner()->getEmail(),
+                            'phone' => $project->getOwner()->getPhone(),
+                            'siret' => $project->getOwner()->getSiret(),
+                            'address' => $project->getOwner()->getAdresse(),
+                            'firstName' => $project->getOwner()->getFirstName(),
+                            'lastName' => $project->getOwner()->getLastName(),
                         ]
                         ,
                         'project' => [
-                            'name'=>$project->getName(),
+                            'name' => $project->getName(),
                             'startDate' => $this->dateService->formateDateWithUser($project->getStartDate(), $project->getOwner()),
                             'endDate' => $this->dateService->formateDateWithUser($project->getEndDate(), $project->getOwner()),
                             'price' => $project->getTotalPrice(),
@@ -537,17 +546,17 @@ class ApiClientController extends AbstractController
 
                     ]
                 ]
-             ,Response::HTTP_OK);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-            return new JsonResponse( [
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -559,29 +568,29 @@ class ApiClientController extends AbstractController
 
             $project = $projectRepository->findOneBy(['uuid' => $uuid]);
             if (!$project) {
-                 return new JsonResponse( [
-                        'state' => 'NDF',
-                        'value' => 'project',
-                     ] , Response::HTTP_NOT_FOUND);
+                return new JsonResponse([
+                    'state' => 'NDF',
+                    'value' => 'project',
+                ], Response::HTTP_NOT_FOUND);
             }
 
 
             $data = json_decode($request->getContent(), true);
             if (!$data) {
-                return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
             }
             if (!isset($data['online'])) {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'NED',
                     'value' => 'online',
-                ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
             if (!is_bool($data['online'])) {
-                return new JsonResponse( [
+                return new JsonResponse([
                     'state' => 'IDT',
                     'value' => 'online',
-                ] ,Response::HTTP_UNPROCESSABLE_ENTITY);
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
 
@@ -589,20 +598,20 @@ class ApiClientController extends AbstractController
             $client->setOnline($data['online']);
             $manager->persist($client);
             $manager->flush();
-            return new JsonResponse( [
+            return new JsonResponse([
                     'state' => 'OK',
                 ]
-             ,Response::HTTP_OK);
+                , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-            return new JsonResponse( [
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -631,31 +640,31 @@ class ApiClientController extends AbstractController
 
                     }
 
-                    return new JsonResponse( [
-                            'state' => 'OK','value' => $dataToReturn
+                    return new JsonResponse([
+                            'state' => 'OK', 'value' => $dataToReturn
                         ]
-                     ,Response::HTTP_OK);
+                        , Response::HTTP_OK);
                 }
             }
 
-            return new JsonResponse( ['state' => 'ND'] ,Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine() );
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-            return new JsonResponse( [
+            return new JsonResponse([
 
                     'state' => 'ISE',
-                    'value' => ' Internal Servor Error : '.$exception->getMessage().' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
 
                 ]
-             ,Response::HTTP_INTERNAL_SERVER_ERROR);
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     public function getDataClient($client)
     {
         $lastUuidProject = null;
-        if (count($client->getProjects()) != 0){
+        if (count($client->getProjects()) != 0) {
             $client->getProjects()[0]->getUuid();
         }
         return [
@@ -671,15 +680,13 @@ class ApiClientController extends AbstractController
             "createdAt" => $this->dateService->formateDate($client->getCreatedAt()),
             "state" => $client->getState(),
             "online" => $client->isOnline(),
-            "note"=>$client->getNote(),
-            "lastUuidProject"=>$lastUuidProject
-
+            "note" => $client->getNote(),
+            "lastUuidProject" => $lastUuidProject
 
 
         ];
     }
 
-    
 
     public function formatNames($client)
     {
