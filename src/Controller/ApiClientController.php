@@ -518,7 +518,7 @@ class ApiClientController extends AbstractController
                             'interfaceLangage' => $settings->getInterfaceLangage()
 
                         ],
-                        [
+                      "projectOwner"=>  [
                             'id' => $project->getOwner()->getId(),
                             'mail' => $project->getOwner()->getEmail(),
                             'phone' => $project->getOwner()->getPhone(),
