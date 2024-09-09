@@ -78,7 +78,7 @@ class ApiMessageController extends AbstractController
     #[Route('/chat/{id}', name: 'get_one_chat', methods: ['get'])]
     public function getChat(Request $request, EntityManagerInterface $manager, $id, ChatRepository $chatRepository): Response
     {
-
+        try {
             $route = $request->attributes->get('_route');
             $chat = $chatRepository->find($id);
 
@@ -116,7 +116,16 @@ class ApiMessageController extends AbstractController
                     'state' => 'OK', "value" => $this->chatData($chat)
                 ]
                 , Response::HTTP_OK);
+        } catch
+        (\Exception $exception) {
+              return new JsonResponse([
 
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     #[Route('/api/client/{id}/chats', name: 'api_get_chats_of_client', methods: ['get'])]
