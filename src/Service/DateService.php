@@ -64,6 +64,19 @@ class DateService
         }
         return $date->format($this->association[$dataFormat] . ' H:i');
     }
+    public function formateDateWithHourAndUser($date,$user)
+    {
+
+        if (!$date) {
+            return null;
+        }
+        $dataFormat = $user->getSetting()->getDateFormat();
+
+        if (!in_array($dataFormat, $this->associationKey)) {
+            return $date->format('d/m/Y H:i');
+        }
+        return $date->format($this->association[$dataFormat] . ' H:i');
+    }
 
     public function formateDateWithUser($date, $user)
     {

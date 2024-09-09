@@ -234,7 +234,7 @@ class ApiMessageController extends AbstractController
             if($route != 'get_one_chat'){
                 $datetime =$this->dateService->formateDateWithHour($message->getCreatedAt());
             }else{
-                $datetime =$this->dateService->formateDateWithUser($message->getCreatedAt(),$chat->getProject()->getOwner());
+                $datetime =$this->dateService->formateDateWithHourAndUser($message->getCreatedAt(),$chat->getProject()->getOwner());
 
             }
             $formattedMessages[] = [
@@ -249,15 +249,17 @@ class ApiMessageController extends AbstractController
 
         if($route != 'get_one_chat'){
             $clientDate =$this->dateService->formateDateWithHour($client->getCreatedAt());
+            $chatDate = $this->dateService->formateDate($chat->getCreatedAt());
         }else{
-            $clientDate =$this->dateService->formateDateWithUser($client->getCreatedAt(),$chat->getProject()->getOwner());
+            $clientDate =$this->dateService->formateDateWithHourAndUser($client->getCreatedAt(),$chat->getProject()->getOwner());
+            $chatDate = $this->dateService->formateDateWithHourAndUser($chat->getCreatedAt(),$chat->getProject()->getOwner());
 
         }
         return [
             "chat" => [
                 'id' => $chat->getId(),
                 'name' => $chat->getName(),
-                'date' => $this->dateService->formateDate($chat->getCreatedAt()),
+                'date' => $chatDate ,
                 'project_id' => $chat->getProject()->getId(),
                 'project_uuid' => $chat->getProject()->getUuid(),
             ],
