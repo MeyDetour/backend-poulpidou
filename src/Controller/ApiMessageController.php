@@ -85,8 +85,8 @@ class ApiMessageController extends AbstractController
                 $chat = $chatRepository->find($id);
             } else {
 
-                $project = $projectRepository->findOneBy(['uuid'=>$id]);
-                if(!$project){
+                $project = $projectRepository->findOneBy(['uuid' => $id]);
+                if (!$project) {
                     return new JsonResponse([
                         'state' => 'NDF',
                         'value' => 'project',
@@ -121,16 +121,16 @@ class ApiMessageController extends AbstractController
                     'value' => 'project',
                 ], Response::HTTP_NOT_FOUND);
             }
-            if(
-              count(  $chat->getMessages() ) !==0 && $route == "api_get_one_chat"
-            ){
+            if (
+                count($chat->getMessages()) !== 0 && $route == "api_get_one_chat"
+            ) {
                 $chat->setRead(true);
                 $manager->persist($chat);
                 $manager->flush();
             }
 
             return new JsonResponse([
-                    'state' => 'OK', "value" => $this->chatData($chat,$route)
+                    'state' => 'OK', "value" => $this->chatData($chat, $route)
                 ]
                 , Response::HTTP_OK);
         } catch
@@ -212,7 +212,7 @@ class ApiMessageController extends AbstractController
         }
     }
 
-    public function chatData($chat,$route)
+    public function chatData($chat, $route)
     {
 
 
@@ -236,35 +236,35 @@ class ApiMessageController extends AbstractController
                 'lastname' => $author->getLastname(),
                 'email' => $author->getMail(),
             ];
-            if($route != 'get_one_chat'){
-                $datetime =$this->dateService->formateDateWithHour($message->getCreatedAt());
-            }else{
-                $datetime =$this->dateService->formateDateWithHourAndUser($message->getCreatedAt(),$chat->getProject()->getOwner());
+            if ($route != 'get_one_chat') {
+                $datetime = $this->dateService->formateDateWithHour($message->getCreatedAt());
+            } else {
+                $datetime = $this->dateService->formateDateWithHourAndUser($message->getCreatedAt(), $chat->getProject()->getOwner());
 
             }
             $formattedMessages[] = [
                 'id' => $message->getId(),
                 'content' => $message->getContent(),
-                'datetime' => $datetime ,
+                'datetime' => $datetime,
                 'author' => $authorData,
                 'type' => $type
             ];
         }
 
 
-        if($route != 'get_one_chat'){
-            $clientDate =$this->dateService->formateDateWithHour($client->getCreatedAt());
+        if ($route != 'get_one_chat') {
+            $clientDate = $this->dateService->formateDateWithHour($client->getCreatedAt());
             $chatDate = $this->dateService->formateDate($chat->getCreatedAt());
-        }else{
-            $clientDate =$this->dateService->formateDateWithHourAndUser($client->getCreatedAt(),$chat->getProject()->getOwner());
-            $chatDate = $this->dateService->formateDateWithHourAndUser($chat->getCreatedAt(),$chat->getProject()->getOwner());
+        } else {
+            $clientDate = $this->dateService->formateDateWithHourAndUser($client->getCreatedAt(), $chat->getProject()->getOwner());
+            $chatDate = $this->dateService->formateDateWithHourAndUser($chat->getCreatedAt(), $chat->getProject()->getOwner());
 
         }
         return [
             "chat" => [
                 'id' => $chat->getId(),
                 'name' => $chat->getName(),
-                'date' => $chatDate ,
+                'date' => $chatDate,
                 'project_id' => $chat->getProject()->getId(),
                 'project_uuid' => $chat->getProject()->getUuid(),
             ],
@@ -273,7 +273,7 @@ class ApiMessageController extends AbstractController
                 'firstName' => $client->getFirstName(),
                 'lastName' => $client->getLastName(),
                 'online' => $client->isOnline(),
-                'date' =>  $clientDate,
+                'date' => $clientDate,
                 'projectNumber' => count($client->getProjects())
             ],
             'messages' => $formattedMessages
@@ -447,7 +447,15 @@ class ApiMessageController extends AbstractController
                 if ($this->newMessage($message, $data['content'], $project)) {
                     return new JsonResponse([
                             'state' => 'OK',
-                        ]
+                            'value' => [
+                                'content' => $message->getContent(),
+                                'datetime' => $this->dateService->formateDateWithHour($message->getCreatedAt()),
+                                'author' => [
+                                    'id' => $message->getAuthorUser()->getId(),
+                                    'firstName' => $message->getAuthorUser()->getFirstName(),
+                                    'lastName' => $message->getAuthorUser()->getLastName(),
+                                ]
+                            ]]
                         , Response::HTTP_OK);
                 }
                 return new JsonResponse([
