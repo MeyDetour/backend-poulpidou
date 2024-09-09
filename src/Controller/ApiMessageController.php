@@ -231,7 +231,7 @@ class ApiMessageController extends AbstractController
                 'lastname' => $author->getLastname(),
                 'email' => $author->getMail(),
             ];
-            if($route == 'get_one_chat'){
+            if($route != 'get_one_chat'){
                 $datetime =$this->dateService->formateDateWithHour($message->getCreatedAt());
             }else{
                 $datetime =$this->dateService->formateDateWithUser($message->getCreatedAt(),$chat->getProject()->getOwner());
@@ -247,7 +247,7 @@ class ApiMessageController extends AbstractController
         }
 
 
-        if($route == 'get_one_chat'){
+        if($route != 'get_one_chat'){
             $clientDate =$this->dateService->formateDateWithHour($client->getCreatedAt());
         }else{
             $clientDate =$this->dateService->formateDateWithUser($client->getCreatedAt(),$chat->getProject()->getOwner());
