@@ -121,9 +121,14 @@ class ApiMessageController extends AbstractController
                     'value' => 'project',
                 ], Response::HTTP_NOT_FOUND);
             }
-            $chat->setRead(true);
-            $manager->persist($chat);
-            $manager->flush();
+            if(
+              count(  $chat->getMessages() ) !==0 && $route == "api_get_one_chat"
+            ){
+                $chat->setRead(true);
+                $manager->persist($chat);
+                $manager->flush();
+            }
+
             return new JsonResponse([
                     'state' => 'OK', "value" => $this->chatData($chat,$route)
                 ]
