@@ -61,7 +61,7 @@ class ApiMessageController extends AbstractController
 
         } catch
         (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -76,11 +76,11 @@ class ApiMessageController extends AbstractController
 
     #[Route('/api/chat/{id}', name: 'api_get_one_chat', methods: ['get'])]
     #[Route('/chat/{id}', name: 'get_one_chat', methods: ['get'])]
-    public function getChat(Request $request ,EntityManagerInterface $manager, $id , ChatRepository $chatRepository): Response
+    public function getChat(Request $request, EntityManagerInterface $manager, $id, ChatRepository $chatRepository): Response
     {
-        try {
-$route = $request->attributes->get('_route');
-                $chat = $chatRepository->find($id);
+
+            $route = $request->attributes->get('_route');
+            $chat = $chatRepository->find($id);
 
             if (!$chat) {
                 return new JsonResponse([
@@ -88,7 +88,7 @@ $route = $request->attributes->get('_route');
                     'value' => 'chat',
                 ], Response::HTTP_NOT_FOUND);
             }
-            if ($route == 'api_get_one_chat'){
+            if ($route == 'api_get_one_chat') {
                 if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser())) {
                     return new JsonResponse([
                         'state' => 'FO',
@@ -116,19 +116,7 @@ $route = $request->attributes->get('_route');
                     'state' => 'OK', "value" => $this->chatData($chat)
                 ]
                 , Response::HTTP_OK);
-        } catch
-        (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
-
-            return new JsonResponse([
-
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-                ]
-                , Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
     }
 
     #[Route('/api/client/{id}/chats', name: 'api_get_chats_of_client', methods: ['get'])]
@@ -172,7 +160,7 @@ $route = $request->attributes->get('_route');
                         'name' => $chat->getName(),
                         'lastMessage' => [
                             "content" => $lastMessage,
-                            "date" => $this->dateService->formateDateWithHour($createdAt)  ,
+                            "date" => $this->dateService->formateDateWithHour($createdAt),
                         ]
                     ];
                 }
@@ -185,7 +173,7 @@ $route = $request->attributes->get('_route');
 
         } catch
         (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -231,30 +219,30 @@ $route = $request->attributes->get('_route');
         }
 
         return [
-                "chat"=>[
-                    'id' => $chat->getId(),
-                    'name' => $chat->getName(),
-                    'date' => $this->dateService->formateDate($chat->getCreatedAt()),
-                    'project_id' => $chat->getProject()->getId(),
-                    'project_uuid' => $chat->getProject()->getUuid(),
-                ],
-                'client' => [
-                    'id' => $client->getId(),
-                    'firstName' => $client->getFirstName(),
-                    'lastName' => $client->getLastName(),
-                    'online' => $client->isOnline(),
-                    'date' => $this->dateService->formateDate($client->getCreatedAt()),
-                    'projectNumber' => count($client->getProjects())
-                ],
-                'messages' => $formattedMessages
-
+            "chat" => [
+                'id' => $chat->getId(),
+                'name' => $chat->getName(),
+                'date' => $this->dateService->formateDate($chat->getCreatedAt()),
+                'project_id' => $chat->getProject()->getId(),
+                'project_uuid' => $chat->getProject()->getUuid(),
+            ],
+            'client' => [
+                'id' => $client->getId(),
+                'firstName' => $client->getFirstName(),
+                'lastName' => $client->getLastName(),
+                'online' => $client->isOnline(),
+                'date' => $this->dateService->formateDate($client->getCreatedAt()),
+                'projectNumber' => count($client->getProjects())
+            ],
+            'messages' => $formattedMessages
 
 
         ];
     }
 
     public function chatDataShortData($chat)
-    {   $lastMessage = null;
+    {
+        $lastMessage = null;
         $messages = $chat->getMessages();
         if (count($messages) > 0) {
             $lastMessage = $messages[sizeof($messages) - 1];
@@ -272,18 +260,17 @@ $route = $request->attributes->get('_route');
 
         return [
 
-                'id' => $chat->getId(),
-                'name' => $chat->getName(),
-                'date' => $this->dateService->formateDate($chat->getCreatedAt()),
-            "lastMessage"=> $lastMessage,
-                'client' => [
-                    'id' => $chat->getClient()->getId(),
-                    'firstName' => $chat->getClient()->getFirstName(),
-                    'lastName' => $chat->getClient()->getLastName(),
-                    'online'=>$chat->getClient()->isOnline(),
-                ],
-                'users' => $users
-
+            'id' => $chat->getId(),
+            'name' => $chat->getName(),
+            'date' => $this->dateService->formateDate($chat->getCreatedAt()),
+            "lastMessage" => $lastMessage,
+            'client' => [
+                'id' => $chat->getClient()->getId(),
+                'firstName' => $chat->getClient()->getFirstName(),
+                'lastName' => $chat->getClient()->getLastName(),
+                'online' => $chat->getClient()->isOnline(),
+            ],
+            'users' => $users
 
 
         ];
@@ -351,7 +338,7 @@ $route = $request->attributes->get('_route');
 
         } catch
         (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -432,7 +419,7 @@ $route = $request->attributes->get('_route');
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -477,7 +464,7 @@ $route = $request->attributes->get('_route');
             }
             $array = $message->getChat()->getMessages();
             $messagesArray = $array->toArray();
-            if ($messagesArray[sizeof($messagesArray) -1]== $message) {
+            if ($messagesArray[sizeof($messagesArray) - 1] == $message) {
                 return new JsonResponse([
                         'state' => 'ASFO',
                         'value' => 'message'
@@ -494,7 +481,7 @@ $route = $request->attributes->get('_route');
 
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -534,7 +521,7 @@ $route = $request->attributes->get('_route');
 
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -558,7 +545,7 @@ $route = $request->attributes->get('_route');
             $this->entityManager->flush();
             return true;
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return false;
         }
 
