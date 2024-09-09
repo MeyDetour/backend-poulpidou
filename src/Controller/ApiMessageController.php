@@ -79,7 +79,7 @@ class ApiMessageController extends AbstractController
     public function getChat(Request $request ,EntityManagerInterface $manager, $id , ChatRepository $chatRepository): Response
     {
         try {
-
+$route = $request->attributes->get('_route');
                 $chat = $chatRepository->find($id);
 
             if (!$chat) {
@@ -88,12 +88,15 @@ class ApiMessageController extends AbstractController
                     'value' => 'chat',
                 ], Response::HTTP_NOT_FOUND);
             }
-            if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse([
-                    'state' => 'FO',
-                    'value' => 'project',
-                ], Response::HTTP_FORBIDDEN);
+            if ($route == 'api_get_one_chat'){
+                if ($chat->getProject()->getOwner() != $this->getUser() && !$chat->getProject()->hasUserInUserAuthorised($this->getUser())) {
+                    return new JsonResponse([
+                        'state' => 'FO',
+                        'value' => 'project',
+                    ], Response::HTTP_FORBIDDEN);
+                }
             }
+
             if ($chat->getProject()->getState() == 'deleted') {
                 return new JsonResponse([
                     'state' => 'DD',
