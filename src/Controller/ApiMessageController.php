@@ -125,7 +125,7 @@ class ApiMessageController extends AbstractController
             $manager->persist($chat);
             $manager->flush();
             return new JsonResponse([
-                    'state' => 'OK', "value" => $this->chatData($chat)
+                    'state' => 'OK', "value" => $this->chatData($chat,$route)
                 ]
                 , Response::HTTP_OK);
         } catch
@@ -207,8 +207,10 @@ class ApiMessageController extends AbstractController
         }
     }
 
-    public function chatData($chat)
+    public function chatData($chat,$route)
     {
+
+
         $client = $chat->getClient();
         $formattedMessages = [];
         foreach ($chat->getMessages() as $message) {
@@ -229,16 +231,28 @@ class ApiMessageController extends AbstractController
                 'lastname' => $author->getLastname(),
                 'email' => $author->getMail(),
             ];
+            if($route == 'get_one_chat'){
+                $datetime =$this->dateService->formateDateWithHour($message->getCreatedAt());
+            }else{
+                $datetime =$this->dateService->formateDateWithUser($message->getCreatedAt(),$chat->getProject()->getOwner());
 
+            }
             $formattedMessages[] = [
                 'id' => $message->getId(),
                 'content' => $message->getContent(),
-                'datetime' => $this->dateService->formateDateWithHour($message->getCreatedAt()),
+                'datetime' => $datetime ,
                 'author' => $authorData,
                 'type' => $type
             ];
         }
 
+
+        if($route == 'get_one_chat'){
+            $clientDate =$this->dateService->formateDateWithHour($client->getCreatedAt());
+        }else{
+            $clientDate =$this->dateService->formateDateWithUser($client->getCreatedAt(),$chat->getProject()->getOwner());
+
+        }
         return [
             "chat" => [
                 'id' => $chat->getId(),
@@ -252,7 +266,7 @@ class ApiMessageController extends AbstractController
                 'firstName' => $client->getFirstName(),
                 'lastName' => $client->getLastName(),
                 'online' => $client->isOnline(),
-                'date' => $this->dateService->formateDate($client->getCreatedAt()),
+                'date' =>  $clientDate,
                 'projectNumber' => count($client->getProjects())
             ],
             'messages' => $formattedMessages
