@@ -75,10 +75,17 @@ class ApiMessageController extends AbstractController
     }
 
     #[Route('/api/chat/{id}', name: 'api_get_one_chat', methods: ['get'])]
-    public function getChat(Request $request, EntityManagerInterface $manager, $id, ChatRepository $chatRepository): Response
+    #[Route('/chat/{uuid}', name: 'get_one_chat', methods: ['get'])]
+    public function getChat( EntityManagerInterface $manager, $id ,$uuid, ChatRepository $chatRepository): Response
     {
         try {
-            $chat = $chatRepository->find($id);
+            if($id){
+
+                $chat = $chatRepository->find($id);
+            }else{
+
+                $chat = $chatRepository->find($uuid);
+            }
             if (!$chat) {
                 return new JsonResponse([
                     'state' => 'NDF',
