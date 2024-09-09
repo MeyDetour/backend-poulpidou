@@ -232,8 +232,8 @@ class ApiMessageController extends AbstractController
 
             $authorData = [
                 'id' => $author->getId(),
-                'firstname' => $author->getFirstname(),
-                'lastname' => $author->getLastname(),
+                'firstName' => $author->getFirstname(),
+                'lastName' => $author->getLastname(),
                 'email' => $author->getMail(),
             ];
             if ($route != 'get_one_chat') {

@@ -1385,8 +1385,8 @@ class HomeController extends AbstractController
                                 'datetime' => null,
                                 'author' => [
                                     'id' => null,
-                                    'firstname' => null,
-                                    'lastname' => null,
+                                    'firstName' => null,
+                                    'lastName' => null,
                                     'email' => null,
                                 ],
                                 'type' => 'client or user',
@@ -1397,8 +1397,8 @@ class HomeController extends AbstractController
                                 'datetime' => null,
                                 'author' => [
                                     'id' => null,
-                                    'firstname' => null,
-                                    'lastname' => null,
+                                    'firstName' => null,
+                                    'lastName' => null,
                                     'email' => null,
                                 ],
                                 'type' => 'client or user',
