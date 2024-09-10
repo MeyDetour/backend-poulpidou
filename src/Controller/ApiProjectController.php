@@ -170,7 +170,7 @@ class ApiProjectController extends AbstractController
                     $project->setTotalPrice($data['totalPrice']);
                 }
 
-                if (isset($data['composition']['isPaying']) &&  ($data['composition']['isPaying']!=null)) {
+                if (isset($data['composition']['isPaying']) &&  ($data['composition']['isPaying']!="null")) {
                     if (gettype($data['composition']['isPaying']) != 'string') {
                         return new JsonResponse([
                             'state' => 'IDT',
@@ -434,7 +434,7 @@ class ApiProjectController extends AbstractController
                         $project->setStartDate($searchDate);
                     }
 
-                    if (isset($data['composition']['isPaying']) && !empty(trim($data['composition']['isPaying'])) && ($data['composition']['isPaying']!=null) ) {
+                    if (isset($data['composition']['isPaying']) && !empty(trim($data['composition']['isPaying'])) && ($data['composition']['isPaying']!="null") ) {
                         if (gettype($data['composition']['isPaying']) != 'string') {
                             return new JsonResponse([
                                 'state' => 'IDT',
