@@ -28,7 +28,7 @@ class ApiStatistiqueController extends AbstractController
         $this->dateService = $dateService;
     }
 
-    #[Route('/api/statistic', name: 'app_api_statistic', methods: "get")]
+    #[Route('/api/statistic', name: 'app_api_statistic', methods: "put")]
     public function index(Request $request, ProjectRepository $projectRepository, TaskRepository $taskRepository, InvoiceRepository $invoiceRepository): Response
     {
         try {
