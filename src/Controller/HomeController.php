@@ -67,6 +67,8 @@ class HomeController extends AbstractController
     {
 
         return $this->json([
+            "MESSAGE"=>"ATTENTION CERTAINES REQUETES NE SONT PAS MIS A JOUR ET LES DONNEES DE RENVOIE NE SONT PAS EXACTEMENT LES MEMES",
+
             'account' => [
                 [
                     'login' => '/api/login_check',
@@ -125,8 +127,8 @@ class HomeController extends AbstractController
                         "createdAt" => null,
                         "state" => null,
                         "online" => null,
-                        "note"=>null,
-                        "lastUuidProject"=>null,
+                        "note" => null,
+                        "lastUuidProject" => null,
                     ],
                     'parametres a mettre dans le body' => [
                         "firstName" => null,
@@ -155,8 +157,8 @@ class HomeController extends AbstractController
                         "createdAt" => null,
                         "state" => null,
                         "online" => null,
-                        "note"=>null,
-                        "lastUuidProject"=>null,
+                        "note" => null,
+                        "lastUuidProject" => null,
 
                     ],
                     'parametres a mettre dans le body' => null,
@@ -209,8 +211,8 @@ class HomeController extends AbstractController
                         "createdAt" => null,
                         "state" => null,
                         "online" => null,
-                        "note"=>null,
-                        "lastUuidProject"=>null,
+                        "note" => null,
+                        "lastUuidProject" => null,
 
                     ],
                     'parametres a mettre dans le body' => [
@@ -1352,8 +1354,8 @@ class HomeController extends AbstractController
                     'gets all chats' => '/api/chats',
                     'methode' => 'get',
                     "renvoie :" => [
-                        "unread"=>[],
-                        "read"=>[]
+                        "unread" => [],
+                        "read" => []
                     ],
                     'parametres a mettre dans le body' => "nothing",
                     'utilisation' => "renvoie les chats dans lequels vous vous trouver + les chats des projets que l'on vous a partager",
@@ -1362,7 +1364,7 @@ class HomeController extends AbstractController
                     'get one chat' => '/api/chat/{id du chat}',
                     'methode' => 'get',
                     "renvoie :" => [
-                        "chat"=>[
+                        "chat" => [
                             'id' => null,
                             'name' => null,
                             'date' => null,
@@ -1513,7 +1515,7 @@ class HomeController extends AbstractController
                         'category' => 'dev',
                         'status' => 'waiting',
                         'dueDate' => '07/08/2024',
-                         'dueDateBaseFormat' => '2024-m-d',
+                        'dueDateBaseFormat' => '2024-m-d',
                         'author' => [
                             'firstName' => 'Maxence',
                             'lastName' => 'ABRILE'
@@ -1536,7 +1538,7 @@ class HomeController extends AbstractController
                         'status' => 'waiting',
                         'order' => 1,
                         'dueDate' => '07/08/2024',
-                         'dueDateBaseFormat' => '2024-m-d',
+                        'dueDateBaseFormat' => '2024-m-d',
                         'author' => [
                             'firstName' => 'Maxence',
                             'lastName' => 'ABRILE'
@@ -1578,7 +1580,7 @@ class HomeController extends AbstractController
                                 'order' => 1,
                                 'status' => 'waiting',
                                 'dueDate' => '07/08/2024',
-                                 'dueDateBaseFormat' => '2024-m-d',
+                                'dueDateBaseFormat' => '2024-m-d',
                                 'author' => [
                                     'firstName' => 'Maxence',
                                     'lastName' => 'ABRILE'
@@ -1610,6 +1612,16 @@ class HomeController extends AbstractController
                     ],
                     'parametres a mettre dans le body' => "nothing",
                     'utilisation' => "obtenir une tache  ",
+                    'need token ? ' => true],
+            ],
+            'statistiques' => [
+
+                [
+                    "avoir une tache " => '/api/statistic',
+                    'methode' => 'get',
+                    "renvoie :" => "ca depend...",
+                    'parametres a mettre dans le body' => "type(string),time(string)",
+                    'utilisation' => "obtenir les statistique selon une periode et un type de donné a afficher ",
                     'need token ? ' => true],
             ]
 
