@@ -101,7 +101,7 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfDay = $startOfDay->setTime(23, 59, 59);
 
                                 $count = $projectRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser());
-dd($count);
+
                                 if ($count != 0) {
                                     $dataToSend[$i] = $count;
                                 }
@@ -196,7 +196,7 @@ dd($count);
             return new JsonResponse([
                     'state' => 'OK',
                     "value" =>
-                        $data
+                        $dataToSend
                 ]
                 , Response::HTTP_OK);
 
