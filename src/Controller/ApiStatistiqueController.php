@@ -36,10 +36,10 @@ class ApiStatistiqueController extends AbstractController
             $type = $request->query->get('type');
             $time = $request->query->get('time');
             if ( empty($type)) {
-                return new JsonResponse(['state' => 'NEF', 'value' => 'type'], Response::HTTP_UNPROCESSABLE_ENTITY);
+                return new JsonResponse(['state' => 'NED', 'value' => 'type'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (  empty($time)) {
-                return new JsonResponse(['state' => 'NEF', 'value' => 'type'], Response::HTTP_UNPROCESSABLE_ENTITY);
+                return new JsonResponse(['state' => 'NED', 'value' => 'type'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (!in_array($type, $this->typeValues)) {
                 return new JsonResponse([
