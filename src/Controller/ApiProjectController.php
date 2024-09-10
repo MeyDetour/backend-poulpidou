@@ -171,7 +171,7 @@ class ApiProjectController extends AbstractController
                 }
 
                 if (isset($data['composition']['isPaying']) &&  ($data['composition']['isPaying']!="null")) {
-                  dd($data);
+
                     if (gettype($data['composition']['isPaying']) != 'string') {
                         return new JsonResponse([
                             'state' => 'IDT',
