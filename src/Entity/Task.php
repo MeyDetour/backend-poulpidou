@@ -36,10 +36,13 @@ class Task
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $col = null;
-
+//['waiting','progress','done']
     #[ORM\Column]
     private ?int $taskOrder = null;
-    //['waiting','progress','done']
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
 
     public function getId(): ?int
     {
@@ -138,6 +141,18 @@ class Task
     public function setTaskOrder(int $taskOrder): static
     {
         $this->taskOrder = $taskOrder;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
