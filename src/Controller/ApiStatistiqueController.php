@@ -77,9 +77,9 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
 
                                 $count = count($projectRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
-                                if ($count != 0) {
+
                                     $dataToSend[$year] = $count;
-                                }
+
                             }
                             break;
 
@@ -89,9 +89,9 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
                                 $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                if ($count != 0) {
+
                                     $dataToSend[$i] = $count;
-                                }
+
                             }
                             break;
 
@@ -102,9 +102,9 @@ class ApiStatistiqueController extends AbstractController
 
                                 $count = count( $projectRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
-                                if ($count != 0) {
+
                                     $dataToSend[$i] = $count;
-                                }
+
                             }
                             break;
                     }
@@ -119,9 +119,9 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
 
                                 $count = count($taskRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
-                                if ($count != 0) {
+
                                     $dataToSend[$year] = $count;
-                                }
+
                             }
                             break;
 
@@ -131,9 +131,9 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
                                 $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                if ($count != 0) {
+
                                     $dataToSend[$i] = $count;
-                                }
+
                             }
                             break;
 
@@ -144,9 +144,9 @@ class ApiStatistiqueController extends AbstractController
 
                                 $count = count( $taskRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
-                                if ($count != 0) {
+
                                     $dataToSend[$i] = $count;
-                                }
+
                             }
                             break;
                     }
@@ -161,9 +161,9 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
 
                                 $count = count($invoiceRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
-                                if ($count != 0) {
+
                                     $dataToSend[$year] = $count;
-                                }
+
                             }
                             break;
 
@@ -173,9 +173,9 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
                                 $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                if ($count != 0) {
+
                                     $dataToSend[$i] = $count;
-                                }
+
                             }
                             break;
 
@@ -186,9 +186,9 @@ class ApiStatistiqueController extends AbstractController
 
                                 $count = count( $invoiceRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
-                                if ($count != 0) {
+
                                     $dataToSend[$i] = $count;
-                                }
+
                             }
                             break;
                     }
