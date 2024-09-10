@@ -121,7 +121,7 @@ class ApiTaskController extends AbstractController
                     $task->setDescription($data['content']);
                 }
 
-
+                $task->setCreatedAt(new \DateTimeImmutable('now'));
                 $task->setName($data['name']);
                 $task->setOwner($this->getUser());
 
