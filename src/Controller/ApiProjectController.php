@@ -434,7 +434,7 @@ class ApiProjectController extends AbstractController
                         $project->setStartDate($searchDate);
                     }
 
-                    if (isset($data['composition']['isPaying'])) {
+                    if (isset($data['composition']['isPaying']) && !empty(trim($data['composition']['isPaying']))) {
                         if (gettype($data['composition']['isPaying']) != 'string') {
                             return new JsonResponse([
                                 'state' => 'IDT',
@@ -443,8 +443,8 @@ class ApiProjectController extends AbstractController
                         }
                         if ($data['composition']['isPaying'] != 'false' && $data['composition']['isPaying'] != 'true') {
                             return new JsonResponse([
-                                'state' => 'IDT',
-                                'value' => 'canSeeClientProfile',
+                                'state' => 'IDTV',
+                                'value' => 'isPaying',
                             ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
 
