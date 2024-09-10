@@ -434,7 +434,7 @@ class ApiProjectController extends AbstractController
                         $project->setStartDate($searchDate);
                     }
 
-                    if (isset($data['composition']['isPaying']) && !empty(trim($data['composition']['isPaying']))) {
+                    if (isset($data['composition']['isPaying']) && !empty(trim($data['composition']['isPaying'])) && ($data['composition']['isPaying']!=null) ) {
                         if (gettype($data['composition']['isPaying']) != 'string') {
                             return new JsonResponse([
                                 'state' => 'IDT',
@@ -670,7 +670,7 @@ class ApiProjectController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -733,7 +733,7 @@ class ApiProjectController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -906,7 +906,7 @@ class ApiProjectController extends AbstractController
                 , Response::HTTP_OK);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -957,7 +957,7 @@ class ApiProjectController extends AbstractController
                 , Response::HTTP_OK);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1004,7 +1004,7 @@ class ApiProjectController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1088,7 +1088,7 @@ class ApiProjectController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1129,7 +1129,7 @@ class ApiProjectController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1172,7 +1172,7 @@ class ApiProjectController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1216,7 +1216,7 @@ class ApiProjectController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1272,7 +1272,7 @@ class ApiProjectController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1308,7 +1308,7 @@ class ApiProjectController extends AbstractController
 
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1411,7 +1411,7 @@ class ApiProjectController extends AbstractController
                 ]
             ];
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1444,7 +1444,7 @@ class ApiProjectController extends AbstractController
                 'doneTasks' => $count,
             ];
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -1480,7 +1480,7 @@ class ApiProjectController extends AbstractController
 
             ];
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
