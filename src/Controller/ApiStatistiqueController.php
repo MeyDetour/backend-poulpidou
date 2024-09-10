@@ -45,14 +45,14 @@ class ApiStatistiqueController extends AbstractController
             if (!in_array($data["type"], $this->typeValues)) {
                 return new JsonResponse([
                         'state' => 'IDV',
-                        'value' => 'status',
+                        'value' => 'type',
                     ]
                     , Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (!in_array($data["time"], $this->timeValues)) {
                 return new JsonResponse([
                         'state' => 'IDV',
-                        'value' => 'status',
+                        'value' => 'time',
                     ]
                     , Response::HTTP_UNPROCESSABLE_ENTITY);
             }
