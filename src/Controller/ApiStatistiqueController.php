@@ -20,7 +20,7 @@ class ApiStatistiqueController extends AbstractController
     private DateService $dateService;
 
     private $typeValues = ['incomes', 'projects', 'tasks'];
-    private $timeValues = ['10yrs', '1yrs', '1m'];
+    private $timeValues = ['10yrs', '1yr', '1m'];
 
     public function __construct(LogService $logService, DateService $dateService)
     {
