@@ -171,6 +171,7 @@ class ApiProjectController extends AbstractController
                 }
 
                 if (isset($data['composition']['isPaying']) &&  ($data['composition']['isPaying']!="null")) {
+                  dd($data);
                     if (gettype($data['composition']['isPaying']) != 'string') {
                         return new JsonResponse([
                             'state' => 'IDT',
@@ -409,6 +410,7 @@ class ApiProjectController extends AbstractController
                     if (isset($data['identity']['githubLink']) && !empty(trim($data['identity']['githubLink']))) {
                         $project->setGithubLink($data['identity']['githubLink']);
                     }
+
                     if (isset($data['identity']['note']) && !empty(trim($data['identity']['note']))) {
                         $project->setNote($data['identity']['note']);
                     }
