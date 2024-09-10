@@ -170,7 +170,7 @@ class ApiProjectController extends AbstractController
                     $project->setTotalPrice($data['totalPrice']);
                 }
 
-                if (isset($data['composition']['isPaying'])) {
+                if (isset($data['composition']['isPaying']) &&  ($data['composition']['isPaying']!=null)) {
                     if (gettype($data['composition']['isPaying']) != 'string') {
                         return new JsonResponse([
                             'state' => 'IDT',
