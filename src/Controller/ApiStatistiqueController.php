@@ -32,24 +32,23 @@ class ApiStatistiqueController extends AbstractController
     public function index(Request $request, ProjectRepository $projectRepository, TaskRepository $taskRepository, InvoiceRepository $invoiceRepository): Response
     {
         try {
-            $data = json_decode($request->getContent(), true);
-            if (!$data) {
-                return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
-            }
-            if (!isset($data["type"]) || empty($data["type"])) {
+
+            $type = $request->query->get('type');
+            $time = $request->query->get('time');
+            if ( empty($type)) {
                 return new JsonResponse(['state' => 'NEF', 'value' => 'type'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            if (!isset($data["time"]) || empty($data["time"])) {
+            if (  empty($time)) {
                 return new JsonResponse(['state' => 'NEF', 'value' => 'type'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            if (!in_array($data["type"], $this->typeValues)) {
+            if (!in_array($type, $this->typeValues)) {
                 return new JsonResponse([
                         'state' => 'IDV',
                         'value' => 'type',
                     ]
                     , Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            if (!in_array($data["time"], $this->timeValues)) {
+            if (!in_array($time, $this->timeValues)) {
                 return new JsonResponse([
                         'state' => 'IDV',
                         'value' => 'time',
@@ -57,8 +56,6 @@ class ApiStatistiqueController extends AbstractController
                     , Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $dataToSend = [];
-            $type = $data["type"];
-            $time = $data["time"];
 
             $today = new \DateTimeImmutable();
             $today = $today->setTime(0, 0);
