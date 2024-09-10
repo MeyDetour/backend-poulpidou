@@ -43,12 +43,15 @@ class ProjectRepository extends ServiceEntityRepository
 
     public function findBetweenDate($date1,$date2,$owner): ?Array
     {
+        $today = new \DateTimeImmutable();
         return $this->createQueryBuilder('p')
             ->where('p.createdAt >= :startDate')
             ->andWhere('p.createdAt <= :endDate')
+            ->andWhere('p.createdAt <= :today')
             ->andWhere('p.owner = :owner')
             ->setParameter('startDate', $date1->format('Y-m-d H:i:s'))
             ->setParameter('endDate', $date2->format('Y-m-d H:i:s'))
+            ->setParameter('today', $today->format('Y-m-d H:i:s'))
             ->setParameter('owner', $owner)
             ->orderBy('p.createdAt', 'ASC')
             ->getQuery()

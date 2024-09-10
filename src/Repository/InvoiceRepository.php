@@ -20,13 +20,16 @@ class InvoiceRepository extends ServiceEntityRepository
     }
     public function findBetweenDate($date1,$date2,$owner): ?Array
     {
+        $today = new \DateTimeImmutable();
         return $this->createQueryBuilder('e')
             ->join('e.project', 'p')
             ->where('e.createdAt >= :startDate')
             ->andWhere('e.createdAt <= :endDate')
+            ->andWhere('p.createdAt <= :today')
             ->andWhere('p.owner = :owner')
             ->setParameter('startDate', $date1->format('Y-m-d'))
             ->setParameter('endDate', $date2->format('Y-m-d'))
+            ->setParameter('today', $today->format('Y-m-d'))
             ->setParameter('owner', $owner)
             ->orderBy('e.createdAt', 'ASC')
             ->getQuery()
