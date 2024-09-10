@@ -21,7 +21,6 @@ class InvoiceRepository extends ServiceEntityRepository
     public function findBetweenDate($date1,$date2,$owner): ?Array
     {
         return $this->createQueryBuilder('e')
-            ->select('COUNT(e)')
             ->where('e.createdAt >= :startDate')
             ->andWhere('e.createdAt <= :endDate')
             ->andWhere('e.owner = :owner')
@@ -30,7 +29,7 @@ class InvoiceRepository extends ServiceEntityRepository
             ->setParameter('owner', $owner)
             ->orderBy('e.createdAt', 'ASC')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getResult();
     }
     //     * @return Invoice[] Returns an array of Invoice objects
     //     */

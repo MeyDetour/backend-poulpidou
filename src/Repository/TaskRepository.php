@@ -18,7 +18,6 @@ class TaskRepository extends ServiceEntityRepository
     public function findBetweenDate($date1,$date2,$owner): ?Array
     {
         return $this->createQueryBuilder('e')
-            ->select('COUNT(e)')
             ->where('e.createdAt >= :startDate')
             ->andWhere('e.createdAt <= :endDate')
             ->andWhere('e.owner = :owner')
@@ -27,7 +26,7 @@ class TaskRepository extends ServiceEntityRepository
             ->setParameter('owner', $owner)
             ->orderBy('e.createdAt', 'ASC')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getResult();
     }
     //    /**
     //     * @return Task[] Returns an array of Task objects

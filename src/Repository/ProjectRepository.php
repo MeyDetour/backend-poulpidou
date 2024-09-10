@@ -44,7 +44,6 @@ class ProjectRepository extends ServiceEntityRepository
     public function findBetweenDate($date1,$date2,$owner): ?Array
     {
         return $this->createQueryBuilder('p')
-            ->select('COUNT(p)')
             ->where('p.createdAt >= :startDate')
             ->andWhere('p.createdAt <= :endDate')
             ->andWhere('p.owner = :owner')
@@ -53,7 +52,7 @@ class ProjectRepository extends ServiceEntityRepository
             ->setParameter('owner', $owner)
             ->orderBy('p.createdAt', 'ASC')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getResult();
     }
     public function searchAcrossTables($searchTerm)
     {

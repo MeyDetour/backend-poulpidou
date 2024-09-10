@@ -143,6 +143,7 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfDay = $startOfDay->setTime(23, 59, 59);
 
                                 $count = $taskRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser());
+
                                 if ($count != 0) {
                                     $dataToSend[$i] = $count;
                                 }
@@ -150,6 +151,7 @@ class ApiStatistiqueController extends AbstractController
                             break;
                     }
                     break;
+
 
                 case "incomes":
                     switch ($time) {
@@ -184,6 +186,7 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfDay = $startOfDay->setTime(23, 59, 59);
 
                                 $count = $invoiceRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser());
+
                                 if ($count != 0) {
                                     $dataToSend[$i] = $count;
                                 }
@@ -191,6 +194,7 @@ class ApiStatistiqueController extends AbstractController
                             break;
                     }
                     break;
+
             }
 
             return new JsonResponse([
