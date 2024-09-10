@@ -35,10 +35,11 @@ class ApiStatistiqueController extends AbstractController
 
             $type = $request->query->get('type');
             $time = $request->query->get('time');
-            if ( empty($type)) {
+
+            if (empty($type)) {
                 return new JsonResponse(['state' => 'NED', 'value' => 'type'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            if (  empty($time)) {
+            if (empty($time)) {
                 return new JsonResponse(['state' => 'NED', 'value' => 'type'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if (!in_array($type, $this->typeValues)) {
@@ -69,13 +70,13 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10yrs":
                             for ($i = 0; $i <= 10; $i++) {
-                                $year = $today->format('Y') -10 + $i;
+                                $year = $today->format('Y') - 10 + $i;
                                 $startOfYear = (new \DateTimeImmutable())->setDate($year, 1, 1)->setTime(0, 0);
                                 $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
 
                                 $count = count($projectRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
 
-                                    $dataToSend[$year] = $count;
+                                $dataToSend[$year] = $count;
 
                             }
                             break;
@@ -87,7 +88,7 @@ class ApiStatistiqueController extends AbstractController
 
                                 $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
-                                    $dataToSend[$i] = $count;
+                                $dataToSend[$i] = $count;
 
                             }
                             break;
@@ -97,10 +98,10 @@ class ApiStatistiqueController extends AbstractController
                                 $startOfDay = $today->setDate($today->format('Y'), $today->format('m'), $i)->setTime(0, 0, 0);
                                 $endOfDay = $startOfDay->setTime(23, 59, 59);
 
-                                $count = count( $projectRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+                                $count = count($projectRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
 
-                                    $dataToSend[$i] = $count;
+                                $dataToSend[$i] = $count;
 
                             }
                             break;
@@ -111,13 +112,13 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10yrs":
                             for ($i = 0; $i <= 10; $i++) {
-                                $year = $today->format('Y') -10 + $i;
+                                $year = $today->format('Y') - 10 + $i;
                                 $startOfYear = (new \DateTimeImmutable())->setDate($year, 1, 1)->setTime(0, 0);
                                 $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
 
                                 $count = count($taskRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
 
-                                    $dataToSend[$year] = $count;
+                                $dataToSend[$year] = $count;
 
                             }
                             break;
@@ -129,7 +130,7 @@ class ApiStatistiqueController extends AbstractController
 
                                 $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
-                                    $dataToSend[$i] = $count;
+                                $dataToSend[$i] = $count;
 
                             }
                             break;
@@ -139,10 +140,10 @@ class ApiStatistiqueController extends AbstractController
                                 $startOfDay = $today->setDate($today->format('Y'), $today->format('m'), $i)->setTime(0, 0, 0);
                                 $endOfDay = $startOfDay->setTime(23, 59, 59);
 
-                                $count = count( $taskRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+                                $count = count($taskRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
 
-                                    $dataToSend[$i] = $count;
+                                $dataToSend[$i] = $count;
 
                             }
                             break;
@@ -153,13 +154,13 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10yrs":
                             for ($i = 0; $i <= 10; $i++) {
-                                $year = $today->format('Y') -10 + $i;
+                                $year = $today->format('Y') - 10 + $i;
                                 $startOfYear = (new \DateTimeImmutable())->setDate($year, 1, 1)->setTime(0, 0);
                                 $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
 
                                 $count = count($invoiceRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
 
-                                    $dataToSend[$year] = $count;
+                                $dataToSend[$year] = $count;
 
                             }
                             break;
@@ -171,7 +172,7 @@ class ApiStatistiqueController extends AbstractController
 
                                 $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
-                                    $dataToSend[$i] = $count;
+                                $dataToSend[$i] = $count;
 
                             }
                             break;
@@ -181,10 +182,10 @@ class ApiStatistiqueController extends AbstractController
                                 $startOfDay = $today->setDate($today->format('Y'), $today->format('m'), $i)->setTime(0, 0, 0);
                                 $endOfDay = $startOfDay->setTime(23, 59, 59);
 
-                                $count = count( $invoiceRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+                                $count = count($invoiceRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
 
-                                    $dataToSend[$i] = $count;
+                                $dataToSend[$i] = $count;
 
                             }
                             break;
