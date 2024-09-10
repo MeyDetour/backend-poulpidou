@@ -157,7 +157,7 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10yrs":
                             for ($i = 0; $i <= 10; $i++) {
-                                $year = $today->format('Y') - $i;
+                                $year = $today->format('Y') -100 + $i;
                                 $startOfYear = (new \DateTimeImmutable())->setDate($year, 1, 1)->setTime(0, 0);
                                 $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
 
