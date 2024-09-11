@@ -67,7 +67,7 @@ class HomeController extends AbstractController
     {
 
         return $this->json([
-            "MESSAGE"=>"ATTENTION CERTAINES REQUETES NE SONT PAS MIS A JOUR ET LES DONNEES DE RENVOIE NE SONT PAS EXACTEMENT LES MEMES",
+            "MESSAGE"=>"ATTENTION CERTAINES REQUETES NE SONT PAS MISE A JOUR ET LES DONNEES DE RENVOIE NE SONT PAS EXACTEMENT LES MEMES",
 
             'account' => [
                 [

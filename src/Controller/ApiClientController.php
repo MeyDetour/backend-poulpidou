@@ -506,7 +506,7 @@ class ApiClientController extends AbstractController
             $settings = $project->getOwner()->getSetting();
 
             $maintenancePercentage = $project->getMaintenancePercentage();
-            if ($project->getMaintenanceProject()==true){
+            if ($project->getMaintenanceProject() == true) {
                 $maintenancePercentage = null;
             }
 
@@ -522,7 +522,7 @@ class ApiClientController extends AbstractController
                             'interfaceLangage' => $settings->getInterfaceLangage()
 
                         ],
-                      "projectOwner"=>  [
+                        "projectOwner" => [
                             'id' => $project->getOwner()->getId(),
                             'mail' => $project->getOwner()->getEmail(),
                             'phone' => $project->getOwner()->getPhone(),
@@ -538,6 +538,15 @@ class ApiClientController extends AbstractController
                             'endDate' => $this->dateService->formateDateWithUser($project->getEndDate(), $project->getOwner()),
                             'price' => $project->getTotalPrice(),
                             'maintenancePercentage' => $maintenancePercentage,
+                            'isPaying' => $project->isPaying(),
+                            'database' => $project->isDatabase(),
+                            'maquette' => $project->isMaquette(),
+                            'maintenance' => $project->isMaintenance(),
+                            'type' => !empty($project->getType()) ? explode(',', $project->getType()) : [],
+                            'framework' => !empty($project->getFramework()) ? explode(',', $project->getFramework()) : [],
+                            'options' => !empty($project->getOptions()) ? explode(',', $project->getOptions()) : [],
+                            'devices' => !empty($project->getDevice()) ? explode(',', $project->getDevice()) : [],
+
 
                         ],
                         'client' => [
