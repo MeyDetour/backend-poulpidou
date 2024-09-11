@@ -357,8 +357,8 @@ class ApiMessageController extends AbstractController
                 }
                 $message = new Message();
 
-                $message->getChat()->setRead(false);
-                $entityManager->persist($message->getChat());
+                $project->getChat()->setRead(false);
+                $entityManager->persist($project->getChat());
                 $entityManager->flush();
                 $message->setClient($project->getClient());
 
