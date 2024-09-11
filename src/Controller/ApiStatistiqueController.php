@@ -69,16 +69,16 @@ class ApiStatistiqueController extends AbstractController
                 case "projects":
                     switch ($time) {
                         case "10yrs":
-                            for ($i = 0; $i <= 10; $i++) {
-                                $year = $today->format('Y') - 10 + $i;
-                                $startOfYear = (new \DateTimeImmutable())->setDate($year, 1, 1)->setTime(0, 0);
-                                $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
-
-                                $count = count($projectRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
-
-                                $dataToSend[$year] = $count;
-
-
+                            for ($y = 0; $y <= 10; $y++) {
+                                $year = $today->format('Y') - 10 + $y;
+                                for ($i = 1; $i <= 12; $i++) {
+                                    $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
+                                    $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+                                    $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
+                                    if ($i <= $today->format('m') && $count != 0) {
+                                        $dataToSend[12 * $y + $i] = $count;
+                                    }
+                                }
                             }
                             break;
 
@@ -88,7 +88,7 @@ class ApiStatistiqueController extends AbstractController
                                 $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
                                 $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                if ($i <= $today->format('m')) {
+                                if ($i <= $today->format('m') && $count != 0 ) {
                                     $dataToSend[$i] = $count;
                                 }
 
@@ -102,7 +102,7 @@ class ApiStatistiqueController extends AbstractController
 
                                 $count = count($projectRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
-                                if ($i <= $today->format('d')) {
+                                if ($i <= $today->format('d') && $count !=0) {
                                     $dataToSend[$i] = $count;
                                 }
 
@@ -115,25 +115,25 @@ class ApiStatistiqueController extends AbstractController
                 case "tasks":
                     switch ($time) {
                         case "10yrs":
-                            for ($i = 0; $i <= 10; $i++) {
-                                $year = $today->format('Y') - 10 + $i;
-                                $startOfYear = (new \DateTimeImmutable())->setDate($year, 1, 1)->setTime(0, 0);
-                                $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
-
-                                $count = count($taskRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
-
-                                $dataToSend[$year] = $count;
-
+                            for ($y = 0; $y <= 10; $y++) {
+                                $year = $today->format('Y') - 10 + $y;
+                                for ($i = 1; $i <= 12; $i++) {
+                                    $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
+                                    $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+                                    $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
+                                    if ($i <= $today->format('m') && $count != 0) {
+                                        $dataToSend[12 * $y + $i] = $count;
+                                    }
+                                }
                             }
                             break;
-
                         case "1yr":
                             for ($i = 1; $i <= 12; $i++) {
                                 $startOfMonth = (new \DateTimeImmutable())->setDate($today->format('Y'), $i, 1)->setTime(0, 0);
                                 $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
                                 $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                if ($i <= $today->format('m')) {
+                                if ($i <= $today->format('m') && $count!=0) {
                                     $dataToSend[$i] = $count;
                                 }
                             }
@@ -147,7 +147,7 @@ class ApiStatistiqueController extends AbstractController
                                 $count = count($taskRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
 
-                                if ($i <= $today->format('d')) {
+                                if ($i <= $today->format('d') && $count !=0) {
                                     $dataToSend[$i] = $count;
                                 }
                             }
@@ -158,18 +158,18 @@ class ApiStatistiqueController extends AbstractController
                 case "incomes":
                     switch ($time) {
                         case "10yrs":
-                            for ($i = 0; $i <= 10; $i++) {
-                                $year = $today->format('Y') - 10 + $i;
-                                $startOfYear = (new \DateTimeImmutable())->setDate($year, 1, 1)->setTime(0, 0);
-                                $endOfYear = (new \DateTimeImmutable())->setDate($year, 12, 31)->setTime(23, 59, 59);
-
-                                $count = count($invoiceRepository->findBetweenDate($startOfYear, $endOfYear, $this->getUser()));
-
-                                $dataToSend[$year] = $count;
-
+                            for ($y = 0; $y <= 10; $y++) {
+                                $year = $today->format('Y') - 10 + $y;
+                                for ($i = 1; $i <= 12; $i++) {
+                                    $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
+                                    $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+                                    $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
+                                    if ($i <= $today->format('m') && $count != 0) {
+                                        $dataToSend[12 * $y + $i] = $count;
+                                    }
+                                }
                             }
                             break;
-
                         case "1yr":
                             for ($i = 1; $i <= 12; $i++) {
                                 $startOfMonth = (new \DateTimeImmutable())->setDate($today->format('Y'), $i, 1)->setTime(0, 0);
@@ -177,7 +177,7 @@ class ApiStatistiqueController extends AbstractController
 
                                 $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
-                                if ($i <= $today->format('m')) {
+                                if ($i <= $today->format('m') && $count!=0) {
                                     $dataToSend[$i] = $count;
                                 }
                             }
@@ -191,7 +191,7 @@ class ApiStatistiqueController extends AbstractController
                                 $count = count($invoiceRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
 
-                                if ($i <= $today->format('d')) {
+                                if ($i <= $today->format('d') && $count !=0) {
                                     $dataToSend[$i] = $count;
                                 }
                             }
