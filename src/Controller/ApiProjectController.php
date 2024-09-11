@@ -234,7 +234,7 @@ class ApiProjectController extends AbstractController
                     $project->setMaintenance(filter_var($data['composition']['maintenance'], FILTER_VALIDATE_BOOLEAN));
                 }
 
-                if (isset($data['composition']['type']) && !empty($data['composition']['type'])) {
+                if (isset($data['composition']['type']) ) {
                     $liste = [];
                     foreach ($data['composition']['type'] as $thing) {
                         if (in_array($thing, $this->listeOfType)) {
@@ -244,7 +244,7 @@ class ApiProjectController extends AbstractController
                     $project->setType(implode(',', $liste));
 
                 }
-                if (isset($data['composition']['framework']) && !empty($data['composition']['framework'])) {
+                if (isset($data['composition']['framework']) ) {
                     $liste = [];
                     foreach ($data['composition']['framework'] as $thing) {
                         if (in_array($thing, $this->listeOfFrameworks)) {
@@ -254,7 +254,7 @@ class ApiProjectController extends AbstractController
                     $project->setFramework(implode(',', $liste));
 
                 }
-                if (isset($data['composition']['options']) && !empty($data['composition']['options'])) {
+                if (isset($data['composition']['options'])) {
                     $liste = [];
                     foreach ($data['composition']['options'] as $thing) {
                         if (in_array($thing, $this->listeOfOptions)) {
@@ -264,7 +264,7 @@ class ApiProjectController extends AbstractController
                     $project->setOptions(implode(',', $liste));
 
                 }
-                if (isset($data['composition']['devices']) && !empty($data['composition']['devices'])) {
+                if (isset($data['composition']['devices'])) {
                     $liste = [];
                     foreach ($data['composition']['devices'] as $thing) {
                         if (in_array($thing, $this->listeOfDevices)) {
@@ -511,7 +511,7 @@ class ApiProjectController extends AbstractController
                         }
                         $project->setMaintenance(filter_var($data['composition']['maintenance'], FILTER_VALIDATE_BOOLEAN));
                     }
-                    if (isset($data['composition']['type']) && !empty($data['composition']['type'])) {
+                    if (isset($data['composition']['type']) ) {
                         $liste = [];
                         foreach ($data['composition']['type'] as $thing) {
                             if (in_array($thing, $this->listeOfType)) {
@@ -521,7 +521,7 @@ class ApiProjectController extends AbstractController
                         $project->setType(implode(',', $liste));
 
                     }
-                    if (isset($data['composition']['framework']) && !empty($data['composition']['framework'])) {
+                    if (isset($data['composition']['framework']) ) {
                         $liste = [];
                         foreach ($data['composition']['framework'] as $thing) {
                             if (in_array($thing, $this->listeOfFrameworks)) {
@@ -531,7 +531,7 @@ class ApiProjectController extends AbstractController
                         $project->setFramework(implode(',', $liste));
 
                     }
-                    if (isset($data['composition']['options']) && !empty($data['composition']['options'])) {
+                    if (isset($data['composition']['options'])) {
                         $liste = [];
                         foreach ($data['composition']['options'] as $thing) {
                             if (in_array($thing, $this->listeOfOptions)) {
@@ -541,7 +541,7 @@ class ApiProjectController extends AbstractController
                         $project->setOptions(implode(',', $liste));
 
                     }
-                    if (isset($data['composition']['devices']) && !empty($data['composition']['devices'])) {
+                    if (isset($data['composition']['devices'])) {
 
                         $liste = [];
                         foreach ($data['composition']['devices'] as $thing) {
