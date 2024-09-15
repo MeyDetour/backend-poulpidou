@@ -20,7 +20,7 @@ class ApiStatistiqueController extends AbstractController
     private DateService $dateService;
 
     private $typeValues = ['incomes', 'projects', 'tasks'];
-    private $timeValues = ['10yrs', '1yr', '1m'];
+    private $timeValues = ['10years', '1year', '3months', '30days', '7days'];
 
     public function __construct(LogService $logService, DateService $dateService)
     {
@@ -68,45 +68,115 @@ class ApiStatistiqueController extends AbstractController
             switch ($type) {
                 case "projects":
                     switch ($time) {
-                        case "10yrs":
+                        case "10years":
+
                             for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
-                                for ($i = 1; $i <= 12; $i++) {
+
+                                //if this is the first year there were 10years
+                                $startMonth = $y == 0 ? $today->format('m') : 1;
+
+                                //if this is this year
+                                $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
+                                for ($i = $startMonth; $i <= $endMonth; $i++) {
                                     $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
                                     $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+
                                     $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                    if ($i <= $today->format('m') && $count != 0) {
+
+                                    if ($count > 0) {
                                         $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
                             break;
 
-                        case "1yr":
-                            for ($i = 1; $i <= 12; $i++) {
-                                $startOfMonth = (new \DateTimeImmutable())->setDate($today->format('Y'), $i, 1)->setTime(0, 0);
-                                $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+                        case "1year":
+                            for ($y = 0; $y <= 1; $y++) {
+                                $year = $today->format('Y') - 1 + $y;
 
-                                $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                if ($i <= $today->format('m') && $count != 0 ) {
-                                    $dataToSend[$i] = $count;
+                                //if this is the first year there were 10years
+                                $startMonth = $y == 0 ? $today->format('m') : 1;
+
+                                //if this is this year
+                                $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
+                                for ($i = $startMonth; $i <= $endMonth; $i++) {
+                                    $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
+                                    $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+
+                                    $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
+
+                                    if ($count > 0) {
+                                        $dataToSend[12 * $y + $i] = $count;
+                                    }
                                 }
-
                             }
                             break;
 
-                        case "1m":
-                            for ($i = 1; $i <= $lastDayInMonth->format('d'); $i++) {
-                                $startOfDay = $today->setDate($today->format('Y'), $today->format('m'), $i)->setTime(0, 0, 0);
-                                $endOfDay = $startOfDay->setTime(23, 59, 59);
+                        case "3months":
+
+                            $startDate = $today->modify('-3 months')->setTime(0, 0, 0);
+
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
 
                                 $count = count($projectRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
-                                if ($i <= $today->format('d') && $count !=0) {
-                                    $dataToSend[$i] = $count;
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
                                 }
+                                $index++;
+                            }
+                            break;
+                        case "30days":
 
+                            $startDate = $today->modify('-30 days')->setTime(0, 0, 0);
 
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
+
+                                $count = count($projectRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
+                                }
+                                $index++;
+                            }
+                            break;
+                        case "7days":
+
+                            $startDate = $today->modify('-7 days')->setTime(0, 0, 0);
+
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
+
+                                $count = count($projectRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
+                                }
+                                $index++;
                             }
                             break;
                     }
@@ -114,42 +184,115 @@ class ApiStatistiqueController extends AbstractController
 
                 case "tasks":
                     switch ($time) {
-                        case "10yrs":
+                        case "10years":
+
                             for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
-                                for ($i = 1; $i <= 12; $i++) {
+
+                                //if this is the first year there were 10years
+                                $startMonth = $y == 0 ? $today->format('m') : 1;
+
+                                //if this is this year
+                                $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
+                                for ($i = $startMonth; $i <= $endMonth; $i++) {
                                     $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
                                     $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+
                                     $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                    if ($i <= $today->format('m') && $count != 0) {
+
+                                    if ($count > 0) {
                                         $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
                             break;
-                        case "1yr":
-                            for ($i = 1; $i <= 12; $i++) {
-                                $startOfMonth = (new \DateTimeImmutable())->setDate($today->format('Y'), $i, 1)->setTime(0, 0);
-                                $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
-                                $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                if ($i <= $today->format('m') && $count!=0) {
-                                    $dataToSend[$i] = $count;
+                        case "1year":
+                            for ($y = 0; $y <= 1; $y++) {
+                                $year = $today->format('Y') - 1 + $y;
+
+                                //if this is the first year there were 10years
+                                $startMonth = $y == 0 ? $today->format('m') : 1;
+
+                                //if this is this year
+                                $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
+                                for ($i = $startMonth; $i <= $endMonth; $i++) {
+                                    $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
+                                    $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+
+                                    $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
+
+                                    if ($count > 0) {
+                                        $dataToSend[12 * $y + $i] = $count;
+                                    }
                                 }
                             }
                             break;
 
-                        case "1m":
-                            for ($i = 1; $i <= $lastDayInMonth->format('d'); $i++) {
-                                $startOfDay = $today->setDate($today->format('Y'), $today->format('m'), $i)->setTime(0, 0, 0);
-                                $endOfDay = $startOfDay->setTime(23, 59, 59);
+                        case "3months":
+
+                            $startDate = $today->modify('-3 months')->setTime(0, 0, 0);
+
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
 
                                 $count = count($taskRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
-
-                                if ($i <= $today->format('d') && $count !=0) {
-                                    $dataToSend[$i] = $count;
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
                                 }
+                                $index++;
+                            }
+                            break;
+                        case "30days":
+
+                            $startDate = $today->modify('-30 days')->setTime(0, 0, 0);
+
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
+
+                                $count = count($taskRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
+                                }
+                                $index++;
+                            }
+                            break;
+                        case "7days":
+
+                            $startDate = $today->modify('-7 days')->setTime(0, 0, 0);
+
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
+
+                                $count = count($taskRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
+                                }
+                                $index++;
                             }
                             break;
                     }
@@ -157,43 +300,115 @@ class ApiStatistiqueController extends AbstractController
 
                 case "incomes":
                     switch ($time) {
-                        case "10yrs":
+                        case "10years":
+
                             for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
-                                for ($i = 1; $i <= 12; $i++) {
+
+                                //if this is the first year there were 10years
+                                $startMonth = $y == 0 ? $today->format('m') : 1;
+
+                                //if this is this year
+                                $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
+                                for ($i = $startMonth; $i <= $endMonth; $i++) {
                                     $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
                                     $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+
                                     $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
-                                    if ($i <= $today->format('m') && $count != 0) {
+
+                                    if ($count > 0) {
                                         $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
                             break;
-                        case "1yr":
-                            for ($i = 1; $i <= 12; $i++) {
-                                $startOfMonth = (new \DateTimeImmutable())->setDate($today->format('Y'), $i, 1)->setTime(0, 0);
-                                $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
-                                $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
+                        case "1year":
+                            for ($y = 0; $y <= 1; $y++) {
+                                $year = $today->format('Y') - 1 + $y;
 
-                                if ($i <= $today->format('m') && $count!=0) {
-                                    $dataToSend[$i] = $count;
+                                //if this is the first year there were 10years
+                                $startMonth = $y == 0 ? $today->format('m') : 1;
+
+                                //if this is this year
+                                $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
+                                for ($i = $startMonth; $i <= $endMonth; $i++) {
+                                    $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
+                                    $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
+
+                                    $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
+
+                                    if ($count > 0) {
+                                        $dataToSend[12 * $y + $i] = $count;
+                                    }
                                 }
                             }
                             break;
 
-                        case "1m":
-                            for ($i = 1; $i <= $lastDayInMonth->format('d'); $i++) {
-                                $startOfDay = $today->setDate($today->format('Y'), $today->format('m'), $i)->setTime(0, 0, 0);
-                                $endOfDay = $startOfDay->setTime(23, 59, 59);
+                        case "3months":
+
+                            $startDate = $today->modify('-3 months')->setTime(0, 0, 0);
+
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
 
                                 $count = count($invoiceRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
 
-
-                                if ($i <= $today->format('d') && $count !=0) {
-                                    $dataToSend[$i] = $count;
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
                                 }
+                                $index++;
+                            }
+                            break;
+                        case "30days":
+
+                            $startDate = $today->modify('-30 days')->setTime(0, 0, 0);
+
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
+
+                                $count = count($invoiceRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
+                                }
+                                $index++;
+                            }
+                            break;
+                        case "7days":
+
+                            $startDate = $today->modify('-7 days')->setTime(0, 0, 0);
+
+                            $period = new \DatePeriod(
+                                $startDate,
+                                new \DateInterval('P1D'),
+                                $today->setTime(23, 59, 59)
+                            );
+                            $index = 0;
+                            foreach ($period as $day) {
+                                $startOfDay = $day->setTime(0, 0, 0);
+                                $endOfDay = $day->setTime(23, 59, 59);
+
+                                $count = count($invoiceRepository->findBetweenDate($startOfDay, $endOfDay, $this->getUser()));
+
+                                if ($count > 0) {
+                                    $dataToSend[$index] = $count;
+                                }
+                                $index++;
                             }
                             break;
                     }
