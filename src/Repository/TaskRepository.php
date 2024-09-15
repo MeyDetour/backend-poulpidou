@@ -21,7 +21,7 @@ class TaskRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('e')
             ->where('e.createdAt >= :startDate')
             ->andWhere('e.createdAt <= :endDate')
-            ->andWhere('p.createdAt <= :today')
+            ->andWhere('e.createdAt <= :today')
             ->andWhere('e.owner = :owner')
             ->setParameter('startDate', $date1->format('Y-m-d'))
             ->setParameter('endDate', $date2->format('Y-m-d'))

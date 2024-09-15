@@ -584,7 +584,6 @@ class ApiProjectController extends AbstractController
                         $project->setCanOtherUserSeeClientProfile(filter_var($data['rules']['canSeeClientProfile'], FILTER_VALIDATE_BOOLEAN));
                     }
 
-                    $project->setCreatedAt(new \DateTimeImmutable());
                     $project->setOwner($this->getUser());
                     $project->setState('active');
                     $manager->persist($project);
