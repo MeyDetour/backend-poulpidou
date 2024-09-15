@@ -248,14 +248,14 @@ class HomeController extends AbstractController
                         "id" => null,
                         "name" => null,
                         "uuid" => null,
-                        "cratedAt" => null,
+                        "createdAt" => null,
                         'totalTasks' => null,
                         'doneTasks' => null,
                     ], [
                         "id" => null,
                         "name" => null,
                         "uuid" => null,
-                        "cratedAt" => null,
+                        "createdAt" => null,
                         'totalTasks' => null,
                         'doneTasks' => null,
                     ]],
@@ -374,7 +374,7 @@ class HomeController extends AbstractController
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
                             "isCurrent" => true,
-                            "cratedAt" => "09/08/2024"
+                            "createdAt" => "09/08/2024"
                         ],
                         "note" => [
                             [
@@ -484,7 +484,7 @@ class HomeController extends AbstractController
                             "isCurrent" => true,
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
-                            "cratedAt" => "09/08/2024"
+                            "createdAt" => "09/08/2024"
                         ],
                         "note" => [
                             [
@@ -569,7 +569,7 @@ class HomeController extends AbstractController
                             "isCurrent" => true,
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
-                            "cratedAt" => "09/08/2024"
+                            "createdAt" => "09/08/2024"
                         ],
                         "note" => [
                             [
@@ -647,7 +647,7 @@ class HomeController extends AbstractController
                             "isCurrent" => true,
                             "chatName" => "nouveau 2 Chat",
                             "state" => "active",
-                            "cratedAt" => "09/08/2024"
+                            "createdAt" => "09/08/2024"
                         ],
                         "note" => [
                             [
@@ -693,7 +693,7 @@ class HomeController extends AbstractController
                                 "id" => null,
                                 "name" => null,
                                 "uuid" => null,
-                                "cratedAt" => null,
+                                "createdAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
                             ],
@@ -701,7 +701,7 @@ class HomeController extends AbstractController
                                 "id" => null,
                                 "name" => null,
                                 "uuid" => null,
-                                "cratedAt" => null,
+                                "createdAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
                             ]
@@ -711,21 +711,21 @@ class HomeController extends AbstractController
                                 "id" => null,
                                 "name" => null,
                                 "uuid" => null,
-                                "cratedAt" => null,
+                                "createdAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
                             ], [
                                 "id" => null,
                                 "name" => null,
                                 "uuid" => null,
-                                "cratedAt" => null,
+                                "createdAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
                             ], [
                                 "id" => null,
                                 "name" => null,
                                 "uuid" => null,
-                                "cratedAt" => null,
+                                "createdAt" => null,
                                 'totalTasks' => null,
                                 'doneTasks' => null,
                             ]
@@ -782,7 +782,7 @@ class HomeController extends AbstractController
                                 'lastName' => null,
                             ],
                             "isCurrent" => true,
-                            "cratedAt" => "09/08/2024"
+                            "createdAt" => "09/08/2024"
                         ],
                         "note" => [
                             [
@@ -949,7 +949,7 @@ class HomeController extends AbstractController
                                 'lastName' => null,
                             ],
                             "isCurrent" => true,
-                            "cratedAt" => "09/08/2024"
+                            "createdAt" => "09/08/2024"
                         ],
                         "note" => [
                             [

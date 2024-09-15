@@ -1381,7 +1381,7 @@ class ApiProjectController extends AbstractController
                     "chatName" => $chat,
                     "state" => $project->getState(),
                     "isCurrent" => $project->isCurrent(),
-                    "cratedAt" => $this->dateService->formateDate($project->getCreatedAt()),
+                    "createdAt" => $this->dateService->formateDate($project->getCreatedAt()),
                     "owner" => [
                         'email' => $project->getOWner()->getEmail(),
                         'firstName' => $project->getOWner()->getFirstName(),
@@ -1441,7 +1441,7 @@ class ApiProjectController extends AbstractController
                 "id" => $project->getId(),
                 "name" => $project->getName(),
                 'uuid' => $project->getUuid(),
-                "cratedAt" => $this->dateService->formateDate($project->getCreatedAt()),
+                "createdAt" => $this->dateService->formateDate($project->getCreatedAt()),
                 'totalTasks' => count($project->getTasks()),
                 'doneTasks' => $count,
             ];

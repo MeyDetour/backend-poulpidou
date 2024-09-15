@@ -146,7 +146,7 @@ class ApiExportImportDataController extends AbstractController
 
                             "state" => $project->getState(),
                             "isCurrent" => $project->isCurrent(),
-                            "cratedAt" => $project->getCreatedAt()->format('d/m/Y H:i'),
+                            "createdAt" => $project->getCreatedAt()->format('d/m/Y H:i'),
                             "chat" => [
                                 'name' => $chat->getName(),
                                 'createdAt' => $chat->getCreatedAt()->format('d/m/Y H:i'),
