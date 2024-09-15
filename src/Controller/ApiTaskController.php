@@ -632,7 +632,7 @@ class ApiTaskController extends AbstractController
             $data = [];
             foreach ($projects as $project) {
                 foreach ($project->getTasks() as $task) {
-                    if ($task->getCol() == 'done') {
+                    if ($task->getCol() != 'done') {
                         $data[] = [
                             'id' => $task->getId(),
                             'name' => $task->getName(),
