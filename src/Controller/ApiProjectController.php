@@ -622,7 +622,7 @@ class ApiProjectController extends AbstractController
         }
     }
 
-    #[Route('/api/project/{id}/switch/current', name: 'set_project_no_current', methods: 'put')]
+    #[Route('/api/project/{id}/switch/current', name: 'set_project_current_or_no_current', methods: ['PUT'])]
     public function switchProjectToUnccurent($id, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
     {
         try {
