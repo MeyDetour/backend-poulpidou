@@ -1229,7 +1229,42 @@ class ApiProjectController extends AbstractController
                 , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+    #[Route('/api/currents/projects', name: 'get_projects_current', methods: 'get')]
+    public function getCurrentProjectsToRender( ): Response
+    {
+        try {
+            $projects = $this->getUser()->getProjects()->toArray();
+            $authorizedProjects = $this->getUser()->getAutorisedInProjects()->toArray();
+            $projects = array_merge($projects, $authorizedProjects);  // Fusionner les projets
 
+            foreach ($projects as $project) {
+
+
+                if ($project->getState() != 'deleted' &&  $project->isCurrent() == true) {
+                        $data[] = $this->getDataProjectForMiniature($project);
+
+                }
+
+            }
+
+            return new JsonResponse([
+                    'state' => 'OK',
+                    'value' => $data
+                ]
+                , Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+
+
+            return new JsonResponse([
+
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
     #[Route('/api/project/{id}/get/client', name: 'get_project_client', methods: 'get')]
     public function getClientOfProject($id, ProjectRepository $repository): Response
     {
