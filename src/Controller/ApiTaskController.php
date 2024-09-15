@@ -97,8 +97,6 @@ class ApiTaskController extends AbstractController
                 $task->setTaskOrder(0);
 
 
-
-
                 if (isset($data['category']) && !empty(trim($data['category']))) {
                     $task->setCategory($data['category']);
                 }
@@ -143,7 +141,7 @@ class ApiTaskController extends AbstractController
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -188,7 +186,7 @@ class ApiTaskController extends AbstractController
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
-                if (array_key_exists('category',$data) && !empty(trim($data['category']))) {
+                if (array_key_exists('category', $data) && !empty(trim($data['category']))) {
                     $task->setCategory($data['category']);
                 }
                 if (isset($data['dueDate']) && !empty(trim($data['dueDate']))) {
@@ -215,21 +213,20 @@ class ApiTaskController extends AbstractController
                             ]
                             , Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-                    if($task->getCategory() != $data['status']){
+                    if ($task->getCategory() != $data['status']) {
                         $task->setCol($data['status']);
                         $task->setTaskOrder(0);
                     }
 
 
-
                 }
-                    $task->setName($data['name']);
+                $task->setName($data['name']);
                 $task->setOwner($this->getUser());
 
                 $entityManager->persist($task);
                 $entityManager->flush();
 
-                if(isset($data['status']) && !empty(trim($data['status']))){
+                if (isset($data['status']) && !empty(trim($data['status']))) {
                     $this->reorderTask($task->getProject(), $data['status'], $task, 0);
                     $this->reorderTaskInColumn($task->getProject(), $lastColumnStatus);
 
@@ -247,7 +244,7 @@ class ApiTaskController extends AbstractController
 
         } catch
         (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -320,7 +317,7 @@ class ApiTaskController extends AbstractController
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -381,7 +378,7 @@ class ApiTaskController extends AbstractController
                         ]
                         , Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
-            $task->setTaskOrder($data['order']);
+                $task->setTaskOrder($data['order']);
                 $this->reorderTask($task->getProject(), $task->getCol(), $task, $data['order']);
 
 
@@ -394,7 +391,7 @@ class ApiTaskController extends AbstractController
             return new JsonResponse(['state' => 'ND'], Response::HTTP_BAD_REQUEST);
 
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -431,7 +428,7 @@ class ApiTaskController extends AbstractController
             $this->entityManager->flush();
             return Null;
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -456,7 +453,7 @@ class ApiTaskController extends AbstractController
 
             return Null;
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
             return new JsonResponse([
 
                     'state' => 'ISE',
@@ -500,7 +497,7 @@ class ApiTaskController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -542,7 +539,7 @@ class ApiTaskController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -609,7 +606,7 @@ class ApiTaskController extends AbstractController
                 ]
                 , Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
 
 
             return new JsonResponse([
@@ -621,6 +618,54 @@ class ApiTaskController extends AbstractController
                 , Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    #[Route('/api/next/tasks', name: 'get_next_tasks', methods: 'get')]
+    public function getNextTasks(ProjectRepository $projectRepository, $id, TaskRepository $taskRepository): Response
+    {
+        try {
+
+            $projects = $this->getUser()->getProjects()->toArray();
+            $authorizedProjects = $this->getUser()->getAutorisedInProjects()->toArray();
+            $projects = array_merge($projects, $authorizedProjects);  // Fusionner les projets
+
+
+            $data = [];
+            foreach ($projects as $project) {
+                foreach ($project->getTasks() as $task) {
+                    if ($task->getCol() == 'done') {
+                        $data[] = [
+                            'id' => $task->getId(),
+                            'name' => $task->getName(),
+                            'projectName' => $project->getName(),
+                            'content' => $task->getDescription(),
+                            'category' => $task->getCategory(),
+                            'dueDate' => $this->dateService->formateDate($task->getDueDate()),
+
+                        ];
+
+                    }
+                }
+            }
+            return new JsonResponse(
+                [
+                    'state' => 'OK',
+                    'value' => $data
+                ]
+                , Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
+
+
+            return new JsonResponse([
+
+                    'state' => 'ISE',
+                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
+
+                ]
+                , Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     public function getData($task)
     {
