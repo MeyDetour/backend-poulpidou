@@ -71,8 +71,8 @@ class ApiStatistiqueController extends AbstractController
                         case "10years":
 
                             for ($y = 0; $y <= 9; $y++) {
-                                $year = $today->format('Y') - 9 + $y;
-
+                                $year = $today->format('Y') - 10 + $y;
+                                dump($year);
                                 //if this is the first year there were 10years
                                 $startMonth = $y == 0 ? $today->format('m') : 1;
 
@@ -88,6 +88,7 @@ class ApiStatistiqueController extends AbstractController
                                         $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
+                                dd('ok');
                             }
                             break;
 
@@ -187,7 +188,7 @@ class ApiStatistiqueController extends AbstractController
                         case "10years":
 
                             for ($y = 0; $y <= 9; $y++) {
-                                $year = $today->format('Y') - 9 + $y;
+                                $year = $today->format('Y') - 10 + $y;
 
                                 //if this is the first year there were 10years
                                 $startMonth = $y == 0 ? $today->format('m') : 1;
@@ -303,7 +304,7 @@ class ApiStatistiqueController extends AbstractController
                         case "10years":
 
                             for ($y = 0; $y <= 9; $y++) {
-                                $year = $today->format('Y') - 9 + $y;
+                                $year = $today->format('Y') - 10 + $y;
 
                                 //if this is the first year there were 10years
                                 $startMonth = $y == 0 ? $today->format('m') : 1;
