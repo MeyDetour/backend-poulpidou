@@ -85,7 +85,7 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[10 * $y + $i] = $count;
+                                        $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
@@ -107,7 +107,7 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[10 * $y + $i] = $count;
+                                        $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
@@ -201,7 +201,7 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[10 * $y + $i] = $count;
+                                        $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
@@ -223,7 +223,7 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[10 * $y + $i] = $count;
+                                        $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
@@ -317,7 +317,7 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[10 * $y + $i] = $count;
+                                        $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
@@ -339,7 +339,7 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[10 * $y + $i] = $count;
+                                        $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
                             }
