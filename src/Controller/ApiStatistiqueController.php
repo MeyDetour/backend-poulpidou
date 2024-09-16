@@ -70,7 +70,7 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10years":
 
-                            for ($y = 0; $y <= 9; $y++) {
+                            for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
                                 dump($year);
                                 //if this is the first year there were 10years
@@ -189,7 +189,7 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10years":
 
-                            for ($y = 0; $y <= 9; $y++) {
+                            for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
 
                                 //if this is the first year there were 10years
@@ -305,7 +305,7 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10years":
 
-                            for ($y = 0; $y <= 9; $y++) {
+                            for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
 
                                 //if this is the first year there were 10years
