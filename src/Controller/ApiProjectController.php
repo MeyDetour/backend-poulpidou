@@ -685,68 +685,6 @@ class ApiProjectController extends AbstractController
 
     }
 
-    #[Route('/api/projects/{id}/switch/current', name: 'set_project_no_current', methods: 'put')]
-    public function getCurrentsProjects($id, ProjectRepository $projectRepository, Request $request, EntityManagerInterface $manager): Response
-    {
-        try {
-            $project = $projectRepository->find($id);
-            if (!$project) {
-                return new JsonResponse([
-                    'state' => 'NDF',
-                    'value' => 'project',
-                ], Response::HTTP_NOT_FOUND);
-            }
-            if ($project->getOwner() != $this->getUser() && !$project->hasUserInUserAuthorised($this->getUser())) {
-                return new JsonResponse([
-                    'state' => 'FO',
-                    'value' => 'project',
-                ], Response::HTTP_FORBIDDEN);
-            }
-            if ($project->getState() == 'deleted') {
-                return new JsonResponse([
-                    'state' => 'DD',
-                    'value' => 'project',
-                ], Response::HTTP_NOT_FOUND);
-            }
-
-            $data = json_decode($request->getContent(), true);
-
-            if (!isset($data['isCurrent'])) {
-                return new JsonResponse([
-                    'state' => 'NED',
-                    'value' => 'isCurrent',
-                ], Response::HTTP_UNPROCESSABLE_ENTITY);
-
-            }
-            if (!is_bool($data['isCurrent'])) {
-                return new JsonResponse([
-                    'state' => 'IDT',
-                    'value' => 'isCurrent',
-                ], Response::HTTP_UNPROCESSABLE_ENTITY);
-
-            }
-
-            $project->setCurrent($data['isCurrent']);
-            $manager->persist($project);
-            $manager->flush();
-            return new JsonResponse([
-                    'state' => 'OK',
-                ]
-                , Response::HTTP_OK);
-        } catch (\Exception $exception) {
-            $this->logService->createLog('ERROR', ' Internal Servor Error ~' . $exception->getMessage() . '~ at |' . $exception->getFile() . ' | line |' . $exception->getLine());
-
-
-            return new JsonResponse([
-
-                    'state' => 'ISE',
-                    'value' => ' Internal Servor Error : ' . $exception->getMessage() . ' at |' . $exception->getFile() . ' | line |' . $exception->getLine()
-
-                ]
-                , Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
-    }
 
     #[Route('/api/project/{id}/note', name: 'edit_note_project', methods: 'put')]
     public function editNote(Request $request, $id, EntityManagerInterface $manager, ProjectRepository $repository): Response
@@ -972,8 +910,7 @@ class ApiProjectController extends AbstractController
     }
 
 
-    #[
-        Route('/api/project/delete/{id}', name: 'delete_project', methods: 'delete')]
+    #[   Route('/api/project/delete/{id}', name: 'delete_project', methods: 'delete')]
     public function delete($id, ProjectRepository $repository, EntityManagerInterface $manager): Response
     {
         try {
@@ -1161,7 +1098,7 @@ class ApiProjectController extends AbstractController
             }
             foreach ($arrayToIterate as $project) {
                 if ($display_delete && $project->getState() == 'deleted' || $project->getState() != 'deleted') {
-                    $data[] = $this->getDataProject($project);
+                    $data[] = $this->getDataProjectForMiniature($project);
                 }
 
 
