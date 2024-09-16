@@ -79,6 +79,7 @@ class ApiStatistiqueController extends AbstractController
                                 //if this is this year
                                 $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
                                 for ($i = $startMonth; $i <= $endMonth; $i++) {
+                                 dump($i);
                                     $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
                                     $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
