@@ -70,6 +70,7 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10years":
 
+                            $countMonth = 0;
                             for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
 
@@ -86,14 +87,15 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[12 * $y + $i] = $count;
+                                        $dataToSend[$countMonth] = $count;
                                     }
+                                    $countMonth++;
                                 }
-
                             }
                             break;
 
                         case "1year":
+                            $countMonth=0;
                             for ($y = 0; $y <= 1; $y++) {
                                 $year = $today->format('Y') - 1 + $y;
 
@@ -109,14 +111,14 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($projectRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[12 * $y + $i] = $count;
+                                        $dataToSend[$countMonth] = $count;
                                     }
+                                    $countMonth++;
                                 }
                             }
                             break;
 
                         case "3months":
-
                             $startDate = $today->modify('-3 months')->setTime(0, 0, 0);
 
                             $period = new \DatePeriod(
@@ -188,6 +190,7 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10years":
 
+                            $countMonth = 0;
                             for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
 
@@ -197,19 +200,22 @@ class ApiStatistiqueController extends AbstractController
                                 //if this is this year
                                 $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
                                 for ($i = $startMonth; $i <= $endMonth; $i++) {
+
                                     $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
                                     $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
                                     $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[12 * $y + $i] = $count;
+                                        $dataToSend[$countMonth] = $count;
                                     }
+                                    $countMonth++;
                                 }
                             }
                             break;
 
                         case "1year":
+                            $countMonth=0;
                             for ($y = 0; $y <= 1; $y++) {
                                 $year = $today->format('Y') - 1 + $y;
 
@@ -225,14 +231,14 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($taskRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[12 * $y + $i] = $count;
+                                        $dataToSend[$countMonth] = $count;
                                     }
+                                    $countMonth++;
                                 }
                             }
                             break;
 
                         case "3months":
-
                             $startDate = $today->modify('-3 months')->setTime(0, 0, 0);
 
                             $period = new \DatePeriod(
@@ -304,6 +310,7 @@ class ApiStatistiqueController extends AbstractController
                     switch ($time) {
                         case "10years":
 
+                            $countMonth = 0;
                             for ($y = 0; $y <= 10; $y++) {
                                 $year = $today->format('Y') - 10 + $y;
 
@@ -313,19 +320,22 @@ class ApiStatistiqueController extends AbstractController
                                 //if this is this year
                                 $endMonth = ($year == $today->format('Y')) ? $today->format('m') : 12;
                                 for ($i = $startMonth; $i <= $endMonth; $i++) {
+
                                     $startOfMonth = (new \DateTimeImmutable())->setDate($year, $i, 1)->setTime(0, 0);
                                     $endOfMonth = $startOfMonth->modify('last day of this month')->setTime(23, 59, 59);
 
                                     $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[12 * $y + $i] = $count;
+                                        $dataToSend[$countMonth] = $count;
                                     }
+                                    $countMonth++;
                                 }
                             }
                             break;
 
                         case "1year":
+                            $countMonth=0;
                             for ($y = 0; $y <= 1; $y++) {
                                 $year = $today->format('Y') - 1 + $y;
 
@@ -341,14 +351,14 @@ class ApiStatistiqueController extends AbstractController
                                     $count = count($invoiceRepository->findBetweenDate($startOfMonth, $endOfMonth, $this->getUser()));
 
                                     if ($count > 0) {
-                                        $dataToSend[12 * $y + $i] = $count;
+                                        $dataToSend[$countMonth] = $count;
                                     }
+                                    $countMonth++;
                                 }
                             }
                             break;
 
                         case "3months":
-
                             $startDate = $today->modify('-3 months')->setTime(0, 0, 0);
 
                             $period = new \DatePeriod(
