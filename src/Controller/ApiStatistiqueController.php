@@ -88,8 +88,9 @@ class ApiStatistiqueController extends AbstractController
                                         $dataToSend[12 * $y + $i] = $count;
                                     }
                                 }
-                                dd('ok');
+
                             }
+                            dd('ok');
                             break;
 
                         case "1year":
