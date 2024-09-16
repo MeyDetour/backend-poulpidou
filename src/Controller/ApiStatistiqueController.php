@@ -141,7 +141,7 @@ class ApiStatistiqueController extends AbstractController
                             break;
                         case "30days":
 
-                            $startDate = $today->modify('-31 days')->setTime(0, 0, 0);
+                            $startDate = $today->modify('-29 days')->setTime(0, 0, 0);
 
                             $period = new \DatePeriod(
                                 $startDate,
@@ -261,7 +261,7 @@ class ApiStatistiqueController extends AbstractController
                             break;
                         case "30days":
 
-                            $startDate = $today->modify('-31 days')->setTime(0, 0, 0);
+                            $startDate = $today->modify('-29 days')->setTime(0, 0, 0);
 
                             $period = new \DatePeriod(
                                 $startDate,
@@ -381,7 +381,7 @@ class ApiStatistiqueController extends AbstractController
                             break;
                         case "30days":
 
-                            $startDate = $today->modify('-31 days')->setTime(0, 0, 0);
+                            $startDate = $today->modify('-29 days')->setTime(0, 0, 0);
 
                             $period = new \DatePeriod(
                                 $startDate,
