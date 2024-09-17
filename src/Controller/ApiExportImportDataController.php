@@ -197,8 +197,12 @@ class ApiExportImportDataController extends AbstractController
                 $todayDate = new \DateTime();
                 $fileName = 'exportFile/' . $todayDate->format('YmdHis') . '.poulpidou';
                 $fileSystem->dumpFile($fileName, $this->json($json));
-                return $this->file($fileName, $todayDate->format('YmdHis') . '.poulpidou', ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-
+               return new JsonResponse([
+                        'state' => 'OK', 'value' => [
+                            'filePath' => null,
+                        ]
+                    ]
+                    , Response::HTTP_OK);
 
             } catch (IOException $e) {
                 $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$e->getMessage().'~ at |' . $e->getFile() . ' | line |' . $e->getLine());
