@@ -103,10 +103,7 @@ class ApiPdfController extends AbstractController
                     'value' => 'file',
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-
-
-            $newFilename =  uniqid() . '.' . $file->guessExtension();
+             $newFilename =  uniqid() . '.' . $file->guessExtension();
             $pdf = $pdfRepository->findOneBy(['project' => $project, 'type' => 'SPECIFICATION', 'owner' => $this->getUser()]);
             if ($pdf) {
 
