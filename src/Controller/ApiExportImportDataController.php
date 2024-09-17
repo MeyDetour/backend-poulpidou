@@ -195,7 +195,7 @@ class ApiExportImportDataController extends AbstractController
                 ];
 
                 $todayDate = new \DateTime();
-                $fileName = $todayDate->format('YmdHis') . '.poulpidou';
+                $fileName = $todayDate->format('YmdHis') . '.json';
                $filePath = $this->getParameter('export_directory') .'/'.$fileName;
 
                 $fileSystem->dumpFile($filePath, $this->json($json));
