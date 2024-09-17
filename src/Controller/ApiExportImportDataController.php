@@ -124,6 +124,7 @@ class ApiExportImportDataController extends AbstractController
                             'content' => $task->getDescription(),
                             'status' => $task->getCol(),
                             'dueDate' => $this->dateService->baseFormateDateWithHour($task->getDueDate()),
+                            'createdAt' => $this->dateService->baseFormateDateWithHour($task->getCreatedAt()),
                             'author' => $task->getOwner()->getEmail(),
                             'category' => $task->getCategory()
                         ];
