@@ -6,6 +6,7 @@
 
 parameters:
     upload_directory: '%kernel.project_dir%/public/pdf'
+    export_directory: '%kernel.project_dir%/public/exportData'
 
 services:
 
