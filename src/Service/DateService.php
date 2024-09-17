@@ -50,6 +50,14 @@ class DateService
         return $date->format('Y-m-d');
 
 
+    }    public function baseFormateDateWithHour($date)
+    {
+        if (!$date) {
+            return null;
+        }
+        return $date->format('Y-m-d H:i');
+
+
     }
 
     public function formateDateWithHour($date)

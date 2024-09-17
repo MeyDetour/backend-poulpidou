@@ -50,9 +50,10 @@ class ApiExportImportDataController extends AbstractController
         "printer"];
     private array $states = ['active', 'deleted'];
 
-    public function __construct(LogService $logService)
+    public function __construct(LogService $logService, DateService $dateService)
     {
         $this->logService = $logService;
+        $this->dateService = $dateService;
 
     }
 
@@ -77,7 +78,7 @@ class ApiExportImportDataController extends AbstractController
                         "siret" => $client->getSiret(),
                         "location" => $client->getLocation(),
                         "mail" => $client->getMail(),
-                        "createdAt" => $client->getCreatedAt()->format('d/m/Y H:i'),
+                        "createdAt" => $this->dateService->baseFormateDateWithHour($client->getCreatedAt())  ,
                         "state" => $client->getState(),
 
                     ];
@@ -101,7 +102,7 @@ class ApiExportImportDataController extends AbstractController
 
                         $formattedMessages[] = [
                             'content' => $message->getContent(),
-                            'createdAt' => $message->getCreatedAt()->format('d/m/Y H:i'),
+                            'createdAt' => $this->dateService->baseFormateDateWithHour($message->getCreatedAt()),
                             'author' => $author,
                             'type' => $type
                         ];
@@ -122,7 +123,7 @@ class ApiExportImportDataController extends AbstractController
                         $tasks[] = ['name' => $task->getName(),
                             'content' => $task->getDescription(),
                             'status' => $task->getCol(),
-                            'dueDate' => $task->getDueDate()->format('d/m/Y H:i'),
+                            'dueDate' => $this->dateService->baseFormateDateWithHour($task->getDueDate()),
                             'author' => $task->getOwner()->getEmail(),
                             'category' => $task->getCategory()
                         ];
@@ -140,16 +141,16 @@ class ApiExportImportDataController extends AbstractController
                             "figmaLink" => $project->getFigmaLink(),
                             "githubLink" => $project->getGithubLink(),
                             "websiteLink" => $project->getWebsiteLink(),
-                            "startDate" => $project->getStartDate()->format('d/m/Y H:i'),
-                            "endDate" => $project->getEndDate()->format('d/m/Y H:i'),
+                            "startDate" => $this->dateService->baseFormateDateWithHour($project->getStartDate()),
+                            "endDate" => $this->dateService->baseFormateDateWithHour($project->getEndDate()),
                             "clientMail" => $project->getClient()->getMail(),
 
                             "state" => $project->getState(),
                             "isCurrent" => $project->isCurrent(),
-                            "createdAt" => $project->getCreatedAt()->format('d/m/Y H:i'),
+                            "createdAt" => $this->dateService->baseFormateDateWithHour($project->getCreatedAt()),
                             "chat" => [
                                 'name' => $chat->getName(),
-                                'createdAt' => $chat->getCreatedAt()->format('d/m/Y H:i'),
+                                'createdAt' => $this->dateService->baseFormateDateWithHour($chat->getCreatedAt()),
                                 'messages' => $formattedMessages
                             ]
                         ],
@@ -200,7 +201,7 @@ class ApiExportImportDataController extends AbstractController
 
 
             } catch (IOException $e) {
-                $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$exception->getMessage().'~ at |' . $e->getFile() . ' | line |' . $e->getLine());
+                $this->logService->createLog('ERROR', ' Internal Servor Error ~'.$e->getMessage().'~ at |' . $e->getFile() . ' | line |' . $e->getLine());
                 return new JsonResponse([
 
                         'state' => 'ISE',
@@ -285,7 +286,7 @@ class ApiExportImportDataController extends AbstractController
                         return $this->error();
                     }
                     $client->setMail($clientData['mail']);
-                    $client->setCreatedAt($date->format('d/m/Y H:i'));
+                    $client->setCreatedAt($date->format('Y-m-d H:i'));
 
                     if ($this->verifyType($clientData, "firstName", 'string')) {
                         $client->setFirstName($clientData['firstName']);
@@ -406,7 +407,7 @@ class ApiExportImportDataController extends AbstractController
                     $project->setNoteNames($projectData['noteNames']);
 
                     $project->setName($projectData['identity']['name']);
-                    $project->setCreatedAt($date->format('d/m/Y H:i'));
+                    $project->setCreatedAt($date->format('Y-m-d H:i'));
                     $client = $clientRepository->findOneBy(['mail' => $projectData['identity']['clientMail']]);
                     if (!$client || $client->getOwner() != $this->getUser()) {
                         return $this->error();
@@ -415,7 +416,7 @@ class ApiExportImportDataController extends AbstractController
 
                     //import associed chat
                     $chat = new Chat();
-                    $chat->setCreatedAt($date->format('d/m/Y H:i'));
+                    $chat->setCreatedAt($date->format('Y-m-d H:i'));
                     $chat->setName($projectData['name']);
                     $chat->setClient($client);
                     if (is_array($projectData['members'])) {
@@ -635,7 +636,7 @@ class ApiExportImportDataController extends AbstractController
             }
         }
         if ($type == 'datetime') {
-            $searchDate = \DateTime::createFromFormat('d/m/Y H:i', $value);
+            $searchDate = \DateTime::createFromFormat('Y-m-d H:i', $value);
             if (!$searchDate) {
                 return false;
             }
