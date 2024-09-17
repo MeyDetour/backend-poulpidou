@@ -204,7 +204,7 @@ class ApiExportImportDataController extends AbstractController
                 return new JsonResponse([
                     'state' => 'OK',
                     'value' => [
-                        'fileUrl' => $filePathl,
+                        'fileUrl' => $filePath,
                         'fileName' => $fileName,
                     ]
                 ], Response::HTTP_OK);
