@@ -196,8 +196,7 @@ class ApiExportImportDataController extends AbstractController
 
                 $todayDate = new \DateTime();
                 $fileName = 'exportFile/' . $todayDate->format('YmdHis') . '.poulpidou';
-              /*  $fileSystem->dumpFile($fileName, $json);
-               */ return $this->json($json);
+                $fileSystem->dumpFile($fileName, $this->json($json));
                 return $this->file($fileName, $todayDate->format('YmdHis') . '.poulpidou', ResponseHeaderBag::DISPOSITION_ATTACHMENT);
 
 
